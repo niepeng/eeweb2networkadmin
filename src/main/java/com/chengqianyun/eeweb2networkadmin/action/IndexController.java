@@ -3,6 +3,7 @@ package com.chengqianyun.eeweb2networkadmin.action;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.ConsoleLoginAccount;
 import com.chengqianyun.eeweb2networkadmin.core.utils.HttpSessionUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.MD5Util;
+import com.chengqianyun.eeweb2networkadmin.core.utils.SHAUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import com.chengqianyun.eeweb2networkadmin.service.ConsoleLoginAccountService;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class IndexController extends BaseController {
 
-  private static Map<String, HttpSession> sessionMap = new HashMap<String, HttpSession>();
+//  private static Map<String, HttpSession> sessionMap = new HashMap<String, HttpSession>();
 
   @Autowired
   private ConsoleLoginAccountService consoleLoginAccountService;
@@ -45,8 +46,6 @@ public class IndexController extends BaseController {
       String sign,
       HttpServletRequest request, Model model,RedirectAttributes redirectAttributes) {
 
-
-
     if ("".equals(loginname) || "".equals(password)) {
       model.addAttribute(MESSAGE, "用户名或密码不能为空");
       return "/index";
@@ -67,6 +66,7 @@ public class IndexController extends BaseController {
       model.addAttribute(MESSAGE, "帐号或密码错误");
       return "/index";
     }
+
 //    if (consoleLoginAccount.getiValid() == 2 || (consoleLoginAccount.getLockTime() != null
 //        && (DateUtil.diffDateToMintue
 //        (DateUtil.getCurrentDate(), consoleLoginAccount.getLockTime())) < 5)) {
@@ -77,7 +77,7 @@ public class IndexController extends BaseController {
 
     HttpSessionUtil.removeDynamicValidateCodeSession();
 
-//    if (!SHAUtil.encode(password).equals(consoleLoginAccount.getVcLoginPassword())) {
+    if (!SHAUtil.encode(password).equals(consoleLoginAccount.getVcLoginPassword())) {
 //      ConsoleLoginAccount consoleLoginAccountParams = new ConsoleLoginAccount();
 //      consoleLoginAccountParams.setVcLoginName(consoleLoginAccount.getVcLoginName());
 //      operationLogService.add(convertOperationLog(loginname,request,consoleLoginAccountParams,
@@ -87,19 +87,20 @@ public class IndexController extends BaseController {
 //        consoleLoginAccount.setLockTime(DateUtil.getCurrentDate());
 //        consoleLoginAccountService.updateLockTime(consoleLoginAccount);
 //      }
-//      model.addAttribute(MESSAGE, "帐号或密码错误");
-//      return "/index";
-//    }
+      model.addAttribute(MESSAGE, "帐号或密码错误");
+      return "/index";
+    }
 
     //用户Session
-    if(sessionMap.get(loginname)!=null){
-      try {
-        sessionMap.get(loginname).invalidate();
-      }catch(Exception e){
-        log.info("error when invalidate session,it may be invalidate ",e);
-      }
-    }
-    sessionMap.put(loginname,request.getSession());
+//    if(sessionMap.get(loginname)!=null){
+//      try {
+//        sessionMap.get(loginname).invalidate();
+//      }catch(Exception e){
+//        log.info("error when invalidate session,it may be invalidate ",e);
+//      }
+//    }
+//    sessionMap.put(loginname,request.getSession());
+
     // 获取上次登陆信息
 //    OperationLog lastLoginLog = operationLogService.getLastLoginLog(consoleLoginAccount.getVcLoginName(),OperationTypeEnum.login.getCode());
 //    if(lastLoginLog != null) {
@@ -108,8 +109,9 @@ public class IndexController extends BaseController {
 //    }
 //
 //    // 初始化权限
-//    consoleLoginAccountService.initAuth(consoleLoginAccount);
-//    HttpSessionUtil.setLoginSession(consoleLoginAccount);
+    consoleLoginAccountService.initAuth(consoleLoginAccount);
+    HttpSessionUtil.setLoginSession(consoleLoginAccount);
+
 //    LogFactory.logMessage("登陆");
 //    ConsoleLoginAccount consoleLoginAccountParams = new ConsoleLoginAccount();
 //    consoleLoginAccountParams.setVcLoginName(consoleLoginAccount.getVcLoginName());
@@ -127,16 +129,17 @@ public class IndexController extends BaseController {
 //      redirectAttributes.addAttribute("id",consoleLoginAccount.getId());
 //      return "redirect:/consoleaccounts/changepassword";
 //    }
+
     return "redirect:/main";
   }
 
   @RequestMapping("/logout")
   public String logout(HttpServletRequest request, Model model) {
 //    LogFactory.logMessage("退出系统");
-//    HttpSession session = request.getSession();
-//    ConsoleLoginAccount account = (ConsoleLoginAccount)session.getAttribute("loginSessionInfo");
+    HttpSession session = request.getSession();
+    ConsoleLoginAccount account = (ConsoleLoginAccount)session.getAttribute("loginSessionInfo");
 //    sessionMap.remove(account.getVcLoginName());
-//    HttpSessionUtil.removeLoginSession();
+    HttpSessionUtil.removeLoginSession();
 //    ConsoleLoginAccount consoleLoginAccountParams = new ConsoleLoginAccount();
 //    consoleLoginAccountParams.setVcLoginName(account.getVcLoginName());
 //    operationLogService.add(convertOperationLog(account.getVcLoginName(),request,consoleLoginAccountParams,
