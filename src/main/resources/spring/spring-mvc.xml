@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is used to put beans related to spring MVC. -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	xmlns:task="http://www.springframework.org/schema/task"
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-3.0.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
+            http://www.springframework.org/schema/security
+            http://www.springframework.org/schema/security/spring-security-3.0.xsd
+             http://www.springframework.org/schema/task
+             http://www.springframework.org/schema/task/spring-task-3.1.xsd">
+
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+	<bean id="springContextHolder" class="com.chengqianyun.eeweb2networkadmin.core.utils.SpringContextHolder" lazy-init="false" />
+	<mvc:annotation-driven/>
+
+	<context:component-scan base-package="com.chengqianyun.eeweb2networkadmin" >
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+
+	<task:annotation-driven/>
+
+	<mvc:interceptors>
+		<bean class="com.chengqianyun.eeweb2networkadmin.core.interceptor.AuthorityAnnotationInterceptor">
+		</bean>
+	</mvc:interceptors>
+
+	<mvc:resources mapping="/home/static/upload/**" location="/home/static/upload/" />
+	<mvc:resources mapping="/ueditor/**" location="/WEB-INF/static/ueditor/" />
+	<mvc:resources mapping="/css/**" location="/WEB-INF/static/css/" />
+	<mvc:resources mapping="/js/**" location="/WEB-INF/static/js/" />
+	<mvc:resources mapping="/fonts/**" location="/WEB-INF/static/font/" />
+	<mvc:resources mapping="/avatars/**" location="/WEB-INF/static/avatars/" />
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"></bean>
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"></bean>
+
+	<bean class="com.chengqianyun.eeweb2networkadmin.core.utils.PropertiesFileUtils">
+		<property name="locations">
+			<list>
+				<value>classpath:config.properties</value>
+			</list>
+		</property>
+	</bean>
+
+
+	<bean id="velocityConfigurer" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath" value="WEB-INF/velocity/"/>
+		<property name="velocityProperties">
+			<props>
+				<prop key="directive.foreach.counter.name">loopCounter</prop>
+				<prop key="directive.foreach.counter.initial.value">0</prop>
+				<prop key="input.encoding">UTF-8</prop>
+				<prop key="output.encoding">UTF-8</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="velocityViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="suffix" value=".vm"/>
+		<property name="contentType" value="text/html;charset=UTF-8"/>
+		<property name="exposeSessionAttributes" value="true"/>
+		<property name="dateToolAttribute" value="dateTool"/>  <!--1-->
+		<property name="numberToolAttribute" value="numberTool"/> <!--2-->
+		<property name="toolboxConfigLocation" value="/WEB-INF/velocity/toolbox.xml"/> <!--3-->
+		<property name="allowSessionOverride" value="true"/>
+	</bean>
+
+
+
+
+	</beans>

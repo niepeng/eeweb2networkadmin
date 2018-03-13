@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chengqianyun.eeweb2networkadmin.biz.entitys.SettingMapper" >
+  <resultMap id="BaseResultMap" type="com.chengqianyun.eeweb2networkadmin.biz.entitys.Setting" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="param_code" property="paramCode" jdbcType="VARCHAR" />
+    <result column="param_value" property="paramValue" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, param_code, param_value, created_at, updated_at, created_by, updated_by
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_setting
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+
+  <select id="selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_setting
+    where param_code = #{code,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="findPageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    SELECT count(*) from  t_setting where 1=1
+    <if test="paramCode != null and paramCode !=''">
+      and  param_code like "%"#{paramCode}"%"
+    </if>
+  </select>
+
+  <select id="findPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT * from t_setting where 1=1
+    <if test="paramCode != null and paramCode !=''">
+      and  param_code like "%"#{paramCode}"%"
+    </if>
+    ORDER BY id DESC
+    <![CDATA[ limit ${startRecord},${endRecord} ]]>
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_setting
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.Setting" >
+    insert into t_setting (param_code, param_value,
+      created_at, updated_at, created_by, 
+      updated_by)
+    values ( #{paramCode,jdbcType=VARCHAR}, #{paramValue,jdbcType=VARCHAR},
+      now(),now(), #{createdBy,jdbcType=VARCHAR},
+      #{updatedBy,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.Setting" >
+    insert into t_setting
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="paramCode != null" >
+        param_code,
+      </if>
+      <if test="paramValue != null" >
+        param_value,
+      </if>
+      <if test="createdAt != null" >
+        created_at,
+      </if>
+      <if test="updatedAt != null" >
+        updated_at,
+      </if>
+      <if test="createdBy != null" >
+        created_by,
+      </if>
+      <if test="updatedBy != null" >
+        updated_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="paramCode != null" >
+        #{paramCode,jdbcType=VARCHAR},
+      </if>
+      <if test="paramValue != null" >
+        #{paramValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null" >
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null" >
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedBy != null" >
+        #{updatedBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.Setting" >
+    update t_setting
+    <set >
+      <if test="paramCode != null" >
+        param_code = #{paramCode,jdbcType=VARCHAR},
+      </if>
+      <if test="paramValue != null" >
+        param_value = #{paramValue,jdbcType=VARCHAR},
+      </if>
+      updated_at = now(),
+      <if test="createdBy != null" >
+        created_by = #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedBy != null" >
+        updated_by = #{updatedBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.Setting" >
+    update t_setting
+    set param_code = #{paramCode,jdbcType=VARCHAR},
+      param_value = #{paramValue,jdbcType=VARCHAR},
+    updated_at = now(),
+      created_by = #{createdBy,jdbcType=VARCHAR},
+      updated_by = #{updatedBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

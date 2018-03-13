@@ -1,0 +1,229 @@
+#set($layout="layout/none.vm")
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="${www}/avatars/fav_new1.png" type="image/x-icon"/>
+    <link rel="shortcut icon" href="${www}/avatars/fav_new1.png" type="image/x-icon"/>
+    <link rel="stylesheet" href="${www}/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${www}/css/font-awesome.min.css">
+    <link rel="stylesheet" href="${www}/css/ace.css">
+    <link rel="stylesheet" href="${www}/css/ace-rtl.min.css">
+    <link rel="stylesheet" href="${www}/css/ace-skins.min.css">
+    <script src="${www}/js/jquery-2.0.3.min.js"></script>
+    <script src="${www}/js/ace-extra.min.js"></script>
+    <script src="${www}/js/jquery.validate.js"></script>
+    <script src="${www}/js/jquery.form.js"></script>
+##    <script src="${www}/js/browser.js"></script>
+</head>
+<body class="login-layout">
+<div class="main-container">
+<div class="main-content">
+<div class="row">
+<div class="col-sm-10 col-sm-offset-1">
+<div class="login-container">
+<div class="center">
+    <h1>
+        <span class="red"></span>
+        <span class="white">后台管理</span>
+    </h1>
+    <h4 class="blue">&copy; </h4>
+
+</div>
+
+<div class="space-6"></div>
+
+<div class="position-relative">
+    <div id="login-box" class="login-box visible widget-box no-border">
+        <div class="widget-body">
+            <div class="widget-main">
+                <h4 class="header blue lighter bigger">
+                    <i class="icon-coffee green"></i>请输入您的登录信息
+                </h4>
+
+                <div class="space-6"></div>
+
+                <form action="${www}/login" method="post" id="login_form">
+                    <input type="hidden" name="sign" id="sign">
+                    <fieldset>
+                        <label class="block clearfix">
+							<span class="block input-icon input-icon-right">
+								<input type="text" class="form-control" id="J_loginname" name="loginname" placeholder="用户名" />
+								<i class="icon-user"></i>
+							</span>
+                        </label>
+
+                        <label class="block clearfix">
+							<span class="block input-icon input-icon-right">
+								<input type="password" class="form-control" id="j_password" name="password" placeholder="密码" />
+								<i class="icon-lock"></i>
+							</span>
+                        </label>
+                      <!---->
+                      <!--##                        <label class="block row clearfix">-->
+                      <!--##                            <div class="col-xs-5">-->
+                      <!--##														<span class="block input-icon input-icon-right">-->
+                      <!--##															<input type="password" class="form-control" placeholder="验证码" />-->
+                      <!--##														</span>-->
+                      <!--##                            </div>-->
+
+                      <!--##                            <div class="col-xs-7">-->
+                      <!--##                                <img src="http://localhost:8090/loan-web/common/validate.do" alt="">-->
+                      <!--##                                <a href="#" class="btn btn-link">刷新</a>-->
+                      <!--##                            </div>-->
+                      <!--##                        </label>-->
+
+                      <!--<label class="block row clearfix">-->
+                      <!--<div class="col-xs-7">-->
+                      <!--<span class="block input-icon input-icon-right">-->
+                      <!--<input type="text" name="dynamicValidateCode" class="form-control" placeholder="手机动态码" />-->
+                      <!--</span>-->
+                      <!--</div>-->
+                      <!--<div class="col-xs-5">-->
+                      <!--<button class="btn btn-sm" type="button" id="J_send_dynamic_verify_code" onclick="getIdentify();">获取动态码</button>-->
+                      <!--</div>-->
+                      <!--</label>-->
+
+                        <div class="space"></div>
+                        <div class="imessage" id="imessage" style="display:block;"><p class="error">#if($msg)$!{msg}#end</p></div>
+##                        <div class="clearfix">
+##                            <label class="inline">
+##                                <input type="checkbox" class="ace" />
+##                                <span class="lbl"> 记住用户名</span>
+##                            </label>
+
+                            <button type="button" class="width-35 pull-right btn btn-sm btn-primary" onclick="submitForm()">
+                                <i class="icon-key"></i>登录
+                            </button>
+                        </div>
+
+                        <div class="space-4"></div>
+                </form>
+
+            <script src="${www}/js/md5.js"></script>
+                <script>
+                    // 提交表单，进行用户名密码签名签名
+                    function submitForm() {
+                        var ln = $("#J_loginname").val();
+                        var pd = $("#j_password").val();
+                        var sign = md5(ln+pd);
+                        $("#sign").val(sign);
+                        $("#login_form").submit();
+                    }
+
+
+                  function autoSubmit() {
+                    $("#J_loginname").val("root");
+                    $("#j_password").val("hello1234");
+                    $("#login_form").submit();
+                  }
+
+                 // autoSubmit();
+
+
+
+                    // 表单验证
+                    $(function () {
+                    // 强密码验证
+jQuery.validator.addMethod("isStrongPwd", function(value, element) {
+    var pwd = /((?=.*\d)(?=.*[A-Za-z])(?=.*\W).{8,20})/;
+    return this.optional(element)||pwd.test(value);
+}, "密码为8-20位，必须包含字母，数字和特殊字符");
+                        var form = $("#login_form");
+                        form.validate({
+                            rules: {
+                                loginname: {
+                                    required: true
+                                },
+                                password: {
+                                    required: true,
+                                    isStrongPwd:true
+                                },
+                                dynamicVerifyCode: {
+                                    required: true
+                                }
+                            },
+                            messages: {
+                                loginname: {
+                                    required: "请输入用户名"
+                                },
+                                password: {
+                                    required: "请输入密码",
+                                    isStrongPwd:"密码为8-20位，必须包含字母，数字和特殊字符"
+                                },
+                                dynamicVerifyCode: {
+                                    required: "请输入手机动态码"
+                                }
+                            }
+                        });
+                        form.find("input").focus(function() {
+                            $("#all_message").hide();
+                        });
+                    });
+
+                    function getIdentify() {
+                    	var loginname = $("#J_loginname").val();     
+					    if (!loginname) {
+                            alert("请输入用户名");
+                            return;
+                        }
+
+                        $('#J_send_dynamic_verify_code').prop("disabled", true);
+                        msgDown('#J_send_dynamic_verify_code',60);
+                        
+					    var sendData = {};
+					    sendData.bus = 'consoleLogin';
+					    sendData.loginname = loginname;
+					    jQuery.ajax({
+					        url: '$!{www}' + '/dynamicValidateCode/toConsoleAccount',
+					        type: 'post',
+					        dataType: 'json',
+					        data: sendData,
+					        success: function (back) {
+					            if (!back.success) {
+					            //	msgDown('#J_send_dynamic_verify_code',60);
+					            //} else {
+					            	//$("#all_message").text(back.msg);
+					            	//$("#all_message").show();
+                                    alert(back.msg);
+					            }
+					        }
+					    });
+					}
+					function  msgDown(id,seconds){
+					    var obj = $(id);
+					    obj.attr('href', 'javascript:void(0);'); 
+						var interval = 1000;
+
+						var countdow = function(){
+							if(seconds == 0){
+								obj.text('重新获取验证码');
+								obj.attr('href','javascript:getIdentify();');
+								obj.prop("disabled", false);
+							}else if(seconds == -1){
+								clearInterval(downId);
+							}else{
+								obj.text(seconds+"秒后重试");
+								obj.prop("disabled", true);
+							}			
+							seconds = seconds -1;
+						};
+						countdow();
+						var downId = window.setInterval(countdow, interval);
+					}
+                </script>
+            </div><!-- /widget-main -->
+        </div><!-- /widget-body -->
+    </div><!-- /login-box -->
+    </div><!-- /signup-box -->
+</div><!-- /position-relative -->
+</div>
+</div><!-- /.col -->
+</div><!-- /.row -->
+</div>
+</div><!-- /.main-container -->
+</body>
+</html>
+

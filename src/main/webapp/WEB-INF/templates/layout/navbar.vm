@@ -1,0 +1,86 @@
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+    </script>
+
+    <div class="main-container-inner">
+        <a class="menu-toggler" id="menu-toggler" href="#">
+            <span class="menu-text"></span>
+        </a>
+
+        <div class="sidebar" id="sidebar">
+            <script type="text/javascript">
+                try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
+            </script>
+
+            <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+                <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+                    <button class="btn btn-success">
+                        <i class="icon-signal"></i>
+                    </button>
+
+                    <button class="btn btn-info">
+                        <i class="icon-pencil"></i>
+                    </button>
+
+                    <button class="btn btn-warning">
+                        <i class="icon-group"></i>
+                    </button>
+
+                    <button class="btn btn-danger">
+                        <i class="icon-cogs"></i>
+                    </button>
+                </div>
+
+                <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+                    <span class="btn btn-success"></span>
+
+                    <span class="btn btn-info"></span>
+
+                    <span class="btn btn-warning"></span>
+
+                    <span class="btn btn-danger"></span>
+                </div>
+            </div><!-- #sidebar-shortcuts -->
+
+
+
+          #if("$!nav_set" == "")
+          <ul class="nav nav-list" id="primary_nav">
+              #foreach($auth in ${authTree})
+                  #if($loginSessionInfo.authCodes.contains($auth.code) )
+                      #if(${auth.type}=='menu')
+                          #set($showMenu = $!{auth.code} == "$!openMenu" )
+                          <li #if($showMenu) class="open" #end>
+                              <a href="#" class="dropdown-toggle">
+                                  <i class="$!{auth.css}"></i>
+                                  <span class="menu-text">$!{auth.name}</span>
+                                  <b class="arrow icon-angle-down"></b>
+                              </a>
+                              <ul class="submenu" #if($showMenu) style="display: block;" #end >
+                                  #foreach($auth2 in ${auth.children})
+                                      #if($loginSessionInfo.authCodes.contains($auth2.code) )
+                                      <li><a href="${www}${auth2.url}">$!{auth2.name}</a></li>
+                                      #end
+                                  #end
+                              </ul>
+                          </li>
+                      #end
+                #end
+              #end
+          </ul>
+          #end
+
+            <div class="sidebar-collapse" id="sidebar-collapse">
+                <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+            </div>
+
+            <script type="text/javascript">
+                try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+            </script>
+        </div><!-- /.sidebar -->
+
+
+</div>
+  </div>
+

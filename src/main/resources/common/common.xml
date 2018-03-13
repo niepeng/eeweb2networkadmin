@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName">
+    <bean id="velocityConfigurer"
+          class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <property name="resourceLoaderPath">
+            <value>/WEB-INF/templates</value>
+        </property>
+        <property name="configLocation">
+            <value>classpath:common/velocity.properties</value>
+        </property>
+        <property name="velocityProperties">
+            <props>
+                <prop key="directive.foreach.counter.name">loopCounter</prop>
+                <prop key="directive.foreach.counter.initial.value">0</prop>
+                <prop key="directive.foreach.iterator.name">loopHasNext</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
+        <property name="suffix">
+            <value>.vm</value>
+        </property>
+
+        <property name="layoutUrl">
+            <value>/layout/default.vm</value>
+        </property>
+
+        <property name="contentType" value="text/html;charset=UTF-8" />
+
+        <property name="exposeSpringMacroHelpers">
+            <value>true</value>
+        </property>
+        <property name="dateToolAttribute">
+            <value>dateTool</value>
+        </property>
+        <property name="numberToolAttribute">
+            <value>numberTool</value>
+        </property>
+
+        <property name="allowRequestOverride" value="true" />
+        <property name="exposeRequestAttributes" value="true" />
+        <property name="exposeSessionAttributes" value="true" />
+    </bean>
+
+
+</beans>

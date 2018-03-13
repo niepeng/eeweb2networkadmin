@@ -1,0 +1,141 @@
+#*分页*#
+
+    #macro(pagination $pageResult $pageRequestURL $dispType)
+        #if ($pageResult && $pageResult.pageSize > 1)
+        #* 当前页 *#
+            #set($curPageNum = $pageResult.curPageNum)
+
+        #* 总的页数 *#
+            #set($pages = $pageResult.pageSize)
+
+        #* 相邻的页数 *#
+            #set($paging_near_steps = 11)
+
+        #* 上一页 *#
+            #set($dispPrePage='<i class="icon-double-angle-left"></i>')
+            #set($dispPrePageDis='<i class="icon-double-angle-left"></i>')
+
+        #* 下一页 *#
+            #set($dispNextPage='<i class="icon-double-angle-right"></i>')
+            #set($dispNextPageDis='<i class="icon-double-angle-right"></i>')
+
+          #set($pageRequestURLFixForSelect = $stringUtil.replace($pageRequestURL, "[PAGINATION_PAGE_INDEX]", "$curPageNum"))
+            <select id="selectChangePageId"  onchange="changePage()">
+##              <option>$!pageRequestURLFixForSelect</option>
+              <option #if($!pageResult.rowsPerPage == 10) selected #end>10</option>
+              <option #if($!pageResult.rowsPerPage == 15) selected #end>15</option>
+              <option #if($!pageResult.rowsPerPage == 20) selected #end>20</option>
+              <option #if($!pageResult.rowsPerPage == 30) selected #end>30</option>
+              <option #if($!pageResult.rowsPerPage == 50) selected #end>50</option>
+            </select>
+
+        <script>
+          ## 用来展示分页内容
+          function changePage() {
+            var options = $("#selectChangePageId option:selected");
+            var value = options.val();
+            window.location.href="$pageRequestURLFixForSelect" + "&pageSize=" + value;
+          }
+        </script>
+
+          #set($pageRequestURL = $pageRequestURL + "&pageSize=${pageResult.rowsPerPage}")
+
+
+            <li class="page-count"><span>共${pageResult.rowCount}条</span></li>
+        #* 上一页控制 *#
+            #if (1 != $curPageNum)
+                #set($prePageIndex = $curPageNum - 1)
+            #* 可点 *#
+                #checkClickable($prePageIndex $dispPrePage 1 $pageRequestURL $dispType)
+            #else
+            #* 不可点 *#
+                #checkClickable("" $dispPrePageDis 0 $pageRequestURL $dispType)
+            #end
+
+            #* 相邻页面 *#
+            #set($avg = $paging_near_steps / 2)
+	        #set($startPageNumber = $curPageNum - $avg)
+	        #if($startPageNumber <= 0) 
+	            #set($startPageNumber = 1)
+	        #end
+	        #set($endPageNumber = $startPageNumber + $paging_near_steps - 1)
+	        #if($endPageNumber > $pages) 
+	            #set($endPageNumber = $pages)
+	        #end
+	        #if($endPageNumber - $startPageNumber < $paging_near_steps) 
+	            #set($startPageNumber = $endPageNumber - $paging_near_steps)
+	            #if($startPageNumber <= 0 ) 
+	                #set($startPageNumber = 1)
+	            #end
+	        #end
+	        
+	        #if($startPageNumber>2)
+	        	#checkClickable("1" 1  1	$pageRequestURL $dispType)
+    		#end
+            #foreach($page_index in [$startPageNumber..$endPageNumber])
+            	#if($page_index==0)
+					<span>...</span>
+				#else
+					#if($page_index==$curPageNum)
+						#checkClickable("" $page_index 0	$pageRequestURL $dispType)
+					#else
+						#checkClickable($page_index $page_index 1	$pageRequestURL $dispType)
+					#end
+				#end
+            #end
+            
+            #if($endPageNumber!=$pages)
+				#checkClickable($pages $pages  1	$pageRequestURL $dispType)
+    		#end
+
+            #* 下一页控制 *#
+                #if($pages != $curPageNum)
+                #* 可点 *#
+                    #set($nextPageIndex=$curPageNum + 1)
+                    #checkClickable($nextPageIndex $dispNextPage 1 $pageRequestURL $dispType)
+                #* 不可点 *#
+                #else
+                    #checkClickable("" $dispNextPageDis 0 $pageRequestURL $dispType)
+                #end
+        #end
+    #end
+
+
+
+
+
+
+
+
+    #macro(checkClickable $pageIndex $pageDisp $clickable $pageRequestURL $dispType)
+        #set($pageRequestURLFix = $stringUtil.replace($pageRequestURL, "[PAGINATION_PAGE_INDEX]", "$pageIndex"))
+
+        #if($dispType == "normal")
+            #if($clickable == 1)
+                <li><a href="${pageRequestURLFix}">${pageDisp}</a></li>
+            #else
+                #if(${curPageNum} == ${pageIndex})
+                    <li class="active"><span>${pageDisp}</span></li>
+                #else
+                    <li class="disabled"><a href="javascript:;">${pageDisp}</a></li>
+                #end
+            #end
+        #else
+            #if($clickable == 1)
+                <li><a href="#" class="j a_page_num" pageNum="$pageIndex">${pageDisp}</a></li>
+            #else
+                #if(${curPageNum} == $pageIndex)
+                    <li class="active"><span>${pageDisp}</span></li>
+                #else
+                    <li class="disabled"><span>${pageDisp}</span></li>
+                #end
+            #end
+        #end
+    #end
+
+
+
+
+    #macro(paginationHelper	$pageResult $pageRequestURL)
+        #pagination($pageResult $pageRequestURL "normal")
+    #end
