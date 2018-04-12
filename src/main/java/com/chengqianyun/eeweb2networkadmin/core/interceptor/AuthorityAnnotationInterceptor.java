@@ -94,10 +94,10 @@ public class AuthorityAnnotationInterceptor extends HandlerInterceptorAdapter {
 				|| currentURL.indexOf("/nopermission") != -1) {
 			return true;
 		}
-		if(!hasAuth(currentURL, loginAccount)){
-			response.sendRedirect(basePath);
-			return false;
-		}
+//		if(!hasAuth(currentURL, loginAccount)){
+//			response.sendRedirect(basePath);
+//			return false;
+//		}
 		return true;
 	}
 

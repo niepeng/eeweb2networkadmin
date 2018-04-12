@@ -25,17 +25,17 @@
 			<property name="forceBigDecimals" value="false" />
 		</javaTypeResolver>
 		<!-- targetProject:自动生成代码的位置 -->
-		<javaModelGenerator targetPackage="com.hd.entitys.act" targetProject="src/main/java">
+		<javaModelGenerator targetPackage="com.chengqianyun.eeweb2networkadmin.biz.entitys" targetProject="src/main/java">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
-		<sqlMapGenerator targetPackage="com.hd.entitys.act" targetProject="src/main/java">
+		<sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
-		<javaClientGenerator targetPackage="com.hd.entitys.act" targetProject="src/main/java" type="XMLMAPPER">
+		<javaClientGenerator targetPackage="com.chengqianyun.eeweb2networkadmin.biz.entitys" targetProject="src/main/java" type="XMLMAPPER">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
-		<table schema="" tableName="t_activity_cal" domainObjectName="ActivityCal"  enableCountByExample="false"
+		<table schema="" tableName="t_area" domainObjectName="Area"  enableCountByExample="false"
 		enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
 		</table>
 	</context>

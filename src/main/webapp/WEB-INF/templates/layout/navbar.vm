@@ -47,27 +47,78 @@
 
           #if("$!nav_set" == "")
           <ul class="nav nav-list" id="primary_nav">
-              #foreach($auth in ${authTree})
-                  #if($loginSessionInfo.authCodes.contains($auth.code) )
-                      #if(${auth.type}=='menu')
-                          #set($showMenu = $!{auth.code} == "$!openMenu" )
-                          <li #if($showMenu) class="open" #end>
-                              <a href="#" class="dropdown-toggle">
-                                  <i class="$!{auth.css}"></i>
-                                  <span class="menu-text">$!{auth.name}</span>
-                                  <b class="arrow icon-angle-down"></b>
-                              </a>
-                              <ul class="submenu" #if($showMenu) style="display: block;" #end >
-                                  #foreach($auth2 in ${auth.children})
-                                      #if($loginSessionInfo.authCodes.contains($auth2.code) )
-                                      <li><a href="${www}${auth2.url}">$!{auth2.name}</a></li>
-                                      #end
-                                  #end
-                              </ul>
-                          </li>
-                      #end
-                #end
-              #end
+##              #foreach($auth in ${authTree})
+##                  #if($loginSessionInfo.authCodes.contains($auth.code) )
+##                      #if(${auth.type}=='menu')
+##                          #set($showMenu = $!{auth.code} == "$!openMenu" )
+##                          <li #if($showMenu) class="open" #end>
+##                              <a href="#" class="dropdown-toggle">
+##                                  <i class="$!{auth.css}"></i>
+##                                  <span class="menu-text">$!{auth.name}</span>
+##                                  <b class="arrow icon-angle-down"></b>
+##                              </a>
+##                              <ul class="submenu" #if($showMenu) style="display: block;" #end >
+##                                  #foreach($auth2 in ${auth.children})
+##                                      #if($loginSessionInfo.authCodes.contains($auth2.code) )
+##                                      <li><a href="${www}${auth2.url}">$!{auth2.name}</a></li>
+##                                      #end
+##                                  #end
+##                              </ul>
+##                          </li>
+##                      #end
+##                #end
+##              #end
+
+                  <li class="open">
+                    <a href="#" class="dropdown-toggle">
+                      <i class="icon-tasks"></i>
+                      <span class="menu-text">实时管理</span>
+                      <b class="arrow icon-angle-down"></b>
+                    </a>
+                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
+                      <li><a href="${www}/intime/dataList">实时数据</a></li>
+                      <li><a href="${www}/aaa.html">实时曲线</a></li>
+                    </ul>
+                  </li>
+
+
+                  <li  class="open">
+                    <a href="#" class="dropdown-toggle">
+                      <i class="icon-tasks"></i>
+                      <span class="menu-text">历史管理</span>
+                      <b class="arrow icon-angle-down"></b>
+                    </a>
+                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
+                      <li><a href="${www}/aaa.html">历史数据</a></li>
+                      <li><a href="${www}/aaa.html">历史曲线</a></li>
+                    </ul>
+                  </li>
+
+
+                  <li  class="open" #if($showMenu) class="open" #end>
+                    <a href="#" class="dropdown-toggle">
+                      <i class="icon-tasks"></i>
+                      <span class="menu-text">设备管理</span>
+                      <b class="arrow icon-angle-down"></b>
+                    </a>
+                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
+                      <li><a href="${www}/aaa.html">区域管理</a></li>
+                      <li><a href="${www}/aaa.html">传感器管理</a></li>
+                    </ul>
+                  </li>
+
+                  <li  class="open" #if($showMenu) class="open" #end>
+                    <a href="#" class="dropdown-toggle">
+                      <i class="icon-tasks"></i>
+                      <span class="menu-text">系统设置</span>
+                      <b class="arrow icon-angle-down"></b>
+                    </a>
+                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
+                      <li><a href="${www}/aaa.html">系统设置</a></li>
+                      <li><a href="${www}/aaa.html">报警管理</a></li>
+                    </ul>
+                  </li>
+
           </ul>
           #end
 

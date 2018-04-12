@@ -1,0 +1,146 @@
+
+<style>
+  .blockcell {
+    height: 30px;line-height: 80x;margin-top:20px;
+  }
+
+  .blockcell_one {
+    color: #fff;
+    float: left;width: 180px;
+    margin-left: 20px;
+    font-size:13px; text-align: center;
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  .blockcell_one_today {
+    background-color: #aed232;
+  }
+
+  .blockcell_one_yesterday {
+    background-color: #5c829c;
+  }
+
+  .blockcell_one_all {
+    background-color: #444e81;
+  }
+
+
+
+</style>
+
+<script src="${www}/js/my97DatePicker/WdatePicker.js"></script>
+
+
+<div class="main-content">
+  <div class="breadcrumbs" id="breadcrumbs">
+    <script type="text/javascript">
+      try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+    </script>
+    <ul class="breadcrumb">
+      <li>
+        <i class="icon-home home-icon"></i>
+        <a href="${www}/sp/main">主页</a>
+      </li>
+      <li class="active">数据统计</li>
+    </ul><!-- .breadcrumb -->
+    <div class="nav-search" id="nav-search">
+    </div><!-- #nav-search -->
+  </div>
+  <div class="page-content">
+    <div class="container-fluid">
+      #if(${msg})
+        <div>
+          #if(${success})
+            <li class="text-success">$!{msg}</li>
+          #else
+            <li class="text-danger">$!{msg}</li>
+          #end
+        </div>
+      #end
+      <div class="dataTables_wrapper">
+        <div class="row">
+          <div class="col-sm-11">
+            <form class="form-inline" role="form">
+              <div class="form-group">
+                <label>指定日期：</label>
+                <input type="text" class="input-date" id="startTimeStr" name="startTimeStr" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd'})"  value="$dateUtil.getDate($startDate, 'yyyy-MM-dd')">
+              </div>
+
+              <div class="form-group">
+                <label>——</label>
+                <input type="text" class="input-date" id="endTimeStr" name="endTimeStr" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd'})"  value="$dateUtil.getDate($endDate, 'yyyy-MM-dd')">
+              </div>
+
+
+              <div class="form-group">
+                <button class="btn btn-xs btn-primary" type="submit">查询</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+
+      ## -------------------------- 今日情况 -----------------------------------
+
+        #set($showTime = $dateUtil.getDate($today.time, 'yyyy-MM-dd'))
+
+        <div class="blockcell">
+          <div class="blockcell_one blockcell_one_today">
+            $showTime  <br/>
+            今日放款金额(万元)  <br/>
+            $!arithUtil.div2Str($today.withdrawMoney, 1000000, 2) xxx
+          </div>
+          <div class="blockcell_one blockcell_one_today">
+            $showTime  <br/>
+            今日放款笔数  <br/>
+            $today.withdrawTimes
+          </div>
+          <div class="blockcell_one blockcell_one_today">
+            $showTime  <br/>
+            今日拒绝笔数 <br/>
+            $today.refuseTimes
+          </div>
+          <div class="blockcell_one blockcell_one_today">
+            $showTime <br/>
+            今日申请笔数 <br/>
+            $today.applyTimes
+          </div>
+        </div>
+
+        <br/> <br/>
+
+
+        <div class="blockcell">
+          <div class="blockcell_one blockcell_one_today">
+            $showTime <br/>
+            今日应收金额(万元)  <br/>
+            $!arithUtil.div2Str($today.receivableMoney, 1000000, 2) zz
+          </div>
+          <div class="blockcell_one blockcell_one_today">
+            $showTime  <br/>
+            今日已收金额(万元)  <br/>
+            $!arithUtil.div2Str($today.receivedMoney, 1000000, 2) zzz1
+          </div>
+          <div class="blockcell_one blockcell_one_today">
+            $showTime  <br/>
+            今日待收金额(万元)  <br/>
+            $!arithUtil.div2Str($today.waitReceivedMoney, 1000000, 2) 3333
+          </div>
+          <div class="blockcell_one blockcell_one_today">
+            $showTime  <br/>
+            今日续期金额(万元)  <br/>
+            $!arithUtil.div2Str($today.renewalMoney, 1000000, 2) 444
+          </div>
+        </div>
+
+
+        <br/> <br/>
+
+
+
+
+      </div>
+    </div>
+  </div><!-- /.page-content -->
+</div><!-- /.main-content -->
