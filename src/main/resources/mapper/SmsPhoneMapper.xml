@@ -1,53 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.chengqianyun.eeweb2networkadmin.biz.entitys.AreaMapper" >
-  <resultMap id="BaseResultMap" type="com.chengqianyun.eeweb2networkadmin.biz.entitys.Area" >
+<mapper namespace="com.chengqianyun.eeweb2networkadmin.biz.entitys.SmsPhoneMapper" >
+  <resultMap id="BaseResultMap" type="com.chengqianyun.eeweb2networkadmin.biz.entitys.SmsPhone" >
     <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="note" property="note" jdbcType="VARCHAR" />
-    <result column="sms_phones" property="smsPhones" jdbcType="VARCHAR" />
     <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
     <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
     <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
     <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, note, sms_phones, created_at, updated_at, created_by, updated_by
+    id, phone, name, created_at, updated_at, created_by, updated_by
   </sql>
-
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from t_area
+    from t_sms_phone
     where id = #{id,jdbcType=BIGINT}
   </select>
-
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from t_area
+    delete from t_sms_phone
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.Area" >
-    insert into t_area ( name, note,
-      sms_phones, created_at, updated_at, 
-      created_by, updated_by)
-    values (#{name,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR},
-      #{smsPhones,jdbcType=VARCHAR}, now(), now(),
-      #{createdBy,jdbcType=VARCHAR}, #{updatedBy,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.SmsPhone" >
+    insert into t_sms_phone ( phone, name,
+      created_at, updated_at, created_by, 
+      updated_by)
+    values (#{phone,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+      now(),now(), #{createdBy,jdbcType=VARCHAR},
+      #{updatedBy,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.Area" >
-    insert into t_area
+  <insert id="insertSelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.SmsPhone" >
+    insert into t_sms_phone
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
       </if>
+      <if test="phone != null" >
+        phone,
+      </if>
       <if test="name != null" >
         name,
-      </if>
-      <if test="note != null" >
-        note,
-      </if>
-      <if test="smsPhones != null" >
-        sms_phones,
       </if>
         created_at,
         updated_at,
@@ -62,14 +56,11 @@
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="note != null" >
-        #{note,jdbcType=VARCHAR},
-      </if>
-      <if test="smsPhones != null" >
-        #{smsPhones,jdbcType=VARCHAR},
       </if>
       now(),
       now(),
@@ -81,17 +72,14 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.Area" >
-    update t_area
+  <update id="updateByPrimaryKeySelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.SmsPhone" >
+    update t_sms_phone
     <set >
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="note != null" >
-        note = #{note,jdbcType=VARCHAR},
-      </if>
-      <if test="smsPhones != null" >
-        sms_phones = #{smsPhones,jdbcType=VARCHAR},
       </if>
         updated_at = now(),
       <if test="updatedBy != null" >
@@ -100,11 +88,10 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.Area" >
-    update t_area
-    set name = #{name,jdbcType=VARCHAR},
-      note = #{note,jdbcType=VARCHAR},
-      sms_phones = #{smsPhones,jdbcType=VARCHAR},
+  <update id="updateByPrimaryKey" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.SmsPhone" >
+    update t_sms_phone
+    set phone = #{phone,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
       updated_at = now(),
       updated_by = #{updatedBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

@@ -94,7 +94,7 @@ CREATE TABLE `t_device_info` (
 
 CREATE TABLE `t_out_condition` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `device_info_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '关联设备信息表id',
+  `device_info_id` bigint(20) NOT NULL default 0 COMMENT '关联设备信息表id',
   `open_closed` smallint(2) unsigned not NULL  DEFAULT 0 COMMENT '打开关闭条件类型:1打开,2关闭',
   `device_type` int(11) not NULL  DEFAULT 0 COMMENT '条件设备类型:温度,湿度,光照等',
   `device_address` int(11) not NULL  DEFAULT 0 COMMENT '条件设备地址',

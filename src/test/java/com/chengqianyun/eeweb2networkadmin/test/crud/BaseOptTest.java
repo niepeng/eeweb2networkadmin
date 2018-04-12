@@ -1,10 +1,13 @@
 package com.chengqianyun.eeweb2networkadmin.test.crud;
 
 
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.AreaMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Setting;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.SettingMapper;
 import com.chengqianyun.eeweb2networkadmin.test.BaseTest;
 import org.junit.Assert;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -18,9 +21,19 @@ public class BaseOptTest extends BaseTest {
   @Autowired
   private SettingMapper settingMapper;
 
-  public void test() {
+  @Autowired
+  private AreaMapper areaMapper;
+
+  @Test
+  public void test1() {
     Setting setting = settingMapper.selectByCode("recommend_subject");
     Assert.assertTrue(setting != null && setting.getId() == 3L);
+  }
+
+  @Test
+  public void test2() {
+    Area area = areaMapper.selectByPrimaryKey(1L);
+    Assert.assertTrue(area == null);
   }
 
 }

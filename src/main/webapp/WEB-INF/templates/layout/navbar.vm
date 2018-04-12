@@ -82,6 +82,18 @@
                   </li>
 
 
+                  <li class="open">
+                    <a href="#" class="dropdown-toggle">
+                      <i class="icon-tasks"></i>
+                      <span class="menu-text">报警记录</span>
+                      <b class="arrow icon-angle-down"></b>
+                    </a>
+                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
+                      <li><a href="${www}/aaa.html">报警数据</a></li>
+                    </ul>
+                  </li>
+
+
                   <li  class="open">
                     <a href="#" class="dropdown-toggle">
                       <i class="icon-tasks"></i>
@@ -103,7 +115,8 @@
                     </a>
                     <ul class="submenu" #if($showMenu) style="display: block;" #end >
                       <li><a href="${www}/aaa.html">区域管理</a></li>
-                      <li><a href="${www}/aaa.html">传感器管理</a></li>
+                      <li><a href="${www}/aaa.html">环境设备管理</a></li>
+                      <li><a href="${www}/aaa.html">开关设备管理</a></li>
                     </ul>
                   </li>
 

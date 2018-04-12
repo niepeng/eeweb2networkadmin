@@ -3,6 +3,7 @@ package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
 import java.util.Date;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * @author 聂鹏
@@ -10,6 +11,7 @@ import lombok.Data;
  * @date 18/3/13
  */
 @Data
+@ToString
 public class Setting {
 
   private Long id;
@@ -25,5 +27,13 @@ public class Setting {
   private String createdBy;
 
   private String updatedBy;
+
+
+  // ==============  扩展属性  =================
+
+
+  // ==============  扩展方法  =================
+
+
 
 }

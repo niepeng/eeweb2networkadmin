@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="area_id" property="areaId" jdbcType="BIGINT" />
+    <result column="sn" property="sn" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="temp_up" property="tempUp" jdbcType="INTEGER" />
+    <result column="temp_down" property="tempDown" jdbcType="INTEGER" />
+    <result column="temp_dev" property="tempDev" jdbcType="INTEGER" />
+    <result column="humi_up" property="humiUp" jdbcType="INTEGER" />
+    <result column="humi_down" property="humiDown" jdbcType="INTEGER" />
+    <result column="humi_dev" property="humiDev" jdbcType="INTEGER" />
+    <result column="shine_up" property="shineUp" jdbcType="INTEGER" />
+    <result column="shine_down" property="shineDown" jdbcType="INTEGER" />
+    <result column="shine_dev" property="shineDev" jdbcType="INTEGER" />
+    <result column="pressure_up" property="pressureUp" jdbcType="INTEGER" />
+    <result column="pressure_down" property="pressureDown" jdbcType="INTEGER" />
+    <result column="pressure_dev" property="pressureDev" jdbcType="INTEGER" />
+    <result column="control_way" property="controlWay" jdbcType="SMALLINT" />
+    <result column="relation_out_id" property="relationOutId" jdbcType="BIGINT" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, area_id, sn, name, tag, address, type, temp_up, temp_down, temp_dev, humi_up, 
+    humi_down, humi_dev, shine_up, shine_down, shine_dev, pressure_up, pressure_down, 
+    pressure_dev, control_way, relation_out_id, created_at, updated_at, created_by, updated_by
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_device_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_device_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo" >
+    insert into t_device_info (area_id, sn,
+      name, tag, address, 
+      type, temp_up, temp_down, 
+      temp_dev, humi_up, humi_down, 
+      humi_dev, shine_up, shine_down, 
+      shine_dev, pressure_up, pressure_down, 
+      pressure_dev, control_way, relation_out_id, 
+      created_at, updated_at, created_by, 
+      updated_by)
+    values (#{areaId,jdbcType=BIGINT}, #{sn,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, #{address,jdbcType=INTEGER}, 
+      #{type,jdbcType=INTEGER}, #{tempUp,jdbcType=INTEGER}, #{tempDown,jdbcType=INTEGER}, 
+      #{tempDev,jdbcType=INTEGER}, #{humiUp,jdbcType=INTEGER}, #{humiDown,jdbcType=INTEGER}, 
+      #{humiDev,jdbcType=INTEGER}, #{shineUp,jdbcType=INTEGER}, #{shineDown,jdbcType=INTEGER}, 
+      #{shineDev,jdbcType=INTEGER}, #{pressureUp,jdbcType=INTEGER}, #{pressureDown,jdbcType=INTEGER}, 
+      #{pressureDev,jdbcType=INTEGER}, #{controlWay,jdbcType=SMALLINT}, #{relationOutId,jdbcType=BIGINT}, 
+      now(), now(), #{createdBy,jdbcType=VARCHAR},
+      #{updatedBy,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo" >
+    insert into t_device_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="areaId != null" >
+        area_id,
+      </if>
+      <if test="sn != null" >
+        sn,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="tag != null" >
+        tag,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="tempUp != null" >
+        temp_up,
+      </if>
+      <if test="tempDown != null" >
+        temp_down,
+      </if>
+      <if test="tempDev != null" >
+        temp_dev,
+      </if>
+      <if test="humiUp != null" >
+        humi_up,
+      </if>
+      <if test="humiDown != null" >
+        humi_down,
+      </if>
+      <if test="humiDev != null" >
+        humi_dev,
+      </if>
+      <if test="shineUp != null" >
+        shine_up,
+      </if>
+      <if test="shineDown != null" >
+        shine_down,
+      </if>
+      <if test="shineDev != null" >
+        shine_dev,
+      </if>
+      <if test="pressureUp != null" >
+        pressure_up,
+      </if>
+      <if test="pressureDown != null" >
+        pressure_down,
+      </if>
+      <if test="pressureDev != null" >
+        pressure_dev,
+      </if>
+      <if test="controlWay != null" >
+        control_way,
+      </if>
+      <if test="relationOutId != null" >
+        relation_out_id,
+      </if>
+        created_at,
+        updated_at,
+      <if test="createdBy != null" >
+        created_by,
+      </if>
+      <if test="updatedBy != null" >
+        updated_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="areaId != null" >
+        #{areaId,jdbcType=BIGINT},
+      </if>
+      <if test="sn != null" >
+        #{sn,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null" >
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="tempUp != null" >
+        #{tempUp,jdbcType=INTEGER},
+      </if>
+      <if test="tempDown != null" >
+        #{tempDown,jdbcType=INTEGER},
+      </if>
+      <if test="tempDev != null" >
+        #{tempDev,jdbcType=INTEGER},
+      </if>
+      <if test="humiUp != null" >
+        #{humiUp,jdbcType=INTEGER},
+      </if>
+      <if test="humiDown != null" >
+        #{humiDown,jdbcType=INTEGER},
+      </if>
+      <if test="humiDev != null" >
+        #{humiDev,jdbcType=INTEGER},
+      </if>
+      <if test="shineUp != null" >
+        #{shineUp,jdbcType=INTEGER},
+      </if>
+      <if test="shineDown != null" >
+        #{shineDown,jdbcType=INTEGER},
+      </if>
+      <if test="shineDev != null" >
+        #{shineDev,jdbcType=INTEGER},
+      </if>
+      <if test="pressureUp != null" >
+        #{pressureUp,jdbcType=INTEGER},
+      </if>
+      <if test="pressureDown != null" >
+        #{pressureDown,jdbcType=INTEGER},
+      </if>
+      <if test="pressureDev != null" >
+        #{pressureDev,jdbcType=INTEGER},
+      </if>
+      <if test="controlWay != null" >
+        #{controlWay,jdbcType=SMALLINT},
+      </if>
+      <if test="relationOutId != null" >
+        #{relationOutId,jdbcType=BIGINT},
+      </if>
+      now(),
+      now(),
+      <if test="createdBy != null" >
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedBy != null" >
+        #{updatedBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo" >
+    update t_device_info
+    <set >
+      <if test="areaId != null" >
+        area_id = #{areaId,jdbcType=BIGINT},
+      </if>
+      <if test="sn != null" >
+        sn = #{sn,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null" >
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="tempUp != null" >
+        temp_up = #{tempUp,jdbcType=INTEGER},
+      </if>
+      <if test="tempDown != null" >
+        temp_down = #{tempDown,jdbcType=INTEGER},
+      </if>
+      <if test="tempDev != null" >
+        temp_dev = #{tempDev,jdbcType=INTEGER},
+      </if>
+      <if test="humiUp != null" >
+        humi_up = #{humiUp,jdbcType=INTEGER},
+      </if>
+      <if test="humiDown != null" >
+        humi_down = #{humiDown,jdbcType=INTEGER},
+      </if>
+      <if test="humiDev != null" >
+        humi_dev = #{humiDev,jdbcType=INTEGER},
+      </if>
+      <if test="shineUp != null" >
+        shine_up = #{shineUp,jdbcType=INTEGER},
+      </if>
+      <if test="shineDown != null" >
+        shine_down = #{shineDown,jdbcType=INTEGER},
+      </if>
+      <if test="shineDev != null" >
+        shine_dev = #{shineDev,jdbcType=INTEGER},
+      </if>
+      <if test="pressureUp != null" >
+        pressure_up = #{pressureUp,jdbcType=INTEGER},
+      </if>
+      <if test="pressureDown != null" >
+        pressure_down = #{pressureDown,jdbcType=INTEGER},
+      </if>
+      <if test="pressureDev != null" >
+        pressure_dev = #{pressureDev,jdbcType=INTEGER},
+      </if>
+      <if test="controlWay != null" >
+        control_way = #{controlWay,jdbcType=SMALLINT},
+      </if>
+      <if test="relationOutId != null" >
+        relation_out_id = #{relationOutId,jdbcType=BIGINT},
+      </if>
+        updated_at = now(),
+      <if test="updatedBy != null" >
+        updated_by = #{updatedBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo" >
+    update t_device_info
+    set area_id = #{areaId,jdbcType=BIGINT},
+      sn = #{sn,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      tag = #{tag,jdbcType=VARCHAR},
+      address = #{address,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      temp_up = #{tempUp,jdbcType=INTEGER},
+      temp_down = #{tempDown,jdbcType=INTEGER},
+      temp_dev = #{tempDev,jdbcType=INTEGER},
+      humi_up = #{humiUp,jdbcType=INTEGER},
+      humi_down = #{humiDown,jdbcType=INTEGER},
+      humi_dev = #{humiDev,jdbcType=INTEGER},
+      shine_up = #{shineUp,jdbcType=INTEGER},
+      shine_down = #{shineDown,jdbcType=INTEGER},
+      shine_dev = #{shineDev,jdbcType=INTEGER},
+      pressure_up = #{pressureUp,jdbcType=INTEGER},
+      pressure_down = #{pressureDown,jdbcType=INTEGER},
+      pressure_dev = #{pressureDev,jdbcType=INTEGER},
+      control_way = #{controlWay,jdbcType=SMALLINT},
+      relation_out_id = #{relationOutId,jdbcType=BIGINT},
+      updated_at = now(),
+      updated_by = #{updatedBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
