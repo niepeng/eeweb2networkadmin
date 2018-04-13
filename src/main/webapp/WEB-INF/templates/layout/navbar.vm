@@ -69,7 +69,8 @@
 ##                #end
 ##              #end
 
-                  <li class="open">
+                  #set($showMenu = "$!openMenu" == "intime")
+                  <li #if($showMenu) class="open" #end>
                     <a href="#" class="dropdown-toggle">
                       <i class="icon-tasks"></i>
                       <span class="menu-text">实时管理</span>
@@ -81,8 +82,8 @@
                     </ul>
                   </li>
 
-
-                  <li class="open">
+                  #set($showMenu = "$!openMenu" == "alarm")
+                  <li #if($showMenu) class="open" #end>
                     <a href="#" class="dropdown-toggle">
                       <i class="icon-tasks"></i>
                       <span class="menu-text">报警记录</span>
@@ -94,7 +95,8 @@
                   </li>
 
 
-                  <li  class="open">
+                  #set($showMenu = "$!openMenu" == "history")
+                  <li #if($showMenu) class="open" #end>
                     <a href="#" class="dropdown-toggle">
                       <i class="icon-tasks"></i>
                       <span class="menu-text">历史管理</span>
@@ -107,20 +109,22 @@
                   </li>
 
 
-                  <li  class="open" #if($showMenu) class="open" #end>
+                  #set($showMenu = "$!openMenu" == "device")
+                  <li #if($showMenu) class="open" #end>
                     <a href="#" class="dropdown-toggle">
                       <i class="icon-tasks"></i>
                       <span class="menu-text">设备管理</span>
                       <b class="arrow icon-angle-down"></b>
                     </a>
                     <ul class="submenu" #if($showMenu) style="display: block;" #end >
-                      <li><a href="${www}/aaa.html">区域管理</a></li>
+                      <li><a href="${www}/device/areaList">区域管理</a></li>
                       <li><a href="${www}/aaa.html">环境设备管理</a></li>
                       <li><a href="${www}/aaa.html">开关设备管理</a></li>
                     </ul>
                   </li>
 
-                  <li  class="open" #if($showMenu) class="open" #end>
+                  #set($showMenu = "$!openMenu" == "setting")
+                  <li #if($showMenu) class="open" #end>
                     <a href="#" class="dropdown-toggle">
                       <i class="icon-tasks"></i>
                       <span class="menu-text">系统设置</span>

@@ -38,7 +38,7 @@ public class DeviceInfo {
     private int address;
 
     /**
-     * 设备类型:按位存储
+     * 设备类型: DeviceTypeEnum 按位存储
      */
     private int type;
 

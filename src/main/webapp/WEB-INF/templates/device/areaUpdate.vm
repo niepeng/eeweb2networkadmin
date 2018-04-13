@@ -1,0 +1,115 @@
+
+<script src="${www}/js/my97DatePicker/WdatePicker.js"></script>
+
+<div class="main-content">
+  <div class="breadcrumbs" id="breadcrumbs">
+    <script src="${www}/js/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript">
+      try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+
+      jQuery(function($) {
+        $('.input-mask-date').mask('9999-99-99');
+      });
+
+    </script>
+
+    <ul class="breadcrumb">
+      <li>
+        <i class="icon-home home-icon"></i>
+        <a href="${www}/main">主页</a>
+      </li>
+
+      <li>
+        <a href="${www}/device/areaList">区域管理</a>
+      </li>
+      <li class="active">修改</li>
+    </ul><!-- .breadcrumb -->
+
+    <div class="nav-search" id="nav-search">
+    ##      <form class="form-search">
+##						<span class="input-icon">
+##							<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+##							<i class="icon-search nav-search-icon"></i>
+##						</span>
+##      </form>
+    </div><!-- #nav-search -->
+  </div>
+
+  <div class="page-content">
+    <div class="page-header">
+      <h1>修改</h1>
+    </div>
+
+    #if(${msg})
+      <div>
+        #if(${success})
+          <li class="text-success">$!{msg}</li>
+        #else
+          <li class="text-danger">$!{msg}</li>
+        #end
+      </div>
+    #end
+
+    <form id="inputForm" action="${www}/device/doAreaUpdate" method="post" class="form-horizontal" enctype="multipart/form-data">
+
+      <input type="hidden" name="id" value="$!area.id" />
+
+      <div class="row">
+        <div class="col-xs-12 col-md-8">
+          <div class="form-group">
+            <label class="col-md-4 col-sm-2 control-label">名称：</label>
+            <div class="col-md-8 col-sm-8">
+              <input type="text" class="col-sm-12" id="name" name="name"
+                     value="$!{area.name}">
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-xs-12 col-md-8">
+          <div class="form-group">
+            <label class="col-md-4 col-sm-2 control-label">备注：</label>
+            <div class="col-md-8 col-sm-8">
+              <input type="text" class="col-sm-12" id="note" name="note"
+                     value="$!{area.note}">
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="clearfix form-actions">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="col-sm-offset-4 col-md-9">
+              <button id="sbt" class="btn btn-info" type="submit">
+                <i id="iok" class="icon-ok bigger-110">提交</i>
+              </button>
+              <button class="btn" type="button" style="margin-left: 100px;" onclick="javascript:history.go(-1);">
+                <i class="icon-arrow-left bigger-110"></i>返回
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div><!-- /.page-content -->
+</div><!-- /.main-content -->
+
+<script src="${www}/js/youcaicommon.js"></script>
+<script type="text/javascript">
+
+  $("#sbt").click(function(e){
+    $("#iok").text("处理中");
+    $("#sbt").attr("disabled", true);
+    $("#inputForm").submit();
+
+  });
+
+</script>
+

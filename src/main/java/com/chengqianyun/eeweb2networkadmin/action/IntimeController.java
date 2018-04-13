@@ -1,7 +1,7 @@
 package com.chengqianyun.eeweb2networkadmin.action;
 
 
-import java.util.HashMap;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
+ * 实时管理
+ *
  * @author 聂鹏
  * @version 1.0
- * @email lsb@51huadian.cn
  * @date 18/4/9
  */
 @Controller
@@ -31,6 +32,7 @@ public class IntimeController extends BaseController {
       @RequestParam(value = "pageSize", required = false, defaultValue = "15") int pageSize,
       Model model) {
     try {
+      addOptMenu(model, MenuEnum.intime);
 //      PaginationQuery query = new PaginationQuery();
 //      if (queryData == null) {
 //        queryData = new HashMap<>();

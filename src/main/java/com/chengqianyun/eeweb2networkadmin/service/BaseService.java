@@ -1,7 +1,9 @@
 package com.chengqianyun.eeweb2networkadmin.service;
 
 
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.AreaMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author 聂鹏
@@ -11,5 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BaseService {
 
+  @Autowired
+  protected AreaMapper areaMapper;
 
 }

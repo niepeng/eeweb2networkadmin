@@ -2,6 +2,7 @@ package com.chengqianyun.eeweb2networkadmin.action;
 
 import com.alibaba.fastjson.JSON;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.ConsoleLoginAccount;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.HttpSessionUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.PageUtilFactory;
 import java.text.SimpleDateFormat;
@@ -77,6 +78,11 @@ public abstract class BaseController {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"), true));
 
 	}
+
+	protected void addOptMenu(Model model, MenuEnum menuEnum) {
+		model.addAttribute("openMenu",menuEnum.getName());
+	}
+
 
 	protected ConsoleLoginAccount getLoginAccount(){
 		ConsoleLoginAccount loginSession = HttpSessionUtil.getLoginSession();
