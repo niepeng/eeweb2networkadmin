@@ -73,7 +73,6 @@
               <td> $!{row.note}</td>
               <td>
                 <a href="${www}/device/areaUpdate?id=${row.id}">修改</a> ｜
-                <a href="${www}/dynamicUpdateConfig/showDetail?id=${row.id}">关联手机号</a> ｜
                 <a href="${www}/device/deleteArea?id=${row.id}" onclick="javascript:return confirm('确认要删除 $!{row.name}?');">删除</a>
               </td>
             </tr>

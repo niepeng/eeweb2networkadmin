@@ -39,13 +39,18 @@ public class DeviceService extends BaseService {
   }
 
   public void addArea(Area area) {
-    if(StringUtil.isEmpty(area.getName())) {
+    if (StringUtil.isEmpty(area.getName())) {
       throw new RuntimeException("区域名称不能为空");
     }
     Area from = areaMapper.selectByName(area.getName());
-    if(from != null) {
+    if (from != null) {
       throw new RuntimeException("当前区域名称已经存在");
     }
+    if (area.getSmsPhones() == null) {
+      areaMapper.insert(area);
+      return;
+    }
+    area.optSmsPhones();
     areaMapper.insert(area);
   }
 
@@ -69,6 +74,8 @@ public class DeviceService extends BaseService {
 
     fromDB.setName(area.getName());
     fromDB.setNote(area.getNote());
+    area.optSmsPhones();
+    fromDB.setSmsPhones(area.getSmsPhones());
     areaMapper.updateByPrimaryKey(fromDB);
   }
 

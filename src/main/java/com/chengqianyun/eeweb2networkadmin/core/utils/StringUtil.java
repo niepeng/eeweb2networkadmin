@@ -211,7 +211,6 @@ public class StringUtil extends StringUtils {
   /**
    * 得到一个字符串的长度,显示的长度,一个汉字或日韩文长度为2,英文字符长度为1
    *
-   * @param String
    *            s ,需要得到长度的字符串
    * @return int, 得到的字符串长度
    */
@@ -232,11 +231,6 @@ public class StringUtil extends StringUtils {
   /**
    * 截取一段字符的长度,不区分中英文,如果数字不正好，则少取一个字符位
    *
-   * @author patriotlml
-   * @param String
-   *            origin, 原始字符串
-   * @param int len, 截取长度(一个汉字长度按2算的)
-   * @return String, 返回的字符串
    */
   public static String substring(String origin, int len) {
     if (origin == null || origin.equals("") || len < 1)
@@ -261,23 +255,37 @@ public class StringUtil extends StringUtils {
   }
 
   /**
-   * 用于转换字符类的list为字符串
+   * 把List组合成字符串，使用 splitChar 分割。
    *
-   * @param list
-   * @param delimt
-   * @return
+   * @param value 需要组合的List
+   * @return 组合后的字符串
    */
-  public static String list2Str(List<Object> list, String delimt) {
-    if (list == null || list.isEmpty()) {
-      return null;
+  public static String assemble(List<String> value, String splitChar) {
+    if (value == null || value.size() == 0) {
+      return "";
     }
-    StringBuffer ids = new StringBuffer();
-    for (Object value : list) {
-      ids.append(value).append(delimt);
+    StringBuilder temp = new StringBuilder();
+    for (String s : value) {
+      temp.append(s);
+      temp.append(splitChar);
     }
-    return ids.substring(0, ids.length() - 1);
-
+    temp.deleteCharAt(temp.length() - 1);
+    return temp.toString();
   }
+
+  public static String assemble(String[] array, String splitChar) {
+    if (array == null || array.length == 0) {
+      return "";
+    }
+    StringBuilder temp = new StringBuilder();
+    for (String s : array) {
+      temp.append(s);
+      temp.append(splitChar);
+    }
+    temp.deleteCharAt(temp.length() - 1);
+    return temp.toString();
+  }
+
 
   public static boolean sql_Injection(String str) {
     if(str==null||"".equals(str)){

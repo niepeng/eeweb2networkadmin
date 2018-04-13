@@ -1,5 +1,6 @@
 package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
+import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import java.util.Date;
 import lombok.Data;
 import lombok.ToString;
@@ -29,6 +30,19 @@ public class Area {
 
 
     // ==============  扩展方法  =================
+
+    public void optSmsPhones() {
+        if (smsPhones == null) {
+            return;
+        }
+        smsPhones = smsPhones.trim().replaceAll("，", ",");
+        String[] smsPhoneArray = smsPhones.split(",");
+        for (int i = 0; i < smsPhoneArray.length; i++) {
+            smsPhoneArray[i] = smsPhoneArray[i].trim();
+        }
+
+        smsPhones = StringUtil.assemble(smsPhoneArray, ",");
+    }
 
 
 }
