@@ -25,7 +25,7 @@
   </div>
   <div class="page-content">
     <div class="page-header">
-      <h1>环境设备管理</h1>
+      <h1>设备管理</h1>
     </div>
     <div class="container-fluid">
 
@@ -60,7 +60,7 @@
             </form>
           </div>
           <div class="col-sm-1 text-right">
-            <a href="${www}/device/areaAdd" class="btn btn-success btn-xs">添加</a>
+            <a href="${www}/device/deviceAdd" class="btn btn-success btn-xs">添加</a>
           </div>
         </div>
         <table id="dataTableResizeCol" class="table table-striped table-bordered table-hover dataTable">
@@ -83,13 +83,19 @@
                   #if($!{row.hasTemp()}) 温度: $!unitUtil.changeTemp($!{row.tempDown})℃ ~ $!unitUtil.changeTemp($!{row.tempUp}) ℃ ($!unitUtil.changeTemp($!{row.tempDev})℃)<br/> #end
                   #if($!{row.hasHumi()}) 湿度: $!unitUtil.changeHumi($!{row.humiDown})%RH ~ $!unitUtil.changeHumi($!{row.humiUp})%RH ($!unitUtil.changeHumi($!{row.humiDev})%RH)<br/> #end
                   #if($!{row.hasPower()}) 电量 <br/> #end
-                  #if($!{row.hasShine()}) 光照: $!unitUtil.changeShine($!{row.shineDown})Lx ~ $!unitUtil.changeShine($!{row.shineUp})Lx ($!unitUtil.changeShine($!{row.shineDev})Lx)<br/> #end
+                  #if($!{row.hasShine()}) 光照: $!{row.shineDown} Lx ~ $!{row.shineUp}Lx ($!{row.shineDev}Lx)<br/> #end
                   #if($!{row.hasPressure()}) 压力: $!unitUtil.changePressure($!{row.pressureDown})Pa ~ $!unitUtil.changePressure($!{row.pressureUp})Pa ($!unitUtil.changePressure($!{row.pressureDev})Pa)<br/> #end
                   #if($!{row.hasSmoke()}) 烟感: <br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationDeviceInfo.address}<br/> #end
                   #if($!{row.hasWater()}) 浸水:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationDeviceInfo.address}<br/> #end
                   #if($!{row.haslectric()}) 停电来点:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationDeviceInfo.address}<br/> #end
+                  #if($!{row.hasOut()}) 控制通道: $!{row.controlWay}<br/>
+
+                  #end
               </td>
               <td>
+                #if($!{row.hasOut()})
+                  <a href="${www}/device/outConditionList?id=${row.id}">配置开关条件</a><br/>
+                #end
                 <a href="${www}/device/areaUpdate2221?id=${row.id}">修改</a> ｜
                 <a href="${www}/device/deleteArea2222?id=${row.id}" onclick="javascript:return confirm('确认要删除 $!{row.name}?');">删除</a>
               </td>

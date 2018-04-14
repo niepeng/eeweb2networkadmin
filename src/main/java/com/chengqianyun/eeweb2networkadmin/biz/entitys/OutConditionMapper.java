@@ -1,6 +1,7 @@
 package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutCondition;
+import java.util.List;
 
 public interface OutConditionMapper {
     int deleteByPrimaryKey(Long id);
@@ -14,4 +15,6 @@ public interface OutConditionMapper {
     int updateByPrimaryKeySelective(OutCondition record);
 
     int updateByPrimaryKey(OutCondition record);
+
+    List<OutCondition> listByDeviceId(long deviceId);
 }

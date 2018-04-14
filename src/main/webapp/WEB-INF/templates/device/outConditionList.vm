@@ -1,0 +1,110 @@
+<div class="main-content">
+  <div class="breadcrumbs" id="breadcrumbs">
+    <script type="text/javascript">
+      try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+
+    </script>
+
+    <ul class="breadcrumb">
+      <li>
+        <i class="icon-home home-icon"></i>
+        <a href="${www}/main">主页</a>
+      </li>
+
+      <li class=""><a href="${www}/device/deviceList">设备管理</a></li>
+      <li class="active">开关条件配置</li>
+    </ul><!-- .breadcrumb -->
+
+    <div class="nav-search" id="nav-search">
+      <form class="form-search">
+      ##         <span class="input-icon">
+##							<input type="text" placeholder="Search ..." class="nav-search-input"  id="nav-search-input" autocomplete="off"/>
+##							<i class="icon-search nav-search-icon"></i>
+##						</span>
+      </form>
+    </div><!-- #nav-search -->
+  </div>
+  <div class="page-content">
+    <div class="page-header">
+      <h1>$!{deviceInfo.area.name}:&nbsp; $!{deviceInfo.name}($!deviceInfo.tag)</h1>
+    </div>
+    <div class="container-fluid">
+
+      #if(${msg})
+        <div>
+          #if(${success})
+            <li class="text-success">$!{msg}</li>
+          #else
+            <li class="text-danger">$!{msg}</li>
+          #end
+        </div>
+      #end
+
+      <div class="dataTables_wrapper">
+        <div class="row">
+          <div class="col-sm-11">
+##            <form class="form-inline" role="form">
+##              <div class="form-group">
+##                <label>名称：</label>
+##                <input type="text" name="name" value="$!{name}">
+##              </div>
+##              <div class="form-group">
+##                <button class="btn btn-xs btn-primary" type="submit">查询</button>
+##              </div>
+##            </form>
+          </div>
+          <div class="col-sm-1 text-right">
+            <a href="${www}/device/outConditionAdd?id=$!{deviceInfo.id}" class="btn btn-success btn-xs">添加条件</a>
+          </div>
+        </div>
+        <table id="dataTableResizeCol" class="table table-striped table-bordered table-hover dataTable">
+          <thead>
+          <tr>
+            <th>条件类型</th>
+            <th>条件设备</th>
+            <th>条件开关类型</th>
+            <th>条件值</th>
+            <th>创建修改时间</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody>
+            #foreach($tmpOutCondition in $deviceInfo.outConditionList)
+            <tr>
+              <td> $!applicationUtil.getOneById($!{tmpOutCondition.deviceType}).name</td>
+              <td> $!{tmpOutCondition.deviceInfo.name}($!{tmpOutCondition.deviceInfo.tag})<br>地址: $!{tmpOutCondition.deviceInfo.address}</td>
+              <td> #if($!{tmpOutCondition.openClosed} == 1) 打开 #else 关闭 #end</td>
+              <td> #if($!{tmpOutCondition.minMax}) 小于 #else 大于 #end
+              #if($!{tmpOutCondition.deviceInfo.hasTemp()})
+                $!unitUtil.changeTemp($!{tmpOutCondition.dataValue})℃
+
+              #elseif($!{tmpOutCondition.deviceInfo.hasHumi()})
+                $!unitUtil.changeHumi($!{tmpOutCondition.dataValue})%RH
+
+              #elseif($!{tmpOutCondition.deviceInfo.hasPower()})
+                $!unitUtil.changePower($!{tmpOutCondition.dataValue})
+
+              #elseif($!{tmpOutCondition.deviceInfo.hasShine()})
+                $!{tmpOutCondition.dataValue} Lx
+
+              #elseif($!{tmpOutCondition.deviceInfo.hasPressure()})
+                $!unitUtil.changePressure($!{tmpOutCondition.dataValue})Pa
+              #end
+              </td>
+              <td>
+                $dateUtil.getDate($!{tmpOutCondition.createdAt}, 'yyyy-MM-dd HH:mm:ss')<br/>
+                $dateUtil.getDate($!{tmpOutCondition.UpdatedAt}, 'yyyy-MM-dd HH:mm:ss')
+              </td>
+              <td>
+                <a href="${www}/device/outConditionUpdate?id=${tmpOutCondition.id}">修改</a> ｜
+                <a href="${www}/device/outConditionDelete?id=${tmpOutCondition.id}&deviceInfoId=$!{deviceInfo.id}" onclick="javascript:return confirm('确认要删除 该条件吗?');">删除</a>
+              </td>
+            </tr>
+            #end
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div><!-- /.page-content -->
+</div><!-- /.main-content -->

@@ -67,12 +67,22 @@
 
 
 
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectBySn" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
+    <include refid="Base_Column_List" />
+    from t_device_info
+    where sn = #{sn,jdbcType=VARCHAR}
+    order by id desc limit 1
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
     <include refid="Base_Column_List" />
     from t_device_info
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from t_device_info
     where id = #{id,jdbcType=BIGINT}

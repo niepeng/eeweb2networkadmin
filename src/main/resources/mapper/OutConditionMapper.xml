@@ -6,7 +6,7 @@
     <result column="device_info_id" property="deviceInfoId" jdbcType="BIGINT" />
     <result column="open_closed" property="openClosed" jdbcType="SMALLINT" />
     <result column="device_type" property="deviceType" jdbcType="INTEGER" />
-    <result column="device_address" property="deviceAddress" jdbcType="INTEGER" />
+    <result column="device_sn" property="deviceSn" jdbcType="VARCHAR" />
     <result column="min_max" property="minMax" jdbcType="SMALLINT" />
     <result column="data_value" property="dataValue" jdbcType="INTEGER" />
     <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
@@ -15,26 +15,41 @@
     <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, device_info_id, open_closed, device_type, device_address, min_max, data_value, 
+    id, device_info_id, open_closed, device_type, device_sn, min_max, data_value,
     created_at, updated_at, created_by, updated_by
   </sql>
+
+
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from t_out_condition
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+
+
+  <select id="listByDeviceId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from t_out_condition
+    where device_info_id = #{deviceId,jdbcType=BIGINT}
+    order by id desc
+  </select>
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from t_out_condition
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.OutCondition" >
     insert into t_out_condition ( device_info_id, open_closed,
-      device_type, device_address, min_max, 
+      device_type, device_sn, min_max,
       data_value, created_at, updated_at, 
       created_by, updated_by)
     values ( #{deviceInfoId,jdbcType=BIGINT}, #{openClosed,jdbcType=SMALLINT},
-      #{deviceType,jdbcType=INTEGER}, #{deviceAddress,jdbcType=INTEGER}, #{minMax,jdbcType=SMALLINT}, 
+      #{deviceType,jdbcType=INTEGER}, #{deviceSn,jdbcType=VARCHAR}, #{minMax,jdbcType=SMALLINT},
       #{dataValue,jdbcType=INTEGER}, now(), now(),
       #{createdBy,jdbcType=VARCHAR}, #{updatedBy,jdbcType=VARCHAR})
   </insert>
@@ -53,8 +68,8 @@
       <if test="deviceType != null" >
         device_type,
       </if>
-      <if test="deviceAddress != null" >
-        device_address,
+      <if test="deviceSn != null" >
+        device_sn,
       </if>
       <if test="minMax != null" >
         min_max,
@@ -84,8 +99,8 @@
       <if test="deviceType != null" >
         #{deviceType,jdbcType=INTEGER},
       </if>
-      <if test="deviceAddress != null" >
-        #{deviceAddress,jdbcType=INTEGER},
+      <if test="deviceSn != null" >
+        #{deviceSn,jdbcType=VARCHAR},
       </if>
       <if test="minMax != null" >
         #{minMax,jdbcType=SMALLINT},
@@ -115,8 +130,8 @@
       <if test="deviceType != null" >
         device_type = #{deviceType,jdbcType=INTEGER},
       </if>
-      <if test="deviceAddress != null" >
-        device_address = #{deviceAddress,jdbcType=INTEGER},
+      <if test="deviceSn != null" >
+        device_sn = #{deviceSn,jdbcType=VARCHAR},
       </if>
       <if test="minMax != null" >
         min_max = #{minMax,jdbcType=SMALLINT},
@@ -136,7 +151,7 @@
     set device_info_id = #{deviceInfoId,jdbcType=BIGINT},
       open_closed = #{openClosed,jdbcType=SMALLINT},
       device_type = #{deviceType,jdbcType=INTEGER},
-      device_address = #{deviceAddress,jdbcType=INTEGER},
+      device_sn = #{deviceAddress,jdbcType=VARCHAR},
       min_max = #{minMax,jdbcType=SMALLINT},
       data_value = #{dataValue,jdbcType=INTEGER},
       updated_at = now(),

@@ -154,6 +154,11 @@ public class DeviceInfo {
      */
     private DeviceInfo relationDeviceInfo;
 
+    /**
+     * 开关量输出:打开关闭条件列表
+     */
+    private List<OutCondition> outConditionList;
+
 
     // ==============  扩展方法  =================
 

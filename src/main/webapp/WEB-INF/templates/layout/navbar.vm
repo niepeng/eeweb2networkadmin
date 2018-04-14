@@ -118,8 +118,7 @@
                     </a>
                     <ul class="submenu" #if($showMenu) style="display: block;" #end >
                       <li><a href="${www}/device/areaList">区域管理</a></li>
-                      <li><a href="${www}/device/deviceEnvList">环境设备管理</a></li>
-                      <li><a href="${www}/aaa.html">开关量输出管理</a></li>
+                      <li><a href="${www}/device/deviceList">设备管理</a></li>
                     </ul>
                   </li>
 

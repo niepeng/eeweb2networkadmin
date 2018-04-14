@@ -28,9 +28,9 @@ public class OutCondition {
     private int deviceType;
 
     /**
-     * 条件设备地址
+     * 条件设备sn号
      */
-    private int deviceAddress;
+    private String deviceSn;
 
     /**
      * 小于大于:1小于,2大于
@@ -63,6 +63,8 @@ public class OutCondition {
     private String updatedBy;
 
     // ==============  扩展属性  =================
+
+    private DeviceInfo deviceInfo;
 
 
     // ==============  扩展方法  =================

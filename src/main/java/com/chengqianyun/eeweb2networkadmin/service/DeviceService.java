@@ -3,6 +3,8 @@ package com.chengqianyun.eeweb2networkadmin.service;
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutCondition;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
@@ -116,6 +118,50 @@ public class DeviceService extends BaseService {
       log.error("DeviceService.getDeviceInfoList,Error", e);
     }
     return result;
+  }
+
+  public DeviceInfo getDeviceInfo(long id) {
+    DeviceInfo deviceInfo = deviceInfoMapper.selectByPrimaryKey(id);
+    if(deviceInfo != null && deviceInfo.getAreaId() > 0) {
+      deviceInfo.setArea(areaMapper.selectByPrimaryKey(deviceInfo.getAreaId()));
+    }
+    return deviceInfo;
+  }
+
+  public List<OutCondition> getOutConditionList(long deviceId) {
+    List<OutCondition> list = outConditionMapper.listByDeviceId(deviceId);
+    if (list != null) {
+      for (OutCondition outCondition : list) {
+        outCondition.setDeviceInfo(deviceInfoMapper.selectBySn(outCondition.getDeviceSn()));
+      }
+    }
+    return list;
+  }
+
+  public void outConditionAdd(OutCondition outCondition) {
+    if (StringUtil.isEmpty(outCondition.getDeviceSn())) {
+      throw new RuntimeException("请填写条件设备sn号");
+    }
+
+    DeviceInfo deviceInfo = deviceInfoMapper.selectBySn(outCondition.getDeviceSn());
+    if (deviceInfo == null) {
+      throw new RuntimeException("当前条件设备sn号设备不存在");
+    }
+
+    DeviceTypeEnum tmpEnum = DeviceTypeEnum.getOneById(outCondition.getDeviceType());
+    if (tmpEnum == null) {
+      throw new RuntimeException("请选择条件设备类型");
+    }
+
+    if (!DeviceTypeEnum.hasType(deviceInfo.getType(), tmpEnum)) {
+      throw new RuntimeException("当前条件设备sn号不是 " + tmpEnum.getName() + "设备");
+    }
+
+    outConditionMapper.insert(outCondition);
+  }
+
+  public void outConditionDelete(long outConditionId) {
+    outConditionMapper.deleteByPrimaryKey(outConditionId);
   }
 
 

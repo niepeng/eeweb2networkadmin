@@ -1,6 +1,7 @@
 package com.chengqianyun.eeweb2networkadmin.core.utils;
 
 
+import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,20 @@ public class ApplicationUtil {
 //    return list;
 //  }
 
+
+  public static DeviceTypeEnum getOneById(int id) {
+    return DeviceTypeEnum.getOneById(id);
+  }
+
+  public static List<DeviceTypeEnum> getAllDataDeviceTypes() {
+    List<DeviceTypeEnum> list = new ArrayList<DeviceTypeEnum>();
+    for(DeviceTypeEnum tmp : DeviceTypeEnum.values()) {
+      if(tmp.isDataDevice()) {
+        list.add(tmp);
+      }
+    }
+    return list;
+  }
 
 
 }

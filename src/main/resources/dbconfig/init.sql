@@ -98,7 +98,7 @@ CREATE TABLE `t_out_condition` (
   `device_info_id` bigint(20) NOT NULL default 0 COMMENT '关联设备信息表id',
   `open_closed` smallint(2) unsigned not NULL  DEFAULT 0 COMMENT '打开关闭条件类型:1打开,2关闭',
   `device_type` int(11) not NULL  DEFAULT 0 COMMENT '条件设备类型:温度,湿度,光照等',
-  `device_address` int(11) not NULL  DEFAULT 0 COMMENT '条件设备地址',
+  `device_sn` varchar(64) DEFAULT NULL COMMENT '条件sn号',
   `min_max` smallint(2) unsigned not NULL  DEFAULT 0 COMMENT '小于大于:1小于,2大于',
   `data_value` int(11) not NULL  DEFAULT 0 COMMENT '数值,参考t_device_info表中的值存储格式',
 

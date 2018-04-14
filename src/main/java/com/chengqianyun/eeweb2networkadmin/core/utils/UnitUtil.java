@@ -20,7 +20,7 @@ public class UnitUtil {
     return chu100(value);
   }
 
-  public String changeShine(int value) {
+  public String changePower(int value) {
     return chu100(value);
   }
 
