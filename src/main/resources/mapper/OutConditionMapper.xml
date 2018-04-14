@@ -151,7 +151,7 @@
     set device_info_id = #{deviceInfoId,jdbcType=BIGINT},
       open_closed = #{openClosed,jdbcType=SMALLINT},
       device_type = #{deviceType,jdbcType=INTEGER},
-      device_sn = #{deviceAddress,jdbcType=VARCHAR},
+      device_sn = #{deviceSn,jdbcType=VARCHAR},
       min_max = #{minMax,jdbcType=SMALLINT},
       data_value = #{dataValue,jdbcType=INTEGER},
       updated_at = now(),

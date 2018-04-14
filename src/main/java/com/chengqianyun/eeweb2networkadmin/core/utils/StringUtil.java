@@ -14,6 +14,32 @@ public class StringUtil extends StringUtils {
   public StringUtil() {
   }
 
+  public static double str2Double(String str) {
+    if (isEmpty(str)) {
+      return 0D;
+    }
+    try {
+      return Double.valueOf(str);
+    } catch (Exception e) {
+
+    }
+
+    return 0D;
+  }
+
+  public static int str2int(String str) {
+    if (isEmpty(str)) {
+      return 0;
+    }
+    try {
+      return Integer.valueOf(str);
+    } catch (Exception e) {
+
+    }
+
+    return 0;
+  }
+
   /**
    * 手机号隐藏 例 ：158*****5566
    *
@@ -179,8 +205,9 @@ public class StringUtil extends StringUtils {
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < buf.length; i++) {
       String hex = Integer.toHexString(buf[i] & 0xFF);
-      if (hex.length() == 1)
+      if (hex.length() == 1) {
         hex = '0' + hex;
+      }
       sb.append(hex);
     }
     return sb.toString();
@@ -200,7 +227,6 @@ public class StringUtil extends StringUtils {
   /**
    * 判断一个字符是Ascill字符还是其它字符（如汉，日，韩文字符）
    *
-   * @param char c, 需要判断的字符
    * @return boolean, 返回true,Ascill字符
    */
   public static boolean isLetter(char c) {
@@ -215,8 +241,9 @@ public class StringUtil extends StringUtils {
    * @return int, 得到的字符串长度
    */
   public static int lengths(String s) {
-    if (s == null)
+    if (s == null) {
       return 0;
+    }
     char[] c = s.toCharArray();
     int len = 0;
     for (int i = 0; i < c.length; i++) {
@@ -233,8 +260,10 @@ public class StringUtil extends StringUtils {
    *
    */
   public static String substring(String origin, int len) {
-    if (origin == null || origin.equals("") || len < 1)
+    if (origin == null || origin.equals("") || len < 1) {
       return "";
+    }
+
     byte[] strByte = new byte[len];
     if (len > lengths(origin)) {
       return origin;

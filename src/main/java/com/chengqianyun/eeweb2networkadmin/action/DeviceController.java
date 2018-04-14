@@ -105,7 +105,7 @@ public class DeviceController extends BaseController {
   }
 
   @RequestMapping(value = "/doAreaUpdate", method = RequestMethod.POST)
-  public String update(@ModelAttribute Area area, Model model, RedirectAttributes redirectAttributes) {
+  public String doAreaUpdate(@ModelAttribute Area area, Model model, RedirectAttributes redirectAttributes) {
     try {
       deviceService.updateArea(area);
       redirectAttributes.addFlashAttribute(SUCCESS, true);
@@ -228,7 +228,7 @@ public class DeviceController extends BaseController {
 
 
   /**
-   * 开关量输出:配置开关条件
+   * 开关量输出:配置开关条件:添加
    */
   @RequestMapping(value = "/outConditionAdd", method = RequestMethod.GET)
   public String outConditionAdd(
@@ -277,6 +277,57 @@ public class DeviceController extends BaseController {
       return "redirect:/device/outConditionList?id=" + deviceId;
     }
   }
+
+
+  /**
+   * 开关量输出:配置开关条件:查看修改
+   */
+  @RequestMapping(value = "/outConditionUpdate", method = RequestMethod.GET)
+  public String outConditionUpdate(
+      @RequestParam(value = "id", required = false, defaultValue = "0") int outConditionId,
+      @RequestParam(value = "deviceInfoId", required = false, defaultValue = "0") int deviceInfoId,
+      Model model, RedirectAttributes redirectAttributes) {
+    try {
+      addOptMenu(model, MenuEnum.device);
+      OutCondition outCondition =  deviceService.getCondition(outConditionId);
+      if(outCondition.getDeviceInfoId() != deviceInfoId) {
+        throw new RuntimeException("请求参数错误");
+      }
+      DeviceInfo deviceInfo = deviceService.getDeviceInfo(deviceInfoId);
+      if (deviceInfo == null || !deviceInfo.hasOut()) {
+        throw new RuntimeException("当前类型的设备不需要配置开关条件");
+      }
+
+
+      model.addAttribute("outCondition", outCondition);
+      model.addAttribute("deviceInfo", deviceInfo);
+
+      return "/device/outConditionUpdate";
+    } catch (Exception ex) {
+      redirectAttributes.addFlashAttribute(SUCCESS, false);
+      redirectAttributes.addFlashAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "redirect:/device/outConditionList?id=" + deviceInfoId;
+    }
+  }
+
+  /**
+   * 开关量输出:配置开关条件:执行修改
+   */
+  @RequestMapping(value = "/doOutConditionUpdate", method = RequestMethod.POST)
+  public String doOutConditionUpdate(@ModelAttribute OutCondition condition, Model model, RedirectAttributes redirectAttributes) {
+    try {
+      deviceService.updateOutCondition(condition);
+      redirectAttributes.addFlashAttribute(SUCCESS, true);
+      redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_OPERATE_SUCESS);
+    } catch (Exception ex) {
+      redirectAttributes.addFlashAttribute(SUCCESS, false);
+      redirectAttributes.addFlashAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+    }
+    return "redirect:/device/outConditionList?id=" + condition.getDeviceInfoId();
+  }
+
 
   /**
    * 开关量输出:配置开关条件:执行删除

@@ -8,6 +8,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
+import com.chengqianyun.eeweb2networkadmin.core.utils.UnitUtil;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -133,6 +134,9 @@ public class DeviceService extends BaseService {
     if (list != null) {
       for (OutCondition outCondition : list) {
         outCondition.setDeviceInfo(deviceInfoMapper.selectBySn(outCondition.getDeviceSn()));
+        DeviceInfo tmpDeviceInfo = new DeviceInfo();
+        tmpDeviceInfo.setType(outCondition.getDeviceType());
+        outCondition.setTmpDeviceInfo(tmpDeviceInfo);
       }
     }
     return list;
@@ -157,11 +161,61 @@ public class DeviceService extends BaseService {
       throw new RuntimeException("当前条件设备sn号不是 " + tmpEnum.getName() + "设备");
     }
 
+    int dataValue = getDataValue(outCondition.getDeviceType(), outCondition.getDataValueStr());
+    outCondition.setDataValue(dataValue);
     outConditionMapper.insert(outCondition);
+  }
+
+
+  public OutCondition getCondition(long outConditionId) {
+    OutCondition fromDB = outConditionMapper.selectByPrimaryKey(outConditionId);
+
+    DeviceInfo tmpDeviceInfo = new DeviceInfo();
+    tmpDeviceInfo.setType(fromDB.getDeviceType());
+    fromDB.setTmpDeviceInfo(tmpDeviceInfo);
+    return fromDB;
+  }
+
+  public void updateOutCondition(OutCondition outCondition) {
+    OutCondition fromDB = outConditionMapper.selectByPrimaryKey(outCondition.getId());
+    if (fromDB == null) {
+      throw new RuntimeException("当前条件不存在");
+    }
+
+    fromDB.setDeviceSn(outCondition.getDeviceSn());
+    fromDB.setOpenClosed(outCondition.getOpenClosed());
+    fromDB.setDeviceType(outCondition.getDeviceType());
+    fromDB.setMinMax(outCondition.getMinMax());
+    int dataValue = getDataValue(outCondition.getDeviceType(), outCondition.getDataValueStr());
+    fromDB.setDataValue(dataValue);
+    outConditionMapper.updateByPrimaryKey(fromDB);
   }
 
   public void outConditionDelete(long outConditionId) {
     outConditionMapper.deleteByPrimaryKey(outConditionId);
+  }
+
+
+
+
+  private int getDataValue(int deviceType, String dataValueStr) {
+    DeviceInfo device = new DeviceInfo();
+    device.setType(deviceType);
+    if (device.hasTemp()) {
+      return UnitUtil.changeTemp(dataValueStr);
+    }
+
+    if (device.hasHumi()) {
+      return UnitUtil.changeHumi(dataValueStr);
+    }
+    if (device.hasPressure()) {
+      return UnitUtil.changePressure(dataValueStr);
+    }
+
+    if (device.hasPower()) {
+      return UnitUtil.changePower(dataValueStr);
+    }
+    return StringUtil.str2int(dataValueStr);
   }
 
 

@@ -74,20 +74,22 @@
               <td> $!applicationUtil.getOneById($!{tmpOutCondition.deviceType}).name</td>
               <td> $!{tmpOutCondition.deviceInfo.name}($!{tmpOutCondition.deviceInfo.tag})<br>地址: $!{tmpOutCondition.deviceInfo.address}</td>
               <td> #if($!{tmpOutCondition.openClosed} == 1) 打开 #else 关闭 #end</td>
-              <td> #if($!{tmpOutCondition.minMax}) 小于 #else 大于 #end
-              #if($!{tmpOutCondition.deviceInfo.hasTemp()})
+              <td> #if($!{tmpOutCondition.minMax} == 1) 小于 #else 大于 #end
+
+
+              #if($!{tmpOutCondition.tmpDeviceInfo.hasTemp()})
                 $!unitUtil.changeTemp($!{tmpOutCondition.dataValue})℃
 
-              #elseif($!{tmpOutCondition.deviceInfo.hasHumi()})
+              #elseif($!{tmpOutCondition.tmpDeviceInfo.hasHumi()})
                 $!unitUtil.changeHumi($!{tmpOutCondition.dataValue})%RH
 
-              #elseif($!{tmpOutCondition.deviceInfo.hasPower()})
-                $!unitUtil.changePower($!{tmpOutCondition.dataValue})
+              #elseif($!{tmpOutCondition.tmpDeviceInfo.hasPower()})
+                $!unitUtil.changePower($!{tmpOutCondition.dataValue})V
 
-              #elseif($!{tmpOutCondition.deviceInfo.hasShine()})
+              #elseif($!{tmpOutCondition.tmpDeviceInfo.hasShine()})
                 $!{tmpOutCondition.dataValue} Lx
 
-              #elseif($!{tmpOutCondition.deviceInfo.hasPressure()})
+              #elseif($!{tmpOutCondition.tmpDeviceInfo.hasPressure()})
                 $!unitUtil.changePressure($!{tmpOutCondition.dataValue})Pa
               #end
               </td>
@@ -96,7 +98,7 @@
                 $dateUtil.getDate($!{tmpOutCondition.UpdatedAt}, 'yyyy-MM-dd HH:mm:ss')
               </td>
               <td>
-                <a href="${www}/device/outConditionUpdate?id=${tmpOutCondition.id}">修改</a> ｜
+                <a href="${www}/device/outConditionUpdate?id=${tmpOutCondition.id}&deviceInfoId=$!{deviceInfo.id}">修改</a> ｜
                 <a href="${www}/device/outConditionDelete?id=${tmpOutCondition.id}&deviceInfoId=$!{deviceInfo.id}" onclick="javascript:return confirm('确认要删除 该条件吗?');">删除</a>
               </td>
             </tr>

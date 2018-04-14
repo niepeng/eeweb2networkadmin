@@ -66,6 +66,13 @@ public class OutCondition {
 
     private DeviceInfo deviceInfo;
 
+    /**
+     * 用来做临时展示使用
+     */
+    private DeviceInfo tmpDeviceInfo;
+
+    private String dataValueStr;
+
 
     // ==============  扩展方法  =================
 

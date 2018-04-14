@@ -8,26 +8,46 @@ package com.chengqianyun.eeweb2networkadmin.core.utils;
 
 public class UnitUtil {
 
-  public String changeTemp(int value) {
+  public static String changeTemp(int value) {
     return chu100(value);
   }
 
-  public String changeHumi(int value) {
+  public static String changeHumi(int value) {
     return chu100(value);
   }
 
-  public String changePressure(int value) {
+  public static String changePressure(int value) {
     return chu100(value);
   }
 
-  public String changePower(int value) {
+  public static String changePower(int value) {
     return chu100(value);
   }
 
-  public String chu100(int value) {
+  public static String chu100(int value) {
     return ArithUtil.div2Str(value, 100, 2);
   }
 
+  public static int changeTemp(String value) {
+    return (int)ArithUtil.mul(StringUtil.str2Double(value), 100);
+  }
+
+  public static int changeHumi(String value) {
+    return (int)ArithUtil.mul(StringUtil.str2Double(value), 100);
+  }
+
+  public static int changePressure(String value) {
+    return (int)ArithUtil.mul(StringUtil.str2Double(value), 100);
+  }
+
+  public static int changePower(String value) {
+    return (int)ArithUtil.mul(StringUtil.str2Double(value), 100);
+  }
+
+  public static void main(String[] args) {
+    String s = "12.39";
+    System.out.println(changeTemp(s));
+  }
 
 
 }
