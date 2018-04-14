@@ -1,6 +1,8 @@
 package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
+import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import java.util.Date;
+import java.util.List;
 import lombok.Data;
 import lombok.ToString;
 
@@ -108,9 +110,19 @@ public class DeviceInfo {
     private short controlWay;
 
     /**
-     * 只有开关量输入才有值:关联对应的开关量输出的id(本表的id)
+     * 只有开关量输入才有值: 联动开关量输出,关联对应的开关输出的id(本表的id)
      */
     private long relationOutId;
+
+    /**
+     * 只有开关量输入才有值:联动开关通道
+     */
+    private short opencloseWay;
+
+    /**
+     * 只有开关量输入才有值:输入通道
+     */
+    private short inWay;
 
     /**
      * 创建时间
@@ -135,9 +147,63 @@ public class DeviceInfo {
 
     // ==============  扩展属性  =================
 
+    private Area area;
+
+    /**
+     * 联动输出地址对应的设备
+     */
+    private DeviceInfo relationDeviceInfo;
+
 
     // ==============  扩展方法  =================
 
+    public void optArea(List<Area> list) {
+        if (list == null) {
+            return;
+        }
 
+        for (Area tmp : list) {
+            if (areaId == tmp.getId()) {
+                this.area = tmp;
+                return;
+            }
+        }
+    }
+
+    public boolean hasTemp() {
+        return DeviceTypeEnum.hasType(type, DeviceTypeEnum.temp);
+    }
+
+    public boolean hasHumi() {
+        return DeviceTypeEnum.hasType(type, DeviceTypeEnum.humi);
+    }
+
+    public boolean hasPower() {
+        return DeviceTypeEnum.hasType(type, DeviceTypeEnum.power);
+    }
+
+    public boolean hasShine() {
+        return DeviceTypeEnum.hasType(type, DeviceTypeEnum.shine);
+    }
+
+    public boolean hasPressure() {
+        return DeviceTypeEnum.hasType(type, DeviceTypeEnum.pressure);
+    }
+
+    public boolean hasSmoke() {
+        return DeviceTypeEnum.hasType(type, DeviceTypeEnum.smoke);
+    }
+
+    public boolean hasWater() {
+        return DeviceTypeEnum.hasType(type, DeviceTypeEnum.water);
+    }
+
+    public boolean hasElectric() {
+        return DeviceTypeEnum.hasType(type, DeviceTypeEnum.electric);
+    }
+
+    public boolean hasOut() {
+        return DeviceTypeEnum.hasType(type, DeviceTypeEnum.out);
+    }
 
 }

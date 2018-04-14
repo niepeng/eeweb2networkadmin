@@ -1,6 +1,7 @@
 package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
-import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
+import java.util.List;
+import java.util.Map;
 
 public interface DeviceInfoMapper {
     int deleteByPrimaryKey(Long id);
@@ -14,4 +15,9 @@ public interface DeviceInfoMapper {
     int updateByPrimaryKeySelective(DeviceInfo record);
 
     int updateByPrimaryKey(DeviceInfo record);
+
+    Integer findPageCount(Map<String,String> map);
+
+    List<DeviceInfo> findPage(Map<String,String> map);
+
 }

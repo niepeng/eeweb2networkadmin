@@ -2,6 +2,7 @@ package com.chengqianyun.eeweb2networkadmin.action;
 
 import com.chengqianyun.eeweb2networkadmin.biz.HdConstant;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
@@ -130,6 +131,35 @@ public class DeviceController extends BaseController {
       model.addAttribute(MESSAGE, ex.getMessage());
       log.error(ex);
       return "redirect:/device/areaList";
+    }
+  }
+
+
+  /**
+   * 环境设备管理
+   */
+  @RequestMapping(value = "/deviceEnvList", method = RequestMethod.GET)
+  public String deviceEnvList(
+      @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
+      @RequestParam(value = "pageSize", required = false, defaultValue = "15") int pageSize,
+      @RequestParam(required = false, defaultValue = "") String areaId,
+      Model model) {
+    try {
+      addOptMenu(model, MenuEnum.device);
+      PaginationQuery query = new PaginationQuery();
+      query.setPageIndex(pageIndex);
+      query.setRowsPerPage(pageSize);
+      query.addQueryData("areaId", areaId);
+      PageResult<DeviceInfo> params = deviceService.getDeviceInfoList(query);
+      model.addAttribute("result", params);
+      model.addAttribute("areaId", areaId);
+
+      return "/device/deviceEnvList";
+    } catch (Exception ex) {
+      model.addAttribute(SUCCESS, false);
+      model.addAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "/device/areaList";
     }
   }
 

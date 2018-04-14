@@ -36,6 +36,11 @@
     <![CDATA[ limit ${startRecord},${endRecord} ]]>
   </select>
 
+  <select id="listAll" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> from t_area
+    ORDER BY id desc
+  </select>
+
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 

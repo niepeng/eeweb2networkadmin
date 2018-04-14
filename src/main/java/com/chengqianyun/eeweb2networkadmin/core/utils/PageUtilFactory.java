@@ -15,6 +15,6 @@ public class PageUtilFactory {
 
   public static StringUtil stringUtil = new StringUtil();
 
-
+  public static UnitUtil unitUtil = new UnitUtil();
 
 }

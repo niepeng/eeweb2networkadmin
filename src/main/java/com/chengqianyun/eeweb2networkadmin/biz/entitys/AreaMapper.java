@@ -21,4 +21,6 @@ public interface AreaMapper {
     List<Area> findPage(Map<String,String> map);
 
     Area selectByName(String name);
+
+    List<Area> listAll();
 }

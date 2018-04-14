@@ -23,6 +23,8 @@
     <result column="pressure_dev" property="pressureDev" jdbcType="INTEGER" />
     <result column="control_way" property="controlWay" jdbcType="SMALLINT" />
     <result column="relation_out_id" property="relationOutId" jdbcType="BIGINT" />
+    <result column="openclose_way" property="opencloseWay" jdbcType="SMALLINT" />
+    <result column="in_way" property="inWay" jdbcType="SMALLINT" />
     <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
     <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
     <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
@@ -31,8 +33,34 @@
   <sql id="Base_Column_List" >
     id, area_id, sn, name, tag, address, type, temp_up, temp_down, temp_dev, humi_up, 
     humi_down, humi_dev, shine_up, shine_down, shine_dev, pressure_up, pressure_down, 
-    pressure_dev, control_way, relation_out_id, created_at, updated_at, created_by, updated_by
+    pressure_dev, control_way, relation_out_id, created_at, updated_at, created_by, updated_by,
+    openclose_way, in_way
   </sql>
+
+
+  <sql id="pageSearch">
+    <where>
+      <if test="name != null and name !=''" >
+        AND name like "%"#{name}"%"
+      </if>
+    </where>
+  </sql>
+
+
+  <select id="findPageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    SELECT count(*) from  t_device_info
+    <include refid="pageSearch"/>
+  </select>
+
+  <select id="findPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> from t_device_info
+    <include refid="pageSearch"/>
+    ORDER BY id desc
+    <![CDATA[ limit ${startRecord},${endRecord} ]]>
+  </select>
+
+
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
@@ -52,7 +80,7 @@
       shine_dev, pressure_up, pressure_down, 
       pressure_dev, control_way, relation_out_id, 
       created_at, updated_at, created_by, 
-      updated_by)
+      updated_by,openclose_way, in_way)
     values (#{areaId,jdbcType=BIGINT}, #{sn,jdbcType=VARCHAR},
       #{name,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, #{address,jdbcType=INTEGER}, 
       #{type,jdbcType=INTEGER}, #{tempUp,jdbcType=INTEGER}, #{tempDown,jdbcType=INTEGER}, 
@@ -61,7 +89,7 @@
       #{shineDev,jdbcType=INTEGER}, #{pressureUp,jdbcType=INTEGER}, #{pressureDown,jdbcType=INTEGER}, 
       #{pressureDev,jdbcType=INTEGER}, #{controlWay,jdbcType=SMALLINT}, #{relationOutId,jdbcType=BIGINT}, 
       now(), now(), #{createdBy,jdbcType=VARCHAR},
-      #{updatedBy,jdbcType=VARCHAR})
+      #{updatedBy,jdbcType=VARCHAR},#{opencloseWay,jdbcType=SMALLINT}, #{inWay,jdbcType=SMALLINT} )
   </insert>
   <insert id="insertSelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo" >
     insert into t_device_info
@@ -137,6 +165,12 @@
       <if test="updatedBy != null" >
         updated_by,
       </if>
+      <if test="opencloseWay != null" >
+        openclose_way,
+      </if>
+      <if test="inWay != null" >
+        in_way,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -210,6 +244,12 @@
       <if test="updatedBy != null" >
         #{updatedBy,jdbcType=VARCHAR},
       </if>
+      <if test="opencloseWay != null" >
+        #{opencloseWay,jdbcType=SMALLINT},
+      </if>
+      <if test="inWay != null" >
+        #{inWay,jdbcType=SMALLINT},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo" >
@@ -279,6 +319,12 @@
       <if test="updatedBy != null" >
         updated_by = #{updatedBy,jdbcType=VARCHAR},
       </if>
+      <if test="opencloseWay != null" >
+        #{opencloseWay,jdbcType=SMALLINT},
+      </if>
+      <if test="inWay != null" >
+        #{inWay,jdbcType=SMALLINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -305,7 +351,10 @@
       control_way = #{controlWay,jdbcType=SMALLINT},
       relation_out_id = #{relationOutId,jdbcType=BIGINT},
       updated_at = now(),
-      updated_by = #{updatedBy,jdbcType=VARCHAR}
+      updated_by = #{updatedBy,jdbcType=VARCHAR},
+      openclose_way = #{opencloseWay,jdbcType=SMALLINT},
+      in_way = #{inWay,jdbcType=SMALLINT},
+
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

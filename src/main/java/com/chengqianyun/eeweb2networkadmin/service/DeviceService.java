@@ -2,6 +2,7 @@ package com.chengqianyun.eeweb2networkadmin.service;
 
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
@@ -84,4 +85,34 @@ public class DeviceService extends BaseService {
 
     areaMapper.deleteByPrimaryKey(areaId);
   }
+
+
+  public PageResult<DeviceInfo> getDeviceInfoList(PaginationQuery query) {
+    PageResult<DeviceInfo> result = null;
+    try {
+      Integer count = deviceInfoMapper.findPageCount(query.getQueryData());
+
+      if (null != count && count.intValue() > 0) {
+        int startRecord = (query.getPageIndex() - 1) * query.getRowsPerPage();
+        query.addQueryData("startRecord", Integer.toString(startRecord));
+        query.addQueryData("endRecord", Integer.toString(query.getRowsPerPage()));
+        List<DeviceInfo> list = deviceInfoMapper.findPage(query.getQueryData());
+        List<Area> areaList = areaMapper.listAll();
+        if (list != null) {
+          for (DeviceInfo info : list) {
+            info.optArea(areaList);
+            if(info.getRelationOutId() > 0) {
+              info.setRelationDeviceInfo(deviceInfoMapper.selectByPrimaryKey(info.getRelationOutId()));
+            }
+          }
+        }
+        result = new PageResult<DeviceInfo>(list, count, query);
+      }
+    } catch (Exception e) {
+      log.error("DeviceService.getDeviceInfoList,Error", e);
+    }
+    return result;
+  }
+
+
 }

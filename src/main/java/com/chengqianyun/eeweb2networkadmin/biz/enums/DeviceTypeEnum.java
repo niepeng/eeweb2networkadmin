@@ -31,7 +31,8 @@ public enum DeviceTypeEnum {
     this.name = name;
   }
 
-
-
+  public static boolean hasType(int idValue, DeviceTypeEnum deviceTypeEnum) {
+    return (deviceTypeEnum.getId() & idValue) == deviceTypeEnum.getId();
+  }
 
 }

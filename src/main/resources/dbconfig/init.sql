@@ -83,6 +83,7 @@ CREATE TABLE `t_device_info` (
 
   `control_way` smallint(4) unsigned not NULL  DEFAULT 0 COMMENT '只有开关量输出才有值:控制通道',
   `relation_out_id` bigint(20) not NULL  DEFAULT 0 COMMENT '只有开关量输入才有值:关联对应的开关量输出的id(本表的id)',
+  -- 是否需要输入通道? 联动开关通道?
 
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '修改时间',

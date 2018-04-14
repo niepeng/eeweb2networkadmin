@@ -51,6 +51,7 @@ public abstract class BaseController {
 			model.addAttribute("applicationUtil", PageUtilFactory.applicationUtil);
 			model.addAttribute("dateUtil", PageUtilFactory.dateUtil);
 			model.addAttribute("stringUtil", PageUtilFactory.stringUtil);
+			model.addAttribute("unitUtil", PageUtilFactory.unitUtil);
 //			model.addAttribute("escapeUtil", new BaseEscapeUtil());
     }
 
