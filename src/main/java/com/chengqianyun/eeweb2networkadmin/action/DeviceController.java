@@ -142,7 +142,8 @@ public class DeviceController extends BaseController {
   public String deviceEnvList(
       @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
       @RequestParam(value = "pageSize", required = false, defaultValue = "15") int pageSize,
-      @RequestParam(required = false, defaultValue = "") String areaId,
+      @RequestParam(value = "areaId", required = false, defaultValue = "") String areaId,
+      @RequestParam(value = "name", required = false, defaultValue = "") String name,
       Model model) {
     try {
       addOptMenu(model, MenuEnum.device);
@@ -150,9 +151,13 @@ public class DeviceController extends BaseController {
       query.setPageIndex(pageIndex);
       query.setRowsPerPage(pageSize);
       query.addQueryData("areaId", areaId);
+      query.addQueryData("name", name);
+
       PageResult<DeviceInfo> params = deviceService.getDeviceInfoList(query);
       model.addAttribute("result", params);
+      model.addAttribute("areaList", deviceService.getAreaAll());
       model.addAttribute("areaId", areaId);
+      model.addAttribute("name", name);
 
       return "/device/deviceEnvList";
     } catch (Exception ex) {

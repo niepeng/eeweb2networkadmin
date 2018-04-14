@@ -43,6 +43,12 @@
       <if test="name != null and name !=''" >
         AND name like "%"#{name}"%"
       </if>
+      <if test="tag != null and tag !=''" >
+        AND tag like "%"#{tag}"%"
+      </if>
+      <if test="areaId != null and areaId !=''" >
+        AND area_id =  #{areaId}
+      </if>
     </where>
   </sql>
 

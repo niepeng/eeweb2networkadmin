@@ -86,6 +86,10 @@ public class DeviceService extends BaseService {
     areaMapper.deleteByPrimaryKey(areaId);
   }
 
+  public List<Area> getAreaAll() {
+    return areaMapper.listAll();
+  }
+
 
   public PageResult<DeviceInfo> getDeviceInfoList(PaginationQuery query) {
     PageResult<DeviceInfo> result = null;

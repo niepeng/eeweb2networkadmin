@@ -44,6 +44,13 @@
           <div class="col-sm-11">
             <form class="form-inline" role="form">
               <div class="form-group">
+                <label>区域：</label>
+                <select name="areaId" id="areaId">
+                  <option value="">全部</option>
+                  #foreach($tmpArea in $areaList)
+                    <option #if("$tmpArea.id" == "$!areaId") selected #end value="$tmpArea.id">$!tmpArea.name</option>
+                  #end
+                </select>
                 <label>名称：</label>
                 <input type="text" name="name" value="$!{name}">
               </div>
@@ -61,8 +68,8 @@
           <tr>
             <th>sn号</th>
             <th>名称(区域)-标签</th>
-            <th>地址</th>
-            <th>类型值</th>
+            <th>设备地址</th>
+            <th>类型值(校正值)</th>
             <th>操作</th>
           </tr>
           </thead>
