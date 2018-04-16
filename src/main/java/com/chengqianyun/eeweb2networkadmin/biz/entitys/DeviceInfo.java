@@ -75,32 +75,32 @@ public class DeviceInfo {
     private int humiDev;
 
     /**
-     * 光照上限
+     * 光照上限:原值
      */
     private int shineUp;
 
     /**
-     * 光照下限
+     * 光照下限:原值
      */
     private int shineDown;
 
     /**
-     * 光照校正值
+     * 光照校正值:原值
      */
     private int shineDev;
 
     /**
-     * 压力上限
+     * 压力上限:800.1,存储80010
      */
     private int pressureUp;
 
     /**
-     * 压力下限
+     * 压力下限:800.1,存储80010
      */
     private int pressureDown;
 
     /**
-     * 压力校正值
+     * 压力校正值:800.1,存储80010
      */
     private int pressureDev;
 
@@ -110,7 +110,7 @@ public class DeviceInfo {
     private short controlWay;
 
     /**
-     * 只有开关量输入才有值: 联动开关量输出,关联对应的开关输出的id(本表的id)
+     * 只有开关量输入才有值: 联动地址
      */
     private long relationOutId;
 
@@ -148,11 +148,6 @@ public class DeviceInfo {
     // ==============  扩展属性  =================
 
     private Area area;
-
-    /**
-     * 联动输出地址对应的设备
-     */
-    private DeviceInfo relationDeviceInfo;
 
     /**
      * 开关量输出:打开关闭条件列表

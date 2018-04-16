@@ -1,6 +1,7 @@
 package com.chengqianyun.eeweb2networkadmin.service;
 
 
+import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceFormBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutCondition;
@@ -108,9 +109,9 @@ public class DeviceService extends BaseService {
         if (list != null) {
           for (DeviceInfo info : list) {
             info.optArea(areaList);
-            if(info.getRelationOutId() > 0) {
-              info.setRelationDeviceInfo(deviceInfoMapper.selectByPrimaryKey(info.getRelationOutId()));
-            }
+//            if(info.getRelationOutId() > 0) {
+//              info.setRelationDeviceInfo(deviceInfoMapper.selectByPrimaryKey(info.getRelationOutId()));
+//            }
           }
         }
         result = new PageResult<DeviceInfo>(list, count, query);
@@ -127,6 +128,61 @@ public class DeviceService extends BaseService {
       deviceInfo.setArea(areaMapper.selectByPrimaryKey(deviceInfo.getAreaId()));
     }
     return deviceInfo;
+  }
+
+  public void addDeviceInfo(DeviceFormBean deviceFormBean) {
+    // 检查sn是否唯一
+    DeviceInfo fromDB = deviceInfoMapper.selectBySn(deviceFormBean.getSn());
+    if (fromDB != null) {
+      throw new RuntimeException("设备sn号已经存在");
+    }
+
+    DeviceInfo deviceInfo = new DeviceInfo();
+    deviceInfo.setAreaId(deviceFormBean.getAreaId());
+    deviceInfo.setSn(deviceFormBean.getSn());
+    deviceInfo.setName(deviceFormBean.getName());
+    deviceInfo.setTag(deviceFormBean.getTag());
+    deviceInfo.setAddress(deviceFormBean.getAddress());
+    deviceInfo.setType(deviceFormBean.calcDeviceType());
+
+    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.temp)) {
+      deviceInfo.setTempUp(UnitUtil.changeTemp(deviceFormBean.getTempUpStr()));
+      deviceInfo.setTempDown(UnitUtil.changeTemp(deviceFormBean.getTempDownStr()));
+      deviceInfo.setTempDev(UnitUtil.changeTemp(deviceFormBean.getTempDevStr()));
+    }
+
+    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.humi)) {
+      deviceInfo.setHumiUp(UnitUtil.changeHumi(deviceFormBean.getHumiUpStr()));
+      deviceInfo.setHumiDown(UnitUtil.changeHumi(deviceFormBean.getHumiDownStr()));
+      deviceInfo.setHumiDev(UnitUtil.changeHumi(deviceFormBean.getHumiDevStr()));
+    }
+
+    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.shine)) {
+      deviceInfo.setShineUp(StringUtil.str2int(deviceFormBean.getShineUpStr()));
+      deviceInfo.setShineDown(StringUtil.str2int(deviceFormBean.getShineDownStr()));
+      deviceInfo.setShineDev(StringUtil.str2int(deviceFormBean.getShineDevStr()));
+    }
+
+    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.pressure)) {
+      deviceInfo.setPressureUp(UnitUtil.changePressure(deviceFormBean.getPressureUpStr()));
+      deviceInfo.setPressureDown(UnitUtil.changePressure(deviceFormBean.getPressureDownStr()));
+      deviceInfo.setPressureDev(UnitUtil.changePressure(deviceFormBean.getPressureDevStr()));
+    }
+
+    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.smoke) ||
+        DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.water) ||
+        DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.electric)) {
+
+      deviceInfo.setRelationOutId(StringUtil.str2int(deviceFormBean.getRelationOutId()));
+      deviceInfo.setOpencloseWay((short) StringUtil.str2int(deviceFormBean.getOpencloseWay()));
+      deviceInfo.setInWay((short) StringUtil.str2int(deviceFormBean.getInWay()));
+    }
+
+    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.out)) {
+      deviceInfo.setControlWay((short) StringUtil.str2int(deviceFormBean.getControlWay()));
+    }
+
+    deviceInfoMapper.insert(deviceInfo);
   }
 
   public List<OutCondition> getOutConditionList(long deviceId) {

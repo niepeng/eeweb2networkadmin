@@ -22,7 +22,7 @@
   </div>
   <div class="page-content">
     <div class="page-header">
-      <h1>新增商户产品</h1>
+      <h1>新增设备</h1>
     </div>
     #if(${msg})
       <div>
@@ -33,13 +33,19 @@
         #end
       </div>
     #end
-    <form id="inputForm" action="${www}/back/shopProduct/insert" method="post" class="form-horizontal">
+
+    <form id="inputForm" action="${www}/device/doDeviceAdd" method="post" class="form-horizontal" onsubmit="javascript:return doSubmitDevice();">
       <div class="row">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">商家id：</label>
+            <label class="col-md-4 col-sm-2 control-label">所属区域：</label>
             <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="shopId" name="shopId" value="$!{shopProduct.shopId}">
+              <select name="areaId" id="areaId">
+                <option value="0">全部</option>
+                #foreach($tmpArea in $areaList)
+                  <option #if("$tmpArea.id" == "$!areaId") selected #end value="$tmpArea.id">$!tmpArea.name</option>
+                #end
+              </select>
             </div>
           </div>
         </div>
@@ -47,9 +53,9 @@
       <div class="row">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">产品名称：</label>
+            <label class="col-md-4 col-sm-2 control-label">sn号：</label>
             <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="name" name="name" value="$!{shopProduct.name}">
+              <input type="text" class="col-sm-12" id="sn" name="sn" value="">
             </div>
           </div>
         </div>
@@ -57,9 +63,9 @@
       <div class="row">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">产品图片：</label>
+            <label class="col-md-4 col-sm-2 control-label">名称：</label>
             <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="imgUrl" name="imgUrl" value="$!{shopProduct.imgUrl}">
+              <input type="text" class="col-sm-12" id="name" name="name" value="">
             </div>
           </div>
         </div>
@@ -67,9 +73,9 @@
       <div class="row">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">产品小标题：</label>
+            <label class="col-md-4 col-sm-2 control-label">标签：</label>
             <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="tip" name="tip" value="$!{shopProduct.tip}">
+              <input type="text" class="col-sm-12" id="tag" name="tag" value="">
             </div>
           </div>
         </div>
@@ -77,93 +83,108 @@
       <div class="row">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">借款金额范围(元)：</label>
+            <label class="col-md-4 col-sm-2 control-label">设备地址：</label>
             <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="loanMoney" name="loanMoney" value="$!{shopProduct.loanMoney}">
+              <input type="text" class="col-sm-12" id="address" name="address" value="">
             </div>
           </div>
         </div>
       </div>
+
       <div class="row">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">月利率(%)：</label>
-            <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="rate" name="rate" value="$!{shopProduct.rate}">
-            </div>
+            <label class="col-md-4 col-sm-2 control-label">设备类型：</label>
+            #foreach($tmpType in $applicationUtil.getAllDeviceTypes())
+              <input type="checkbox" id="deviceType_$tmpType.id" name="deviceTypes" onchange="changeDeviceType(this)" value="$!tmpType.id" /> $!{tmpType.name}&nbsp;
+            #end
           </div>
         </div>
       </div>
-      <div class="row">
+
+
+      <div class="row" id="tempDiv" style="display: none;">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">天数：</label>
-            <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="days" name="days" value="$!{shopProduct.days}">
-            </div>
+            <label class="col-md-4 col-sm-2 control-label">温度信息：</label>
+            温度上限 <input type="text" style="width: 60px;" id="tempUpStr" name="tempUpStr" value="">℃ &nbsp;
+            温度下限 <input type="text" style="width: 60px;" id="tempDownStr" name="tempDownStr" value="">℃ &nbsp;
+            温度校正值 <input type="text" style="width: 60px;" id="tempDevStr" name="tempDevStr" value="">℃
           </div>
         </div>
       </div>
-      <div class="row">
+
+      <div class="row" id="humiDiv" style="display: none;">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">初始申请人数：</label>
-            <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="申请人数" name="申请人数" value="0">
-            </div>
+            <label class="col-md-4 col-sm-2 control-label">湿度信息：</label>
+            湿度上限 <input type="text" style="width: 60px;" id="humiUpStr" name="humiUpStr" value="">%RH &nbsp;
+            湿度下限 <input type="text" style="width: 60px;" id="humiDownStr" name="humiDownStr" value="">%RH &nbsp;
+            湿度校正值 <input type="text" style="width: 60px;" id="humiDevStr" name="humiDevStr" value="">%RH
           </div>
         </div>
       </div>
-      <div class="row">
+
+
+      <div class="row" id="shineDiv" style="display: none;">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">申请条件：</label>
-            <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="applyConditon" name="applyConditon" value="$!{shopProduct.applyConditon}">多行条件通过&lt;br&gt;符号分割换行
-            </div>
+            <label class="col-md-4 col-sm-2 control-label">光照信息：</label>
+            光照上限 <input type="text" style="width: 60px;" id="shineUpStr" name="shineUpStr" value=""> Lx &nbsp;
+            光照下限 <input type="text" style="width: 60px;" id="shineDownStr" name="shineDownStr" value=""> Lx &nbsp;
+            光照校正值 <input type="text" style="width: 60px;" id="shineDevStr" name="shineDevStr" value=""> Lx
           </div>
         </div>
       </div>
-      <div class="row">
+
+      <div class="row" id="pressureDiv" style="display: none;">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">介绍：</label>
-            <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="introduce" name="introduce" value="$!{shopProduct.introduce}">多行介绍通过&lt;br&gt;符号分割换行
-            </div>
+            <label class="col-md-4 col-sm-2 control-label">压力信息：</label>
+            压力上限 <input type="text" style="width: 60px;" id="pressureUpStr" name="pressureUpStr" value=""> Pa &nbsp;
+            压力下限 <input type="text" style="width: 60px;" id="pressureDownStr" name="pressureDownStr" value=""> Pa &nbsp;
+            压力校正值 <input type="text" style="width: 60px;" id="pressureDevStr" name="pressureDevStr" value=""> Pa
           </div>
         </div>
       </div>
-      <div class="row">
+
+      <div class="row" id="inDiv" style="display: none;">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">上架时间：</label>
-            <div class="col-md-8 col-sm-8">
-              <input type="text" class="input-date" id="startTime" name="startTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm'})"  value="$!{shopProduct.startTime}">
-            </div>
+            <label class="col-md-4 col-sm-2 control-label">开关量输入：</label>
+            联动地址 <input type="text" style="width: 60px;" id="relationOutId" name="relationOutId" value=""> &nbsp;
+            联动通道 <select id="opencloseWay" name="opencloseWay">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                    </select>  &nbsp;
+            输入通道  <select id="inWay" name="inWay">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                    </select>
           </div>
         </div>
       </div>
-      <div class="row">
+
+      <div class="row" id="outDiv" style="display: none;">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">下架时间：</label>
-            <div class="col-md-8 col-sm-8">
-              <input type="text" class="input-date" id="endTime" name="endTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm'})"  value="$!{shopProduct.endTime}">
-            </div>
+            <label class="col-md-4 col-sm-2 control-label">开关量输出：</label>
+            控制通道 <select id="controlWay" name="controlWay">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                    </select>  &nbsp;
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-xs-12 col-md-8">
-          <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">排序值：</label>
-            <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="sortValue" name="sortValue" value="$!{shopProduct.sortValue}">
-            </div>
-          </div>
-        </div>
-      </div>
+
+
+
       <div class="clearfix form-actions">
         <div class="row">
           <div class="col-md-8">
@@ -177,4 +198,153 @@
       </div>
     </form>
   </div><!-- /.main-content -->
-  <script src="${www}/js/youcaicommon.js"></script>
+  <script src="${www}/js/youcaicommon.js?ts=20180416"></script>
+  <script src="${www}/js/xue.js"></script>
+
+  <script>
+    function changeDeviceType(obj) {
+      if(!checkDeviceType()) {
+        obj.checked = false;
+        return;
+      }
+
+      // 控制展示内容
+//          temp(1,"温度", true),
+//          humi(2,"湿度", true),
+//          power(4,"电量", true),
+//          shine(8,"光照", true),
+//          pressure(16,"压力", true),
+//          smoke(32,"烟感", false),
+//          water(64,"浸水", false),
+//          electric(128,"停电来点", false),
+//          out(256,"开关量输出", false),
+
+      refushShow();
+      contrlOut(document.getElementById("deviceType_256").checked);
+    }
+
+    function refushShow() {
+      contrlTemp(document.getElementById("deviceType_1").checked);
+      contrlHumi(document.getElementById("deviceType_2").checked);
+      contrlShine(document.getElementById("deviceType_8").checked);
+      contrlPressure(document.getElementById("deviceType_16").checked);
+      contrlIn(document.getElementById("deviceType_32").checked || document.getElementById("deviceType_64").checked || document.getElementById("deviceType_128").checked);
+    }
+
+
+    function checkDeviceType() {
+      var deviceTypesObject = document.getElementsByName("deviceTypes");
+
+      // 如果开关量输出被选中,那么其他的类型不能选择了
+      var isOutChecked = document.getElementById("deviceType_256").checked;
+      if (isOutChecked) {
+        for (k in deviceTypesObject) {
+          if (deviceTypesObject[k].checked && deviceTypesObject[k].value != 256) {
+            alert("设备类型如果选中了开关量输出,那么不能选中其他类型,请调整");
+            return false;
+          }
+        }
+      }
+
+      // 开关量输入只能选择一个
+      var inNum = (document.getElementById("deviceType_32").checked) ? 1 : 0;
+      inNum += ((document.getElementById("deviceType_64").checked) ? 1 : 0);
+      inNum += ((document.getElementById("deviceType_128").checked) ? 1 : 0);
+      if(inNum > 1) {
+        alert("开关量输入设备只能选择一个");
+        return false;
+      }
+      return true;
+    }
+
+    function doSubmitDevice() {
+      if(document.getElementById("sn").value == "") {
+        alert("sn号不能为空");
+        return false;
+      }
+      if(document.getElementById("name").value == "") {
+        alert("名称不能为空");
+        return false;
+      }
+      if(document.getElementById("tag").value == "") {
+        alert("标签不能为空");
+        return false;
+      }
+
+      var address = document.getElementById("address").value;
+      if(address == "" || address % 1 != 0) {
+        alert("设备地址不能为空并且是整数");
+        return false;
+      }
+
+      return true;
+
+    }
+
+    function contrlTemp(isShow) {
+      if(isShow) {
+        document.getElementById("tempDiv").style.display = "block";
+      } else {
+        document.getElementById("tempDiv").style.display = "none";
+
+        document.getElementById("tempUpStr").value = "";
+        document.getElementById("tempDownStr").value = "";
+        document.getElementById("tempDevStr").value = "";
+      }
+    }
+
+    function contrlHumi(isShow) {
+      if(isShow) {
+        document.getElementById("humiDiv").style.display = "block";
+      } else {
+        document.getElementById("humiDiv").style.display = "none";
+
+        document.getElementById("humiUpStr").value = "";
+        document.getElementById("humiDownStr").value = "";
+        document.getElementById("humiDevStr").value = "";
+      }
+    }
+
+    function contrlShine(isShow) {
+      if(isShow) {
+        document.getElementById("shineDiv").style.display = "block";
+      } else {
+        document.getElementById("shineDiv").style.display = "none";
+
+        document.getElementById("shineUpStr").value = "";
+        document.getElementById("shineDownStr").value = "";
+        document.getElementById("shineDevStr").value = "";
+      }
+    }
+
+    function contrlPressure(isShow) {
+      if(isShow) {
+        document.getElementById("pressureDiv").style.display = "block";
+      } else {
+        document.getElementById("pressureDiv").style.display = "none";
+
+        document.getElementById("pressureUpStr").value = "";
+        document.getElementById("pressureDownStr").value = "";
+        document.getElementById("pressureDevStr").value = "";
+      }
+    }
+
+    function contrlIn(isShow) {
+      if(isShow) {
+        document.getElementById("inDiv").style.display = "block";
+      } else {
+        document.getElementById("inDiv").style.display = "none";
+      }
+    }
+
+    function contrlOut(isShow) {
+      if(isShow) {
+        document.getElementById("outDiv").style.display = "block";
+      } else {
+        document.getElementById("outDiv").style.display = "none";
+      }
+      refushShow();
+    }
+
+
+  </script>

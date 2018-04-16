@@ -1,6 +1,7 @@
 package com.chengqianyun.eeweb2networkadmin.action;
 
 import com.chengqianyun.eeweb2networkadmin.biz.HdConstant;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceFormBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutCondition;
@@ -177,19 +178,6 @@ public class DeviceController extends BaseController {
     try {
       addOptMenu(model, MenuEnum.device);
       List<Area> areaList = deviceService.getAreaAll();
-
-//      PaginationQuery query = new PaginationQuery();
-//      query.setPageIndex(pageIndex);
-//      query.setRowsPerPage(pageSize);
-//      query.addQueryData("areaId", areaId);
-//      query.addQueryData("name", name);
-//
-//      PageResult<DeviceInfo> params = deviceService.getDeviceInfoList(query);
-//      model.addAttribute("result", params);
-//      model.addAttribute("areaList", deviceService.getAreaAll());
-//      model.addAttribute("areaId", areaId);
-
-
       model.addAttribute("areaList", areaList);
 
       return "/device/deviceAdd";
@@ -200,6 +188,31 @@ public class DeviceController extends BaseController {
       return "/device/deviceAdd";
     }
   }
+
+//
+
+  /**
+   * 设备管理:执行添加
+   */
+  @RequestMapping(value = "/doDeviceAdd", method = RequestMethod.POST)
+  public String doDeviceAdd(DeviceFormBean deviceFormBean, Model model, RedirectAttributes redirectAttributes) {
+    try {
+      addOptMenu(model, MenuEnum.device);
+      deviceService.addDeviceInfo(deviceFormBean);
+
+      redirectAttributes.addFlashAttribute(SUCCESS, true);
+      redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_SAVE_SUCESS);
+      return "redirect:/device/deviceList";
+    } catch (Exception ex) {
+      redirectAttributes.addFlashAttribute(SUCCESS, false);
+      redirectAttributes.addFlashAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "redirect:/device/deviceAdd";
+    }
+  }
+
+
+
 
   /**
    * 开关量输出:配置开关条件

@@ -85,12 +85,10 @@
                   #if($!{row.hasPower()}) 电量 <br/> #end
                   #if($!{row.hasShine()}) 光照: $!{row.shineDown} Lx ~ $!{row.shineUp}Lx ($!{row.shineDev}Lx)<br/> #end
                   #if($!{row.hasPressure()}) 压力: $!unitUtil.changePressure($!{row.pressureDown})Pa ~ $!unitUtil.changePressure($!{row.pressureUp})Pa ($!unitUtil.changePressure($!{row.pressureDev})Pa)<br/> #end
-                  #if($!{row.hasSmoke()}) 烟感: <br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationDeviceInfo.address}<br/> #end
-                  #if($!{row.hasWater()}) 浸水:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationDeviceInfo.address}<br/> #end
-                  #if($!{row.haslectric()}) 停电来点:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationDeviceInfo.address}<br/> #end
-                  #if($!{row.hasOut()}) 控制通道: $!{row.controlWay}<br/>
-
-                  #end
+                  #if($!{row.hasSmoke()}) 烟感: <br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
+                  #if($!{row.hasWater()}) 浸水:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
+                  #if($!{row.haslectric()}) 停电来点:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
+                  #if($!{row.hasOut()}) 控制通道: $!{row.controlWay}<br/>#end
               </td>
               <td>
                 #if($!{row.hasOut()})

@@ -35,5 +35,9 @@ public class ApplicationUtil {
     return list;
   }
 
+  public static DeviceTypeEnum[] getAllDeviceTypes() {
+    return DeviceTypeEnum.values();
+  }
+
 
 }

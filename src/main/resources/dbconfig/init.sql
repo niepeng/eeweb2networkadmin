@@ -58,39 +58,37 @@ CREATE TABLE `t_sms_phone` (
 
 CREATE TABLE `t_device_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `area_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '所属区域',
+  `area_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '所属区域',
   `sn` varchar(64) DEFAULT NULL COMMENT 'sn号',
   `name` varchar(64) DEFAULT NULL COMMENT '名称',
   `tag` varchar(128) DEFAULT NULL COMMENT '标签',
-  `address` int(11) not NULL  DEFAULT 0 COMMENT '设备地址',
-  `type` int(11) not NULL  DEFAULT 0 COMMENT '设备类型:按位存储',
+  `address` int(11) NOT NULL DEFAULT '0' COMMENT '设备地址',
+  `type` int(11) NOT NULL DEFAULT '0' COMMENT '设备类型:按位存储',
+  `temp_up` int(11) NOT NULL DEFAULT '0' COMMENT '温度上限:23.34,存储2334',
+  `temp_down` int(11) NOT NULL DEFAULT '0' COMMENT '温度下限:23.34,存储2334',
+  `temp_dev` int(11) NOT NULL DEFAULT '0' COMMENT '温度校正值:23.34,存储2334',
+  `humi_up` int(11) NOT NULL DEFAULT '0' COMMENT '湿度上限:45.67,存储4567',
+  `humi_down` int(11) NOT NULL DEFAULT '0' COMMENT '湿度下限:45.67,存储4567',
+  `humi_dev` int(11) NOT NULL DEFAULT '0' COMMENT '湿度校正值:45.67,存储4567',
+  `shine_up` int(11) NOT NULL DEFAULT '0' COMMENT '光照上限',
+  `shine_down` int(11) NOT NULL DEFAULT '0' COMMENT '光照下限',
+  `shine_dev` int(11) NOT NULL DEFAULT '0' COMMENT '光照校正值',
+  `pressure_up` int(11) NOT NULL DEFAULT '0' COMMENT '压力上限',
+  `pressure_down` int(11) NOT NULL DEFAULT '0' COMMENT '压力下限',
+  `pressure_dev` int(11) NOT NULL DEFAULT '0' COMMENT '压力校正值',
 
-  `temp_up` int(11) not NULL  DEFAULT 0 COMMENT '温度上限:23.34,存储2334',
-  `temp_down` int(11) not NULL  DEFAULT 0 COMMENT '温度下限:23.34,存储2334',
-  `temp_dev` int(11) not NULL  DEFAULT 0 COMMENT '温度校正值:23.34,存储2334',
+  `control_way` smallint(4) unsigned NOT NULL DEFAULT '0' COMMENT '只有开关量输出才有值:控制通道',
 
-  `humi_up` int(11) not NULL  DEFAULT 0 COMMENT '湿度上限:45.67,存储4567',
-  `humi_down` int(11) not NULL  DEFAULT 0 COMMENT '湿度下限:45.67,存储4567',
-  `humi_dev` int(11) not NULL  DEFAULT 0 COMMENT '湿度校正值:45.67,存储4567',
-
-  `shine_up` int(11) not NULL  DEFAULT 0 COMMENT '光照上限',
-  `shine_down` int(11) not NULL  DEFAULT 0 COMMENT '光照下限',
-  `shine_dev` int(11) not NULL  DEFAULT 0 COMMENT '光照校正值',
-
-  `pressure_up` int(11) not NULL  DEFAULT 0 COMMENT '压力上限',
-  `pressure_down` int(11) not NULL  DEFAULT 0 COMMENT '压力下限',
-  `pressure_dev` int(11) not NULL  DEFAULT 0 COMMENT '压力校正值',
-
-  `control_way` smallint(4) unsigned not NULL  DEFAULT 0 COMMENT '只有开关量输出才有值:控制通道',
-  `relation_out_id` bigint(20) not NULL  DEFAULT 0 COMMENT '只有开关量输入才有值:关联对应的开关量输出的id(本表的id)',
-  -- 是否需要输入通道? 联动开关通道?
-
+  `relation_out_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '只有开关量输入才有值: 联动开关量输出,关联对应的开关输出的id(本表的id)',
+  `openclose_way` smallint(4) NOT NULL DEFAULT '0' COMMENT '只有开关量输入才有值:联动开关通道',
+  `in_way` smallint(4) NOT NULL DEFAULT '0' COMMENT '只有开关量输入才有值:输入通道',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
   `created_by` varchar(45) DEFAULT NULL COMMENT '创建人',
   `updated_by` varchar(45) DEFAULT NULL COMMENT '修改人',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='设备信息表';
+
 
 
 CREATE TABLE `t_out_condition` (

@@ -56,6 +56,19 @@ function checkFormatInt(obj) {
   return false;
 }
 
+
+function checkFormatInt(obj, msg) {
+  var data = obj.val();
+  if(data % 1 == 0) {
+    obj.removeClass("red");
+    return true;
+  }
+  alert(msg);
+  obj.addClass("red");
+  return false;
+}
+
+
 function checkFormatDate(obj) {
   var data = obj.val();
   var flag = validateDate(data);
