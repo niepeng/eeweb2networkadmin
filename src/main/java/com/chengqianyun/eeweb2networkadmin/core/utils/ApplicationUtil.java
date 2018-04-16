@@ -35,6 +35,10 @@ public class ApplicationUtil {
     return list;
   }
 
+  public boolean hasDeviceType(int value, int type) {
+    return DeviceTypeEnum.hasType(value, DeviceTypeEnum.getOneById(type));
+  }
+
   public static DeviceTypeEnum[] getAllDeviceTypes() {
     return DeviceTypeEnum.values();
   }

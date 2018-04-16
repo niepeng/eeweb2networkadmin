@@ -25,7 +25,7 @@ public class UnitUtil {
   }
 
   public static String chu100(int value) {
-    return ArithUtil.div2Str(value, 100, 2);
+    return String.valueOf(ArithUtil.div(value, 100));
   }
 
   public static int changeTemp(String value) {

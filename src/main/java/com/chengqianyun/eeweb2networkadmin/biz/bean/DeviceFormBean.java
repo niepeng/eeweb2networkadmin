@@ -16,6 +16,10 @@ import lombok.ToString;
 @ToString
 public class DeviceFormBean {
 
+  /**
+   * id,在添加的时候为空,所以设计成string类型的
+   */
+  private String id;
 
   /**
    * 所属区域

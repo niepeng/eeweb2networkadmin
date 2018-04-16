@@ -17,12 +17,12 @@
       <li>
         <a href="${www}/device/deviceList">列表</a>
       </li>
-      <li class="active">新增设备</li>
+      <li class="active">修改设备</li>
     </ul><!-- .breadcrumb -->
   </div>
   <div class="page-content">
     <div class="page-header">
-      <h1>新增设备</h1>
+      <h1>修改设备: $!{deviceInfo.name}($!{deviceInfo.tag})</h1>
     </div>
     #if(${msg})
       <div>
@@ -34,7 +34,11 @@
       </div>
     #end
 
-    <form id="inputForm" action="${www}/device/doDeviceAdd" method="post" class="form-horizontal" onsubmit="javascript:return doSubmitDevice();">
+    <form id="inputForm" action="${www}/device/doDeviceUpdate" method="post" class="form-horizontal" onsubmit="javascript:return doSubmitDevice();">
+
+      <input type="hidden" name="id" value="$!{deviceInfo.id}" />
+      <input type="hidden" name="sn" id="sn" value="$!{deviceInfo.sn}" />
+
       <div class="row">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
@@ -43,7 +47,7 @@
               <select name="areaId" id="areaId">
                 <option value="0">全部</option>
                 #foreach($tmpArea in $areaList)
-                  <option #if("$tmpArea.id" == "$!areaId") selected #end value="$tmpArea.id">$!tmpArea.name</option>
+                  <option #if("$tmpArea.id" == "$!{deviceInfo.areaId}") selected #end value="$tmpArea.id">$!tmpArea.name</option>
                 #end
               </select>
             </div>
@@ -55,7 +59,7 @@
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">sn号：</label>
             <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="sn" name="sn" value="">
+              <input type="text" class="col-sm-12" id="" name="" readonly value="$!{deviceInfo.sn}">
             </div>
           </div>
         </div>
@@ -65,7 +69,7 @@
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">名称：</label>
             <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="name" name="name" value="">
+              <input type="text" class="col-sm-12" id="name" name="name" value="$!{deviceInfo.name}">
             </div>
           </div>
         </div>
@@ -75,7 +79,7 @@
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">标签：</label>
             <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="tag" name="tag" value="">
+              <input type="text" class="col-sm-12" id="tag" name="tag" value="$!{deviceInfo.tag}">
             </div>
           </div>
         </div>
@@ -85,7 +89,7 @@
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">设备地址：</label>
             <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="address" name="address" value="">
+              <input type="text" class="col-sm-12" id="address" name="address" value="$!{deviceInfo.address}">
             </div>
           </div>
         </div>
@@ -96,7 +100,11 @@
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">设备类型：</label>
             #foreach($tmpType in $applicationUtil.getAllDeviceTypes())
-              <input type="checkbox" id="deviceType_$tmpType.id" name="deviceTypes" onchange="changeDeviceType(this)" value="$!tmpType.id" /> $!{tmpType.name}&nbsp;
+              <input type="checkbox" id="deviceType_$tmpType.id" name="deviceTypes" onchange="changeDeviceType(this)" value="$!tmpType.id"
+              #if($applicationUtil.hasDeviceType($deviceInfo.type, $tmpType.id))
+                checked
+              #end
+              /> $!{tmpType.name}&nbsp;
             #end
           </div>
         </div>
@@ -107,9 +115,9 @@
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">温度信息：</label>
-            温度上限 <input type="text" style="width: 60px;" id="tempUpStr" name="tempUpStr" value="">℃ &nbsp;
-            温度下限 <input type="text" style="width: 60px;" id="tempDownStr" name="tempDownStr" value="">℃ &nbsp;
-            温度校正值 <input type="text" style="width: 60px;" id="tempDevStr" name="tempDevStr" value="">℃
+            温度上限 <input type="text" style="width: 60px;" id="tempUpStr" name="tempUpStr" value="$unitUtil.changeTemp($!{deviceInfo.tempUp})">℃ &nbsp;
+            温度下限 <input type="text" style="width: 60px;" id="tempDownStr" name="tempDownStr" value="$unitUtil.changeTemp($!{deviceInfo.tempDown})">℃ &nbsp;
+            温度校正值 <input type="text" style="width: 60px;" id="tempDevStr" name="tempDevStr" value="$unitUtil.changeTemp($!{deviceInfo.tempDev})">℃
           </div>
         </div>
       </div>
@@ -118,9 +126,9 @@
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">湿度信息：</label>
-            湿度上限 <input type="text" style="width: 60px;" id="humiUpStr" name="humiUpStr" value="">%RH &nbsp;
-            湿度下限 <input type="text" style="width: 60px;" id="humiDownStr" name="humiDownStr" value="">%RH &nbsp;
-            湿度校正值 <input type="text" style="width: 60px;" id="humiDevStr" name="humiDevStr" value="">%RH
+            湿度上限 <input type="text" style="width: 60px;" id="humiUpStr" name="humiUpStr" value="$unitUtil.changeHumi($!{deviceInfo.humiUp})">%RH &nbsp;
+            湿度下限 <input type="text" style="width: 60px;" id="humiDownStr" name="humiDownStr" value="$unitUtil.changeHumi($!{deviceInfo.humiDown})">%RH &nbsp;
+            湿度校正值 <input type="text" style="width: 60px;" id="humiDevStr" name="humiDevStr" value="$unitUtil.changeHumi($!{deviceInfo.humiDev})">%RH
           </div>
         </div>
       </div>
@@ -130,9 +138,9 @@
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">光照信息：</label>
-            光照上限 <input type="text" style="width: 60px;" id="shineUpStr" name="shineUpStr" value=""> Lx &nbsp;
-            光照下限 <input type="text" style="width: 60px;" id="shineDownStr" name="shineDownStr" value=""> Lx &nbsp;
-            光照校正值 <input type="text" style="width: 60px;" id="shineDevStr" name="shineDevStr" value=""> Lx
+            光照上限 <input type="text" style="width: 60px;" id="shineUpStr" name="shineUpStr" value="$!{deviceInfo.shineUp}"> Lx &nbsp;
+            光照下限 <input type="text" style="width: 60px;" id="shineDownStr" name="shineDownStr" value="$!{deviceInfo.shineDown}"> Lx &nbsp;
+            光照校正值 <input type="text" style="width: 60px;" id="shineDevStr" name="shineDevStr" value="$!{deviceInfo.shineDev}"> Lx
           </div>
         </div>
       </div>
@@ -141,9 +149,9 @@
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">压力信息：</label>
-            压力上限 <input type="text" style="width: 60px;" id="pressureUpStr" name="pressureUpStr" value=""> Pa &nbsp;
-            压力下限 <input type="text" style="width: 60px;" id="pressureDownStr" name="pressureDownStr" value=""> Pa &nbsp;
-            压力校正值 <input type="text" style="width: 60px;" id="pressureDevStr" name="pressureDevStr" value=""> Pa
+            压力上限 <input type="text" style="width: 60px;" id="pressureUpStr" name="pressureUpStr" value="$unitUtil.changePressure($!{deviceInfo.pressureUp})"> Pa &nbsp;
+            压力下限 <input type="text" style="width: 60px;" id="pressureDownStr" name="pressureDownStr" value="$unitUtil.changePressure($!{deviceInfo.pressureDown})"> Pa &nbsp;
+            压力校正值 <input type="text" style="width: 60px;" id="pressureDevStr" name="pressureDevStr" value="$unitUtil.changePressure($!{deviceInfo.pressureDev})"> Pa
           </div>
         </div>
       </div>
@@ -152,18 +160,18 @@
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">开关量输入：</label>
-            联动地址 <input type="text" style="width: 60px;" id="relationOutId" name="relationOutId" value=""> &nbsp;
+            联动地址 <input type="text" style="width: 60px;" id="relationOutId" name="relationOutId" value="$!{deviceInfo.relationOutId}"> &nbsp;
             联动通道 <select id="opencloseWay" name="opencloseWay">
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
+                      <option value="1"  #if("$!{deviceInfo.opencloseWay}" == "1") selected #end>1</option>
+                      <option value="2"  #if("$!{deviceInfo.opencloseWay}" == "2") selected #end>2</option>
+                      <option value="3"  #if("$!{deviceInfo.opencloseWay}" == "3") selected #end>3</option>
+                      <option value="4"  #if("$!{deviceInfo.opencloseWay}" == "4") selected #end>4</option>
                     </select>  &nbsp;
             输入通道  <select id="inWay" name="inWay">
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
+                      <option value="1" #if("$!{deviceInfo.inWay}" == "1") selected #end >1</option>
+                      <option value="2" #if("$!{deviceInfo.inWay}" == "2") selected #end >2</option>
+                      <option value="3" #if("$!{deviceInfo.inWay}" == "3") selected #end >3</option>
+                      <option value="4" #if("$!{deviceInfo.inWay}" == "4") selected #end >4</option>
                     </select>
           </div>
         </div>
@@ -174,15 +182,14 @@
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">开关量输出：</label>
             控制通道 <select id="controlWay" name="controlWay">
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
+                      <option value="1" #if("$!{deviceInfo.controlWay}" == "1") selected #end >1</option>
+                      <option value="2" #if("$!{deviceInfo.controlWay}" == "2") selected #end >2</option>
+                      <option value="3" #if("$!{deviceInfo.controlWay}" == "3") selected #end >3</option>
+                      <option value="4" #if("$!{deviceInfo.controlWay}" == "4") selected #end >4</option>
                     </select>  &nbsp;
           </div>
         </div>
       </div>
-
 
 
       <div class="clearfix form-actions">
@@ -202,4 +209,8 @@
     </form>
   </div><!-- /.main-content -->
   <script src="${www}/js/youcaicommon.js?ts=20180416"></script>
-  <script src="${www}/js/xue.js?ts=20180416"></script>
+  <script src="${www}/js/xue.js?ts=2018041619"></script>
+
+  <script>
+    changeDeviceType();
+  </script>

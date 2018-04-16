@@ -94,8 +94,8 @@
                 #if($!{row.hasOut()})
                   <a href="${www}/device/outConditionList?id=${row.id}">配置开关条件</a><br/>
                 #end
-                <a href="${www}/device/areaUpdate2221?id=${row.id}">修改</a> ｜
-                <a href="${www}/device/deleteArea2222?id=${row.id}" onclick="javascript:return confirm('确认要删除 $!{row.name}?');">删除</a>
+                <a href="${www}/device/deviceUpdate?id=${row.id}">修改</a> ｜
+                <a href="${www}/device/deleteDevice?id=${row.id}" onclick="javascript:return confirm('确认要删除 $!{row.name}?');">删除</a>
               </td>
             </tr>
             #end

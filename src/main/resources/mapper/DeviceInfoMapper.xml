@@ -336,10 +336,10 @@
         updated_by = #{updatedBy,jdbcType=VARCHAR},
       </if>
       <if test="opencloseWay != null" >
-        #{opencloseWay,jdbcType=SMALLINT},
+        openclose_way = #{opencloseWay,jdbcType=SMALLINT},
       </if>
       <if test="inWay != null" >
-        #{inWay,jdbcType=SMALLINT},
+        in_way = #{inWay,jdbcType=SMALLINT}
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -369,7 +369,7 @@
       updated_at = now(),
       updated_by = #{updatedBy,jdbcType=VARCHAR},
       openclose_way = #{opencloseWay,jdbcType=SMALLINT},
-      in_way = #{inWay,jdbcType=SMALLINT},
+      in_way = #{inWay,jdbcType=SMALLINT}
 
     where id = #{id,jdbcType=BIGINT}
   </update>

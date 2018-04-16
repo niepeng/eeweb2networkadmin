@@ -185,6 +185,95 @@ public class DeviceService extends BaseService {
     deviceInfoMapper.insert(deviceInfo);
   }
 
+  public void updateDevice(DeviceFormBean deviceFormBean) {
+    DeviceInfo deviceInfo = deviceInfoMapper.selectByPrimaryKey(StringUtil.str2long(deviceFormBean.getId()));
+    if (deviceInfo == null) {
+      throw new RuntimeException("当前设备不存在,请打开设备列表重新操作");
+    }
+
+    deviceInfo.setName(deviceFormBean.getName());
+    deviceInfo.setAreaId(deviceFormBean.getAreaId());
+    deviceInfo.setTag(deviceFormBean.getTag());
+    deviceInfo.setAddress(deviceFormBean.getAddress());
+    deviceInfo.setType(deviceFormBean.calcDeviceType());
+
+    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.temp)) {
+      deviceInfo.setTempUp(UnitUtil.changeTemp(deviceFormBean.getTempUpStr()));
+      deviceInfo.setTempDown(UnitUtil.changeTemp(deviceFormBean.getTempDownStr()));
+      deviceInfo.setTempDev(UnitUtil.changeTemp(deviceFormBean.getTempDevStr()));
+    } else {
+      deviceInfo.setTempUp(0);
+      deviceInfo.setTempDown(0);
+      deviceInfo.setTempDev(0);
+    }
+
+    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.humi)) {
+      deviceInfo.setHumiUp(UnitUtil.changeHumi(deviceFormBean.getHumiUpStr()));
+      deviceInfo.setHumiDown(UnitUtil.changeHumi(deviceFormBean.getHumiDownStr()));
+      deviceInfo.setHumiDev(UnitUtil.changeHumi(deviceFormBean.getHumiDevStr()));
+    } else {
+      deviceInfo.setHumiUp(0);
+      deviceInfo.setHumiDown(0);
+      deviceInfo.setHumiDev(0);
+    }
+
+    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.shine)) {
+      deviceInfo.setShineUp(StringUtil.str2int(deviceFormBean.getShineUpStr()));
+      deviceInfo.setShineDown(StringUtil.str2int(deviceFormBean.getShineDownStr()));
+      deviceInfo.setShineDev(StringUtil.str2int(deviceFormBean.getShineDevStr()));
+    } else {
+      deviceInfo.setShineUp(0);
+      deviceInfo.setShineDown(0);
+      deviceInfo.setShineDev(0);
+    }
+
+    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.pressure)) {
+      deviceInfo.setPressureUp(UnitUtil.changePressure(deviceFormBean.getPressureUpStr()));
+      deviceInfo.setPressureDown(UnitUtil.changePressure(deviceFormBean.getPressureDownStr()));
+      deviceInfo.setPressureDev(UnitUtil.changePressure(deviceFormBean.getPressureDevStr()));
+    } else {
+      deviceInfo.setPressureUp(0);
+      deviceInfo.setPressureDown(0);
+      deviceInfo.setPressureDev(0);
+    }
+
+    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.smoke) ||
+        DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.water) ||
+        DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.electric)) {
+
+      deviceInfo.setRelationOutId(StringUtil.str2int(deviceFormBean.getRelationOutId()));
+      deviceInfo.setOpencloseWay((short) StringUtil.str2int(deviceFormBean.getOpencloseWay()));
+      deviceInfo.setInWay((short) StringUtil.str2int(deviceFormBean.getInWay()));
+    } else {
+      deviceInfo.setRelationOutId(0);
+      deviceInfo.setOpencloseWay((short) 0);
+      deviceInfo.setInWay((short) 0);
+    }
+
+    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.out)) {
+      deviceInfo.setControlWay((short) StringUtil.str2int(deviceFormBean.getControlWay()));
+    } else {
+      deviceInfo.setControlWay((short) 0);
+    }
+
+    deviceInfoMapper.updateByPrimaryKeySelective(deviceInfo);
+
+  }
+
+  public void deleteDevice(long id) {
+    // 注意:校验在开关量条件中是否存在设备,如果存在不能删除
+    DeviceInfo deviceInfo = deviceInfoMapper.selectByPrimaryKey(id);
+    if (deviceInfo == null) {
+      return;
+    }
+
+    List<OutCondition> conditionList = outConditionMapper.selectConditionSn(deviceInfo.getSn());
+    if (conditionList != null && conditionList.size() > 0) {
+      throw new RuntimeException("该设备存在于开关量条件中,请先删除开关量中的条件");
+    }
+    deviceInfoMapper.deleteByPrimaryKey(id);
+  }
+
   public List<OutCondition> getOutConditionList(long deviceId) {
     List<OutCondition> list = outConditionMapper.listByDeviceId(deviceId);
     if (list != null) {

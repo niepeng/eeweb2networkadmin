@@ -27,6 +27,18 @@ public class StringUtil extends StringUtils {
     return 0D;
   }
 
+  public static long str2long(String str) {
+    if (isEmpty(str)) {
+      return 0;
+    }
+    try {
+      return Long.valueOf(str).longValue();
+    } catch (Exception e) {
+
+    }
+    return 0;
+  }
+
   public static int str2int(String str) {
     if (isEmpty(str)) {
       return 0;
@@ -36,7 +48,6 @@ public class StringUtil extends StringUtils {
     } catch (Exception e) {
 
     }
-
     return 0;
   }
 

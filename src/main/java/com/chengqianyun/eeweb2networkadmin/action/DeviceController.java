@@ -211,6 +211,64 @@ public class DeviceController extends BaseController {
     }
   }
 
+  /**
+   * 设备管理:进入编辑页
+   */
+  @RequestMapping(value = "/deviceUpdate", method = RequestMethod.GET)
+  public String deviceUpdate(Long id, Model model, RedirectAttributes redirectAttributes) {
+    try {
+      addOptMenu(model, MenuEnum.device);
+      DeviceInfo deviceInfo = deviceService.getDeviceInfo(id);
+      List<Area> areaList = deviceService.getAreaAll();
+      model.addAttribute("deviceInfo", deviceInfo);
+      model.addAttribute("areaList", areaList);
+
+      return "/device/deviceUpdate";
+    } catch (Exception ex) {
+      redirectAttributes.addFlashAttribute(SUCCESS, false);
+      redirectAttributes.addFlashAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "redirect:/device/deviceList";
+    }
+  }
+
+  /**
+   * 设备管理:执行修改
+   */
+  @RequestMapping(value = "/doDeviceUpdate", method = RequestMethod.POST)
+  public String doDeviceUpdate(@ModelAttribute DeviceFormBean bean, Model model, RedirectAttributes redirectAttributes) {
+    try {
+      deviceService.updateDevice(bean);
+      redirectAttributes.addFlashAttribute(SUCCESS, true);
+      redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_OPERATE_SUCESS);
+    } catch (Exception ex) {
+      redirectAttributes.addFlashAttribute(SUCCESS, false);
+      redirectAttributes.addFlashAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+    }
+    return "redirect:/device/deviceList";
+  }
+
+
+  /**
+   * 设备管理:删除
+   */
+  @RequestMapping(value = "/deleteDevice", method = RequestMethod.GET)
+  public String deleteDevice(Long id, Model model, RedirectAttributes redirectAttributes) {
+    try {
+      deviceService.deleteDevice(id);
+      redirectAttributes.addFlashAttribute(SUCCESS, true);
+      redirectAttributes.addFlashAttribute(MESSAGE,HdConstant.MESSAGE_RECORD_DELETE_SUCESS);
+      return "redirect:/device/deviceList";
+    } catch (Exception ex) {
+      redirectAttributes.addFlashAttribute(SUCCESS, false);
+      redirectAttributes.addFlashAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "redirect:/device/deviceList";
+    }
+  }
+
+
 
 
 
