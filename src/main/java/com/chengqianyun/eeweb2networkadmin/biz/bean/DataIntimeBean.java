@@ -108,10 +108,8 @@ public class DataIntimeBean {
         elementDataBean.setArea(dataIntime.getDeviceInfo().getArea());
         elementDataBean.setStatus(dataIntime.getStatus());
         if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
-          if (dataIntime.isTempUp()) {
-            elementDataBean.setTempStatus(UpDownEnum.up.getId());
-          } else if (dataIntime.isTempDown()) {
-            elementDataBean.setTempStatus(UpDownEnum.down.getId());
+          if (dataIntime.isTempUp() || dataIntime.isTempDown()) {
+            elementDataBean.setStatus(StatusEnum.alarm.getId());
           } else {
             elementDataBean.setStatus(StatusEnum.normal.getId());
           }
@@ -128,10 +126,8 @@ public class DataIntimeBean {
         elementDataBean.setArea(dataIntime.getDeviceInfo().getArea());
         elementDataBean.setStatus(dataIntime.getStatus());
         if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
-          if (dataIntime.isHumiUp()) {
-            elementDataBean.setHumiStatus(UpDownEnum.up.getId());
-          } else if (dataIntime.isHumiDown()) {
-            elementDataBean.setHumiStatus(UpDownEnum.down.getId());
+          if (dataIntime.isHumiUp() || dataIntime.isHumiDown()) {
+            elementDataBean.setStatus(StatusEnum.alarm.getId());
           } else {
             elementDataBean.setStatus(StatusEnum.normal.getId());
           }
@@ -162,10 +158,8 @@ public class DataIntimeBean {
         elementDataBean.setArea(dataIntime.getDeviceInfo().getArea());
         elementDataBean.setStatus(dataIntime.getStatus());
         if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
-          if (dataIntime.isShineUp()) {
-            elementDataBean.setShineStatus(UpDownEnum.up.getId());
-          } else if (dataIntime.isShineDown()) {
-            elementDataBean.setShineStatus(UpDownEnum.down.getId());
+          if (dataIntime.isShineUp() || dataIntime.isShineDown()) {
+            elementDataBean.setStatus(StatusEnum.alarm.getId());
           } else {
             elementDataBean.setStatus(StatusEnum.normal.getId());
           }
@@ -182,10 +176,8 @@ public class DataIntimeBean {
         elementDataBean.setArea(dataIntime.getDeviceInfo().getArea());
         elementDataBean.setStatus(dataIntime.getStatus());
         if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
-          if (dataIntime.isPressureUp()) {
-            elementDataBean.setPressureStatus(UpDownEnum.up.getId());
-          } else if (dataIntime.isPressureDown()) {
-            elementDataBean.setPressureStatus(UpDownEnum.down.getId());
+          if (dataIntime.isPressureUp() || dataIntime.isPressureDown()) {
+            elementDataBean.setStatus(StatusEnum.alarm.getId());
           } else {
             elementDataBean.setStatus(StatusEnum.normal.getId());
           }

@@ -90,7 +90,7 @@
                       <b class="arrow icon-angle-down"></b>
                     </a>
                     <ul class="submenu" #if($showMenu) style="display: block;" #end >
-                      <li><a href="${www}/aaa.html">报警数据</a></li>
+                      <li><a href="${www}/alarm/alarmList">报警数据</a></li>
                     </ul>
                   </li>
 

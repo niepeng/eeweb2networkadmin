@@ -36,40 +36,8 @@ public class ElementDataBean {
 
   private String unit;
 
-  /**
-   * 默认为0, UpDownEnum
-   */
-  private int tempStatus;
-
-  /**
-   * 默认为0, UpDownEnum
-   */
-  private int humiStatus;
-
-  /**
-   * 默认为0, UpDownEnum
-   */
-  private int powerStatus;
-
-  /**
-   * 默认为0, UpDownEnum
-   */
-  private int shineStatus;
-
-  /**
-   * 默认为0, UpDownEnum
-   */
-  private int pressureStatus;
 
   // =============== 扩展方法 =====================
-
-  public boolean isUp() {
-    return tempStatus + humiStatus + powerStatus + shineStatus + pressureStatus == UpDownEnum.up.getId();
-  }
-
-  public boolean isDown() {
-    return tempStatus + humiStatus + powerStatus + shineStatus + pressureStatus == UpDownEnum.down.getId();
-  }
 
 
 }

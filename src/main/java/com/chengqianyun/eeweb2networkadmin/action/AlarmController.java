@@ -1,13 +1,17 @@
 package com.chengqianyun.eeweb2networkadmin.action;
 
 
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.AlarmTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
+import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
+import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import com.chengqianyun.eeweb2networkadmin.service.AlarmService;
 import com.chengqianyun.eeweb2networkadmin.service.DeviceService;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,24 +44,39 @@ public class AlarmController extends BaseController {
   public String alarmList(
       @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
       @RequestParam(value = "pageSize", required = false, defaultValue = "15") int pageSize,
-      @RequestParam(value = "deviceIds", required = false, defaultValue = "") String deviceIds,
+      @RequestParam(value = "deviceName", required = false, defaultValue = "") String deviceName,
       // AlarmTypeEnum
-      @RequestParam(value = "alarmTypes", required = false, defaultValue = "1") String alarmTypes,
-      @RequestParam(value = "alarmUnits", required = false, defaultValue = "") String alarmUnits,
+      @RequestParam(value = "alarmType", required = false, defaultValue = "") String alarmType,
+      // AlarmConfirmEnum
+      @RequestParam(value = "alarmConfirm", required = false, defaultValue = "") String alarmConfirm,
+      @RequestParam(value = "startTime", required = false) String startTime,
+      @RequestParam(value = "endTime", required = false) String endTime,
       Model model) {
     try {
+      if(StringUtil.isEmpty(startTime) && StringUtil.isEmpty(endTime)) {
+        Date now = new Date();
+        startTime = DateUtil.getDate(DateUtil.formatCurrentMin(now), DateUtil.dateFullPattern);
+        endTime = DateUtil.getDate(now, DateUtil.dateFullPattern);
+      }
       addOptMenu(model, MenuEnum.alarm);
       PaginationQuery query = new PaginationQuery();
       query.setPageIndex(pageIndex);
       query.setRowsPerPage(pageSize);
-//      query.addQueryData("areaId", areaId);
-//      query.addQueryData("name", name);
+      query.addQueryData("deviceName", deviceName);
+      query.addQueryData("alarmType", alarmType);
+      query.addQueryData("alarmConfirm", alarmConfirm);
+      query.addQueryData("startTime", startTime);
+      query.addQueryData("endTime", endTime);
 
-      PageResult<DeviceInfo> params = deviceService.getDeviceInfoList(query);
+      PageResult<DeviceAlarm> params = alarmService.getAlarmList(query);
       model.addAttribute("result", params);
       model.addAttribute("areaList", deviceService.getAreaAll());
-//      model.addAttribute("areaId", areaId);
-//      model.addAttribute("name", name);
+
+      model.addAttribute("deviceName", deviceName);
+      model.addAttribute("alarmType", alarmType);
+      model.addAttribute("alarmConfirm", alarmConfirm);
+      model.addAttribute("startTime", startTime);
+      model.addAttribute("endTime", endTime);
 
       return "/alarm/alarmList";
     } catch (Exception ex) {

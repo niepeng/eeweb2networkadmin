@@ -23,89 +23,34 @@ public class DeviceAlarm {
     private long areaId;
 
     /**
-     * 设备类型: DeviceTypeEnum 按位存储
+     * 一种传感器类型: DeviceTypeEnum 中的一位
      */
-    private int deviceType;
+    private int deviceOneType;
 
     /**
-     * AlarmTypeEnum 状态:1报警,2系统确认,3人工确认
+     * 报警类型 AlarmTypeEnum:1 传感器超限, 2烟感,...
      */
-    private int status;
+    private int alarmType;
 
     /**
-     * 温度:23.34,存储2334
+     *  AlarmConfirmEnum :0未确认,1已确认
      */
-    private int temp;
+    private short confirm;
 
     /**
-     * 湿度:45.67,存储4567
+     * UpDownEnum:0默认,1偏高,2偏低
      */
-    private int humi;
+    private short upDown;
 
     /**
-     * 电量:300,代表3v
+     * 设备读取值(报警值)
      */
-    private int power;
+    private int data;
 
     /**
-     * 光照:20000,存储直接值
+     * 设备读取值正常范围
      */
-    private int shine;
-
-    /**
-     * 压力:10000,存储实际值
-     */
-    private int pressure;
-
-    /**
-     * UpDownEnum:1偏高,2偏低,3离线
-     */
-    private short tempStatus;
-
-    /**
-     * UpDownEnum:1偏高,2偏低,3离线
-     */
-    private short humiStatus;
-
-    /**
-     * UpDownEnum:1偏高,2偏低,3离线
-     */
-    private short powerStatus;
-
-    /**
-     * UpDownEnum:1偏高,2偏低,3离线
-     */
-    private short shineStatus;
-
-    /**
-     * UpDownEnum:1偏高,2偏低,3离线
-     */
-    private short pressureStatus;
-
-    /**
-     * 烟感:0没有报警,1报警
-     */
-    private short smoke;
-
-    /**
-     * 跑冒滴漏:0没有报警,1报警
-     */
-    private short water;
-
-    /**
-     * 断电来电:0停电,1来电
-     */
-    private short electric;
-
-    /**
-     * 人体感应:0没有报警,1报警
-     */
-    private short body;
-
-    /**
-     * 开关量输出(报警器)0没有输出,1有输出
-     */
-    private short out;
+    private String dataScope;
 
     /**
      * 最近一次报警时间
@@ -113,39 +58,14 @@ public class DeviceAlarm {
     private Date recentlyAlarmTime;
 
     /**
-     * 系统确认时间
+     * 报警结束时间:如果报警没有结束,同一种类型报警不更新值,只更新最近一次报警时间
      */
-    private Date systemConfirmTime;
+    private Date alarmEndTime;
 
     /**
      * 人工确认时间
      */
     private Date userConfirmTime;
-
-    /**
-     * 温度正常范围
-     */
-    private String tempNormal;
-
-    /**
-     * 温度正常范围
-     */
-    private String humiNormal;
-
-    /**
-     * 电压正常范围
-     */
-    private String powerNormal;
-
-    /**
-     * 光照正常范围
-     */
-    private String shineNormal;
-
-    /**
-     * 压力正常范围
-     */
-    private String pressureNormal;
 
     /**
      * 备注
@@ -172,9 +92,16 @@ public class DeviceAlarm {
      */
     private String updatedBy;
 
+
     // ==============  扩展属性  =================
+
+    private DeviceInfo deviceInfo;
 
 
     // ==============  扩展方法  =================
+
+
+
+
 
 }

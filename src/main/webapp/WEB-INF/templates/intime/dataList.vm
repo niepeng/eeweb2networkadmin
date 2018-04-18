@@ -127,29 +127,22 @@
           #foreach($tmpElementDataBean in $dataIntimeBean.elementDataBeanList)
             <div
             #if("$!{tmpElementDataBean.status}" == "1")
-                class="blockcell_one blockcell_one_normal"
+              #set($showStatus ="正常")
+              class="blockcell_one blockcell_one_normal"
             #elseif("$!{tmpElementDataBean.status}" == "3")
                 class="blockcell_one blockcell_one_offline"
+              #set($showStatus ="离线")
             #else
                 class="blockcell_one blockcell_one_alarm"
+              #set($showStatus ="报警")
             #end
             >
               $!{tmpElementDataBean.deviceInfo.name}($!{tmpElementDataBean.area.name})-$!{tmpElementDataBean.deviceInfo.tag} <br/>
               $!{tmpElementDataBean.data} $!{tmpElementDataBean.unit} &nbsp;
-
-              #set($showStatus = "")
-              #if($tmpElementDataBean.isUp())
-                #set($showStatus = "偏高")
-              #elseif($tmpElementDataBean.isDown())
-                #set($showStatus = "偏低")
-              #end
-              #set($showStatus = $showStatus + $!applicationUtil.getStatus($!{tmpElementDataBean.status}).meaning)
-              $showStatus
-               <br/>
+              $showStatus <br/>
               $dateUtil.getDate($!{tmpElementDataBean.time}, 'yyyy-MM-dd HH:mm:ss')
             </div>
           #end
-
 
         </div>
 

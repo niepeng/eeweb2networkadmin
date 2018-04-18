@@ -2,6 +2,7 @@ package com.chengqianyun.eeweb2networkadmin.service;
 
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.AreaMapper;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarmMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntimeMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfoMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutConditionMapper;
@@ -27,4 +28,7 @@ public class BaseService {
 
   @Autowired
   protected DeviceDataIntimeMapper dataIntimeMapper;
+
+  @Autowired
+  protected DeviceAlarmMapper deviceAlarmMapper;
 }

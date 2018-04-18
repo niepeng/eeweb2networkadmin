@@ -34,9 +34,9 @@
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 
-		<!--<table schema="" tableName="t_device_alarm" domainObjectName="DeviceAlarm"  enableCountByExample="false"-->
-		<!--enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">-->
-		<!--</table>-->
+		<table schema="" tableName="t_device_alarm" domainObjectName="DeviceAlarm"  enableCountByExample="false"
+		enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+		</table>
 
 	</context>
 </generatorConfiguration>

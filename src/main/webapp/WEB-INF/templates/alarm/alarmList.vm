@@ -1,3 +1,6 @@
+<script src="${www}/js/my97DatePicker/WdatePicker.js"></script>
+
+
 <div class="main-content">
   <div class="breadcrumbs" id="breadcrumbs">
     <script type="text/javascript">
@@ -44,24 +47,34 @@
           <div class="col-sm-11">
             <form class="form-inline" role="form">
               <div class="form-group">
-                <label>区域：</label>
-                <select name="areaId" id="areaId">
+                <label>名称：</label>
+                <input type="text" name="deviceName" value="$!{deviceName}">
+                <label>报警类型：</label>
+                <select name="alarmType" id="alarmType">
                   <option value="">全部</option>
-                  #foreach($tmpArea in $areaList)
-                    <option #if("$tmpArea.id" == "$!areaId") selected #end value="$tmpArea.id">$!tmpArea.name</option>
+                  #foreach($tmpAlarmType in $applicationUtil.getAllAlarmTypes())
+                    <option #if("$tmpAlarmType.id" == "$!alarmType") selected #end value="$tmpAlarmType.id">$!tmpAlarmType.meaning</option>
                   #end
                 </select>
-                <label>名称：</label>
-                <input type="text" name="name" value="$!{name}">
+                <label>报警确认：</label>
+                <select name="alarmConfirm" id="alarmConfirm">
+                  <option value="">全部</option>
+                  #foreach($tmpAlarmConfirm in $applicationUtil.getAllConfirms())
+                    <option #if("$tmpAlarmConfirm.id" == "$!alarmConfirm") selected #end value="$tmpAlarmConfirm.id">$!tmpAlarmConfirm.meaning</option>
+                  #end
+                </select>
+                <label>首次报警时间：</label>
+                <input type="text" class="input-date" name="startTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="$!{startTime}"> ~
+                <input type="text" class="input-date" name="endTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="$!{endTime}">
               </div>
               <div class="form-group">
                 <button class="btn btn-xs btn-primary" type="submit">查询</button>
               </div>
             </form>
           </div>
-          <div class="col-sm-1 text-right">
-            <a href="${www}/device/deviceAdd" class="btn btn-success btn-xs">添加</a>
-          </div>
+##          <div class="col-sm-1 text-right">
+##            <a href="${www}/device/deviceAdd" class="btn btn-success btn-xs">添加</a>
+##          </div>
         </div>
         <table id="dataTableResizeCol" class="table table-striped table-bordered table-hover dataTable">
           <thead>
@@ -105,7 +118,7 @@
           <div class="col-sm-12">
             <div class="dataTables_paginate paging_bootstrap">
               <ul class="pagination">
-                #set($pageRequestURL="${www}/device/deviceList?pageIndex=[PAGINATION_PAGE_INDEX]#if($!{result.queryParameters})&$!{result.queryParameters}#end")
+                #set($pageRequestURL="${www}/alarm/alarmList?pageIndex=[PAGINATION_PAGE_INDEX]#if($!{result.queryParameters})&$!{result.queryParameters}#end")
                 #paginationHelper($result $pageRequestURL)
               </ul>
             </div>

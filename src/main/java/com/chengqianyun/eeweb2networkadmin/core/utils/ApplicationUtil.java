@@ -1,6 +1,8 @@
 package com.chengqianyun.eeweb2networkadmin.core.utils;
 
 
+import com.chengqianyun.eeweb2networkadmin.biz.enums.AlarmConfirmEnum;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.AlarmTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.UpDownEnum;
@@ -58,5 +60,13 @@ public class ApplicationUtil {
     return UpDownEnum.find(id);
   }
 
+
+  public static AlarmTypeEnum[] getAllAlarmTypes() {
+    return AlarmTypeEnum.values();
+  }
+
+  public static AlarmConfirmEnum[] getAllConfirms() {
+    return AlarmConfirmEnum.values();
+  }
 
 }

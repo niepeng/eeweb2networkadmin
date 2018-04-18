@@ -21,6 +21,34 @@ public class DateUtil {
   public static String dateFullPatternNoSecond =  datePattern + " " + "HH:mm";
 
 
+
+  public static Date formatCurrentMin(Date date) {
+    if (date == null) {
+      return null;
+    }
+    Calendar c = Calendar.getInstance();
+    c.setTime(date);
+    c.set(Calendar.HOUR_OF_DAY, 0);
+    c.set(Calendar.MINUTE, 0);
+    c.set(Calendar.SECOND, 0);
+    c.set(Calendar.MILLISECOND, 0);
+    return c.getTime();
+  }
+
+  public static Date formatCurrentMax(Date date) {
+    if (date == null) {
+      return null;
+    }
+    Calendar c = Calendar.getInstance();
+    c.setTime(date);
+    c.set(Calendar.HOUR_OF_DAY, 23);
+    c.set(Calendar.MINUTE, 59);
+    c.set(Calendar.SECOND, 0);
+    c.set(Calendar.MILLISECOND, 0);
+    return c.getTime();
+  }
+
+
   /**
    * 根据默认日期格式，返回日期字符串。
    *
