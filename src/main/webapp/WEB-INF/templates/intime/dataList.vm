@@ -108,7 +108,7 @@
           </div>
 
           <div class="col-sm-1 text-right">
-            <a href="${www}/device/xxxx" class="btn btn-success btn-xs">收齐条件?不处理?</a>
+            <a href="${www}/intime/dataList2" class="btn btn-success btn-xs">切换总览</a>
           </div>
         </div>
 
@@ -137,9 +137,31 @@
               #set($showStatus ="报警")
             #end
             >
+
+              ## 设备名称(区域)-标签
               $!{tmpElementDataBean.deviceInfo.name}($!{tmpElementDataBean.area.name})-$!{tmpElementDataBean.deviceInfo.tag} <br/>
-              $!{tmpElementDataBean.data} $!{tmpElementDataBean.unit} &nbsp;
-              $showStatus <br/>
+
+              ## 数据值展示和单位
+              #if($!{tmpElementDataBean.deviceOneTypeEnum.isDataDevice()})
+                #if("$!{tmpElementDataBean.status}" != "3") $!{tmpElementDataBean.data} #else -- #end $!{tmpElementDataBean.deviceOneTypeEnum.unit} &nbsp;
+              #end
+
+              ## 展示文案如:温度正常
+              #if("$!{tmpElementDataBean.status}" == "3")
+                $!{tmpElementDataBean.deviceOneTypeEnum.name}离线
+              #else
+                #if("$!{tmpElementDataBean.deviceOneTypeEnum.id}" == "128")
+                  #if("$!{tmpElementDataBean.status}" == "1")
+                    来电
+                  #else
+                    停电
+                   #end
+                #else
+                  #set($showStatus = $!{tmpElementDataBean.deviceOneTypeEnum.name} + $showStatus)
+                  $showStatus
+                #end
+              #end
+              <br/>
               $dateUtil.getDate($!{tmpElementDataBean.time}, 'yyyy-MM-dd HH:mm:ss')
             </div>
           #end

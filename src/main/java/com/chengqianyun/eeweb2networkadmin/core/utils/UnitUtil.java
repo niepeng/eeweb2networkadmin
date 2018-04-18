@@ -1,5 +1,7 @@
 package com.chengqianyun.eeweb2networkadmin.core.utils;
 
+import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
+
 /**
  * @author 聂鹏
  * @version 1.0
@@ -44,10 +46,40 @@ public class UnitUtil {
     return (int)ArithUtil.mul(StringUtil.str2Double(value), 100);
   }
 
+
+  public static String showValueAndUnit(int data, DeviceTypeEnum typeEnum) {
+    return showValue(data, typeEnum) + (typeEnum != null ? typeEnum.getUnit() : "");
+  }
+
+  public static String showValue(int data, DeviceTypeEnum typeEnum) {
+    if (typeEnum == DeviceTypeEnum.temp) {
+      return changeTemp(data);
+    }
+
+    if (typeEnum == DeviceTypeEnum.humi) {
+      return changeHumi(data);
+    }
+
+    if (typeEnum == DeviceTypeEnum.power) {
+      return changePower(data);
+    }
+
+    if (typeEnum == DeviceTypeEnum.shine) {
+      return String.valueOf(data);
+    }
+
+    if (typeEnum == DeviceTypeEnum.pressure) {
+      return changePressure(data);
+    }
+    return "";
+  }
+
   public static void main(String[] args) {
     String s = "12.39";
     System.out.println(changeTemp(s));
   }
+
+
 
 
 }

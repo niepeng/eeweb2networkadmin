@@ -1,5 +1,6 @@
 package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
+import com.chengqianyun.eeweb2networkadmin.core.utils.BizConstant;
 import java.util.Date;
 import lombok.Data;
 import lombok.ToString;
@@ -58,7 +59,7 @@ public class DeviceDataIntime {
     private short water;
 
     /**
-     * 断电来电:0断电,1来电
+     * 断电来电:0来电,1断电(报警)
      */
     private short electric;
 
@@ -119,6 +120,13 @@ public class DeviceDataIntime {
         return humi + deviceInfo.getHumiDev() < deviceInfo.getHumiDown();
     }
 
+    public boolean isPowerUp() {
+        return power > BizConstant.power_max;
+    }
+
+    public boolean isPowerDown() {
+        return power < BizConstant.power_min;
+    }
 
     public boolean isShineUp() {
         return shine - deviceInfo.getShineDev() > deviceInfo.getShineUp();
@@ -136,5 +144,22 @@ public class DeviceDataIntime {
     public boolean isPressureDown() {
         return pressure + deviceInfo.getPressureDev() < deviceInfo.getPressureDown();
     }
+
+    public boolean isSmokeAlarm() {
+        return smoke == (short) 1;
+    }
+
+    public boolean isWaterAlarm() {
+        return water == (short) 1;
+    }
+
+    public boolean isElectricAlarm() {
+        return electric == (short) 1;
+    }
+
+    public boolean isBodyAlarm() {
+        return body == (short) 1;
+    }
+
 
 }

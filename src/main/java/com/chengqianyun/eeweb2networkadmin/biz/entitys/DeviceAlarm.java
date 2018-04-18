@@ -1,5 +1,8 @@
 package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
+import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.UpDownEnum;
+import com.chengqianyun.eeweb2networkadmin.core.utils.UnitUtil;
 import java.util.Date;
 import lombok.Data;
 import lombok.ToString;
@@ -99,6 +102,15 @@ public class DeviceAlarm {
 
 
     // ==============  扩展方法  =================
+
+    public String showAlarmMsg() {
+        DeviceTypeEnum typeEnum = DeviceTypeEnum.getOneById(deviceOneType);
+        if (typeEnum.isDataDevice()) {
+            // 温度偏高，当前温度30℃，请及时处理！
+            return typeEnum.getName() + (UpDownEnum.find(upDown).getMeaning()) + ", 当前" + typeEnum.getName() + UnitUtil.showValueAndUnit(data, typeEnum) + "，请及时处理！";
+        }
+        return "";
+    }
 
 
 

@@ -11,27 +11,29 @@ import lombok.Getter;
 @Getter
 public enum DeviceTypeEnum {
 
-  temp(1,"温度", true),
-  humi(2,"湿度", true),
-  power(4,"电量", true),
-  shine(8,"光照", true),
-  pressure(16,"压力", true),
-  smoke(32,"烟感", false),
-  water(64,"跑冒滴漏", false),
-  electric(128,"断电来电", false),
-  body(256,"人体感应", false),
-  out(512,"开关量输出", false),
+  temp(1,"温度", true, "℃"),
+  humi(2,"湿度", true, "%RH"),
+  power(4,"电量", true, "V"),
+  shine(8,"光照", true, "Lx"),
+  pressure(16,"压力", true, "kPa"),
+  smoke(32,"烟感", false, ""),
+  water(64,"跑冒滴漏", false, ""),
+  electric(128,"断电来电", false, ""),
+  body(256,"人体感应", false, ""),
+  out(512,"开关量输出", false, ""),
   ;
 
   final int id;
   final String name;
   final boolean isDataDevice;
+  final String unit;
 
 
-  private DeviceTypeEnum(int id, String name, boolean isDataDevice) {
+  private DeviceTypeEnum(int id, String name, boolean isDataDevice, String unit) {
     this.id = id;
     this.name = name;
     this.isDataDevice = isDataDevice;
+    this.unit = unit;
   }
 
   public static DeviceTypeEnum getOneById(int id) {

@@ -79,37 +79,58 @@
         <table id="dataTableResizeCol" class="table table-striped table-bordered table-hover dataTable">
           <thead>
           <tr>
-            <th>sn号</th>
-            <th>名称(区域)-标签</th>
-            <th>设备地址</th>
-            <th>类型值(校正值)</th>
+            <th>名称</th>
+            <th>报警信息</th>
+            <th>报警</th>
+            <th>结束报警</th>
+            <th>备注信息</th>
+            <th>已读</th>
             <th>操作</th>
           </tr>
           </thead>
           <tbody>
             #foreach($row in $result.rows)
             <tr>
-              <td>$!{row.sn}</td>
-              <td> $!{row.name}($!{row.area.name})-$!{row.tag}</td>
-              <td>$!{row.address}</td>
+              <td>$!{row.deviceInfo.name}</td>
               <td>
-                #if($!{row.hasTemp()}) 温度: $!unitUtil.changeTemp($!{row.tempDown})℃ ~ $!unitUtil.changeTemp($!{row.tempUp}) ℃ ($!unitUtil.changeTemp($!{row.tempDev})℃)<br/> #end
-                #if($!{row.hasHumi()}) 湿度: $!unitUtil.changeHumi($!{row.humiDown})%RH ~ $!unitUtil.changeHumi($!{row.humiUp})%RH ($!unitUtil.changeHumi($!{row.humiDev})%RH)<br/> #end
-                #if($!{row.hasPower()}) 电量 <br/> #end
-                #if($!{row.hasShine()}) 光照: $!{row.shineDown} Lx ~ $!{row.shineUp}Lx ($!{row.shineDev}Lx)<br/> #end
-                #if($!{row.hasPressure()}) 压力: $!unitUtil.changePressure($!{row.pressureDown})Pa ~ $!unitUtil.changePressure($!{row.pressureUp})Pa ($!unitUtil.changePressure($!{row.pressureDev})Pa)<br/> #end
-                #if($!{row.hasSmoke()}) 烟感: <br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
-                #if($!{row.hasWater()}) 跑冒滴漏:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
-                #if($!{row.haslectric()}) 断电来电:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
-                #if($!{row.hasOut()}) 控制通道: $!{row.controlWay}<br/>#end
+                $!{row.showAlarmMsg()}
               </td>
               <td>
-                #if($!{row.hasOut()})
-                  <a href="${www}/device/outConditionList?id=${row.id}">配置开关条件</a><br/>
-                #end
-                <a href="${www}/device/deviceUpdate?id=${row.id}">修改</a> ｜
-                <a href="${www}/device/deleteDevice?id=${row.id}" onclick="javascript:return confirm('确认要删除 $!{row.name}?');">删除</a>
+                  首次:$!dateUtil.getDate($!{row.createdAt}, 'yyyy-MM-dd HH:mm:ss') <br/>
+                  最近:$!dateUtil.getDate($!{row.recentlyAlarmTime}, 'yyyy-MM-dd HH:mm:ss') <br/>
               </td>
+              <td>#if($!{row.alarmEndTime} == "")
+                    未结束
+                  #else
+                    $!dateUtil.getDate($!{row.alarmEndTime}, 'yyyy-MM-dd HH:mm:ss')
+                  #end
+              </td>
+              <td>$!{row.note}</td>
+              <td>#if($!{row.confirm} == 0) 未读 #else 已读 #end</td>
+              <td>
+                备注
+              </td>
+##              <td>$!{row.sn}</td>
+##              <td> $!{row.name}($!{row.area.name})-$!{row.tag}</td>
+##              <td>$!{row.address}</td>
+##              <td>
+##                #if($!{row.hasTemp()}) 温度: $!unitUtil.changeTemp($!{row.tempDown})℃ ~ $!unitUtil.changeTemp($!{row.tempUp}) ℃ ($!unitUtil.changeTemp($!{row.tempDev})℃)<br/> #end
+##                #if($!{row.hasHumi()}) 湿度: $!unitUtil.changeHumi($!{row.humiDown})%RH ~ $!unitUtil.changeHumi($!{row.humiUp})%RH ($!unitUtil.changeHumi($!{row.humiDev})%RH)<br/> #end
+##                #if($!{row.hasPower()}) 电量 <br/> #end
+##                #if($!{row.hasShine()}) 光照: $!{row.shineDown} Lx ~ $!{row.shineUp}Lx ($!{row.shineDev}Lx)<br/> #end
+##                #if($!{row.hasPressure()}) 压力: $!unitUtil.changePressure($!{row.pressureDown})Pa ~ $!unitUtil.changePressure($!{row.pressureUp})Pa ($!unitUtil.changePressure($!{row.pressureDev})Pa)<br/> #end
+##                #if($!{row.hasSmoke()}) 烟感: <br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
+##                #if($!{row.hasWater()}) 跑冒滴漏:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
+##                #if($!{row.haslectric()}) 断电来电:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
+##                #if($!{row.hasOut()}) 控制通道: $!{row.controlWay}<br/>#end
+##              </td>
+##              <td>
+##                #if($!{row.hasOut()})
+##                  <a href="${www}/device/outConditionList?id=${row.id}">配置开关条件</a><br/>
+##                #end
+##                <a href="${www}/device/deviceUpdate?id=${row.id}">修改</a> ｜
+##                <a href="${www}/device/deleteDevice?id=${row.id}" onclick="javascript:return confirm('确认要删除 $!{row.name}?');">删除</a>
+##              </td>
             </tr>
             #end
           </tbody>

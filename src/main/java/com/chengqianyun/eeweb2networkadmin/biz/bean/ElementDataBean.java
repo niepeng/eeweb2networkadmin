@@ -3,6 +3,7 @@ package com.chengqianyun.eeweb2networkadmin.biz.bean;
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.UpDownEnum;
 import java.util.Date;
 import lombok.Data;
@@ -32,10 +33,7 @@ public class ElementDataBean {
 
   private Date time;
 
-  private int deviceOneType;
-
-  private String unit;
-
+  private DeviceTypeEnum deviceOneTypeEnum;
 
   // =============== 扩展方法 =====================
 

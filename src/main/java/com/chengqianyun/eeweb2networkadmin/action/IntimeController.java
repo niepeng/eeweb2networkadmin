@@ -34,7 +34,7 @@ public class IntimeController extends BaseController {
   private DeviceIntimeService deviceIntimeService;
 
   /**
-   * 实时数据展示
+   * 实时数据展示1
    */
   @RequestMapping( value = "/dataList", method = RequestMethod.GET)
   public String dataList(
@@ -66,5 +66,36 @@ public class IntimeController extends BaseController {
       return "/intime/dataList";
     }
   }
+
+  /**
+   * 实时数据展示2
+   */
+  @RequestMapping( value = "/dataList2", method = RequestMethod.GET)
+  public String dataList2(
+      // 报警状态:StatusEnum
+      @RequestParam(value = "status", required = false, defaultValue = "") String status,
+      // 设备区域
+      @RequestParam(value = "areaId", required = false, defaultValue = "") String areaId,
+      // 名称
+      @RequestParam(value = "name", required = false, defaultValue = "") String name,
+      Model model) {
+    try {
+      addOptMenu(model, MenuEnum.intime);
+      List<Area> areaList = deviceService.getAreaAll();
+//      DataIntimeBean dataIntimeBean = new DataIntimeBean();
+//      dataIntimeBean.setDeviceTypes(deviceTypes);
+//
+//      deviceIntimeService.deviceDataIntime(dataIntimeBean);
+      model.addAttribute("areaList", areaList);
+//      model.addAttribute("dataIntimeBean", dataIntimeBean);
+      return "/intime/dataList2";
+    } catch (Exception ex) {
+      model.addAttribute(SUCCESS, false);
+      model.addAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "/intime/dataList2";
+    }
+  }
+
 
 }

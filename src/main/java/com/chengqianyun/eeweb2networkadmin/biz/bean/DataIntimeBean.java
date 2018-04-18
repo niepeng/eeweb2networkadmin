@@ -116,8 +116,7 @@ public class DataIntimeBean {
         }
         elementDataBean.setTime(dataIntime.getUpdatedAt());
         elementDataBean.setData(UnitUtil.changeTemp(dataIntime.getTemp()));
-        elementDataBean.setDeviceOneType(DeviceTypeEnum.temp.getId());
-        elementDataBean.setUnit("℃");
+        elementDataBean.setDeviceOneTypeEnum(DeviceTypeEnum.temp);
         elementDataBeanList.add(elementDataBean);
       }
       if (hasOneDeviceType(DeviceTypeEnum.humi.getId()) && DeviceTypeEnum.hasType(tmpType, DeviceTypeEnum.humi)) {
@@ -134,8 +133,7 @@ public class DataIntimeBean {
         }
         elementDataBean.setTime(dataIntime.getUpdatedAt());
         elementDataBean.setData(UnitUtil.changeHumi(dataIntime.getHumi()));
-        elementDataBean.setDeviceOneType(DeviceTypeEnum.humi.getId());
-        elementDataBean.setUnit("%RH");
+        elementDataBean.setDeviceOneTypeEnum(DeviceTypeEnum.humi);
         elementDataBeanList.add(elementDataBean);
       }
       if (hasOneDeviceType(DeviceTypeEnum.power.getId()) && DeviceTypeEnum.hasType(tmpType, DeviceTypeEnum.power)) {
@@ -144,12 +142,15 @@ public class DataIntimeBean {
         elementDataBean.setArea(dataIntime.getDeviceInfo().getArea());
         elementDataBean.setStatus(dataIntime.getStatus());
         if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
-//          elementDataBean.setStatus(dataIntime.isShineUp() ? UpDownEnum.up.getId() : UpDownEnum.down.getId());
+          if (dataIntime.isPowerUp() || dataIntime.isPowerDown()) {
+            elementDataBean.setStatus(StatusEnum.alarm.getId());
+          } else {
+            elementDataBean.setStatus(StatusEnum.normal.getId());
+          }
         }
         elementDataBean.setTime(dataIntime.getUpdatedAt());
         elementDataBean.setData(UnitUtil.changePower(dataIntime.getPower()));
-        elementDataBean.setDeviceOneType(DeviceTypeEnum.power.getId());
-        elementDataBean.setUnit("V");
+        elementDataBean.setDeviceOneTypeEnum(DeviceTypeEnum.power);
         elementDataBeanList.add(elementDataBean);
       }
       if (hasOneDeviceType(DeviceTypeEnum.shine.getId()) && DeviceTypeEnum.hasType(tmpType, DeviceTypeEnum.shine)) {
@@ -166,8 +167,7 @@ public class DataIntimeBean {
         }
         elementDataBean.setTime(dataIntime.getUpdatedAt());
         elementDataBean.setData(String.valueOf(dataIntime.getShine()));
-        elementDataBean.setDeviceOneType(DeviceTypeEnum.shine.getId());
-        elementDataBean.setUnit("Lx");
+        elementDataBean.setDeviceOneTypeEnum(DeviceTypeEnum.shine);
         elementDataBeanList.add(elementDataBean);
       }
       if (hasOneDeviceType(DeviceTypeEnum.pressure.getId()) && DeviceTypeEnum.hasType(tmpType, DeviceTypeEnum.pressure)) {
@@ -184,8 +184,7 @@ public class DataIntimeBean {
         }
         elementDataBean.setTime(dataIntime.getUpdatedAt());
         elementDataBean.setData(UnitUtil.changePressure(dataIntime.getPressure()));
-        elementDataBean.setDeviceOneType(DeviceTypeEnum.pressure.getId());
-        elementDataBean.setUnit("Pa");
+        elementDataBean.setDeviceOneTypeEnum(DeviceTypeEnum.pressure);
         elementDataBeanList.add(elementDataBean);
       }
       if (hasOneDeviceType(DeviceTypeEnum.smoke.getId()) && DeviceTypeEnum.hasType(tmpType, DeviceTypeEnum.smoke)) {
@@ -193,9 +192,16 @@ public class DataIntimeBean {
         elementDataBean.setDeviceInfo(dataIntime.getDeviceInfo());
         elementDataBean.setArea(dataIntime.getDeviceInfo().getArea());
         elementDataBean.setStatus(dataIntime.getStatus());
+        if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
+          if (dataIntime.isSmokeAlarm()) {
+            elementDataBean.setStatus(StatusEnum.alarm.getId());
+          } else {
+            elementDataBean.setStatus(StatusEnum.normal.getId());
+          }
+        }
         elementDataBean.setTime(dataIntime.getUpdatedAt());
         elementDataBean.setData(String.valueOf(dataIntime.getSmoke()));
-        elementDataBean.setDeviceOneType(DeviceTypeEnum.smoke.getId());
+        elementDataBean.setDeviceOneTypeEnum(DeviceTypeEnum.smoke);
         elementDataBeanList.add(elementDataBean);
       }
       if (hasOneDeviceType(DeviceTypeEnum.water.getId()) && DeviceTypeEnum.hasType(tmpType, DeviceTypeEnum.water)) {
@@ -203,9 +209,16 @@ public class DataIntimeBean {
         elementDataBean.setDeviceInfo(dataIntime.getDeviceInfo());
         elementDataBean.setArea(dataIntime.getDeviceInfo().getArea());
         elementDataBean.setStatus(dataIntime.getStatus());
+        if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
+          if (dataIntime.isWaterAlarm()) {
+            elementDataBean.setStatus(StatusEnum.alarm.getId());
+          } else {
+            elementDataBean.setStatus(StatusEnum.normal.getId());
+          }
+        }
         elementDataBean.setTime(dataIntime.getUpdatedAt());
         elementDataBean.setData(String.valueOf(dataIntime.getWater()));
-        elementDataBean.setDeviceOneType(DeviceTypeEnum.water.getId());
+        elementDataBean.setDeviceOneTypeEnum(DeviceTypeEnum.water);
         elementDataBeanList.add(elementDataBean);
       }
       if (hasOneDeviceType(DeviceTypeEnum.electric.getId()) && DeviceTypeEnum.hasType(tmpType, DeviceTypeEnum.electric)) {
@@ -213,9 +226,16 @@ public class DataIntimeBean {
         elementDataBean.setDeviceInfo(dataIntime.getDeviceInfo());
         elementDataBean.setArea(dataIntime.getDeviceInfo().getArea());
         elementDataBean.setStatus(dataIntime.getStatus());
+        if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
+          if (dataIntime.isElectricAlarm()) {
+            elementDataBean.setStatus(StatusEnum.alarm.getId());
+          } else {
+            elementDataBean.setStatus(StatusEnum.normal.getId());
+          }
+        }
         elementDataBean.setTime(dataIntime.getUpdatedAt());
         elementDataBean.setData(String.valueOf(dataIntime.getElectric()));
-        elementDataBean.setDeviceOneType(DeviceTypeEnum.electric.getId());
+        elementDataBean.setDeviceOneTypeEnum(DeviceTypeEnum.electric);
         elementDataBeanList.add(elementDataBean);
       }
       if (hasOneDeviceType(DeviceTypeEnum.body.getId()) && DeviceTypeEnum.hasType(tmpType, DeviceTypeEnum.body)) {
@@ -223,9 +243,16 @@ public class DataIntimeBean {
         elementDataBean.setDeviceInfo(dataIntime.getDeviceInfo());
         elementDataBean.setArea(dataIntime.getDeviceInfo().getArea());
         elementDataBean.setStatus(dataIntime.getStatus());
+        if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
+          if (dataIntime.isBodyAlarm()) {
+            elementDataBean.setStatus(StatusEnum.alarm.getId());
+          } else {
+            elementDataBean.setStatus(StatusEnum.normal.getId());
+          }
+        }
         elementDataBean.setTime(dataIntime.getUpdatedAt());
         elementDataBean.setData(String.valueOf(dataIntime.getBody()));
-        elementDataBean.setDeviceOneType(DeviceTypeEnum.body.getId());
+        elementDataBean.setDeviceOneTypeEnum(DeviceTypeEnum.body);
         elementDataBeanList.add(elementDataBean);
       }
       if (hasOneDeviceType(DeviceTypeEnum.out.getId()) && DeviceTypeEnum.hasType(tmpType, DeviceTypeEnum.out)) {
@@ -235,7 +262,7 @@ public class DataIntimeBean {
         elementDataBean.setStatus(dataIntime.getStatus());
         elementDataBean.setTime(dataIntime.getUpdatedAt());
         elementDataBean.setData(String.valueOf(dataIntime.getOut()));
-        elementDataBean.setDeviceOneType(DeviceTypeEnum.out.getId());
+        elementDataBean.setDeviceOneTypeEnum(DeviceTypeEnum.out);
         elementDataBeanList.add(elementDataBean);
       }
     }

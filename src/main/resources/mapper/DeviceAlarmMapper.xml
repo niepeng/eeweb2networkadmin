@@ -37,16 +37,16 @@
           b.name like "%"#{deviceName}"%"
       </if>
       <if test="alarmType != null and alarmType !=''" >
-        AND alarm_type  = #{alarmType,jdbcType=INTEGER}
+        AND a.alarm_type  = #{alarmType,jdbcType=INTEGER}
       </if>
       <if test="alarmConfirm != null and alarmConfirm !=''" >
-        AND confirm  = #{alarmConfirm,jdbcType=SMALLINT}
+        AND a.confirm  = #{alarmConfirm,jdbcType=SMALLINT}
       </if>
       <if test="startTime != null and startTime !=''" >
-        AND created_at  <![CDATA[ >= ]]>  #{startTime,jdbcType=TIMESTAMP}
+        AND a.created_at  <![CDATA[ >= ]]>  #{startTime,jdbcType=TIMESTAMP}
       </if>
       <if test="endTime != null and endTime !=''" >
-        AND created_at  <![CDATA[ < ]]>  #{endTime,jdbcType=TIMESTAMP}
+        AND a.created_at  <![CDATA[ < ]]>  #{endTime,jdbcType=TIMESTAMP}
       </if>
     </where>
   </sql>

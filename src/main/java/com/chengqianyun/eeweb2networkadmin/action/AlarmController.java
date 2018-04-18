@@ -43,7 +43,7 @@ public class AlarmController extends BaseController {
   @RequestMapping(value = "/alarmList", method = RequestMethod.GET)
   public String alarmList(
       @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
-      @RequestParam(value = "pageSize", required = false, defaultValue = "15") int pageSize,
+      @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize,
       @RequestParam(value = "deviceName", required = false, defaultValue = "") String deviceName,
       // AlarmTypeEnum
       @RequestParam(value = "alarmType", required = false, defaultValue = "") String alarmType,

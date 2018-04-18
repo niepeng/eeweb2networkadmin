@@ -58,7 +58,7 @@ public class DeviceDataHistory {
     private short water;
 
     /**
-     * 断电来电:0停电,1来电
+     * 断电来电:0来电,1断电(报警)
      */
     private short electric;
 
