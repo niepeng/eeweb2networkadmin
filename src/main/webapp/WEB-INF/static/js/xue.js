@@ -5,7 +5,7 @@ function changeDeviceType(obj) {
     return;
   }
   refushShow();
-  contrlOut(document.getElementById("deviceType_256").checked);
+  contrlOut(document.getElementById("deviceType_512").checked);
 }
 
 function refushShow() {
@@ -13,7 +13,10 @@ function refushShow() {
   contrlHumi(document.getElementById("deviceType_2").checked);
   contrlShine(document.getElementById("deviceType_8").checked);
   contrlPressure(document.getElementById("deviceType_16").checked);
-  contrlIn(document.getElementById("deviceType_32").checked || document.getElementById("deviceType_64").checked || document.getElementById("deviceType_128").checked);
+  contrlIn(document.getElementById("deviceType_32").checked ||
+      document.getElementById("deviceType_64").checked ||
+      document.getElementById("deviceType_128").checked ||
+      document.getElementById("deviceType_256").checked );
 }
 
 
@@ -21,10 +24,10 @@ function checkDeviceType() {
   var deviceTypesObject = document.getElementsByName("deviceTypes");
 
   // 如果开关量输出被选中,那么其他的类型不能选择了
-  var isOutChecked = document.getElementById("deviceType_256").checked;
+  var isOutChecked = document.getElementById("deviceType_512").checked;
   if (isOutChecked) {
     for (k in deviceTypesObject) {
-      if (deviceTypesObject[k].checked && deviceTypesObject[k].value != 256) {
+      if (deviceTypesObject[k].checked && deviceTypesObject[k].value != 512) {
         alert("设备类型如果选中了开关量输出,那么不能选中其他类型,请调整");
         return false;
       }
@@ -35,6 +38,7 @@ function checkDeviceType() {
   var inNum = (document.getElementById("deviceType_32").checked) ? 1 : 0;
   inNum += ((document.getElementById("deviceType_64").checked) ? 1 : 0);
   inNum += ((document.getElementById("deviceType_128").checked) ? 1 : 0);
+  inNum += ((document.getElementById("deviceType_256").checked) ? 1 : 0);
   if(inNum > 1) {
     alert("开关量输入设备只能选择一个");
     return false;

@@ -13,6 +13,7 @@
     <result column="smoke" property="smoke" jdbcType="SMALLINT" />
     <result column="water" property="water" jdbcType="SMALLINT" />
     <result column="electric" property="electric" jdbcType="SMALLINT" />
+    <result column="body" property="body" jdbcType="SMALLINT" />
     <result column="out" property="out" jdbcType="SMALLINT" />
     <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
     <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
@@ -20,7 +21,7 @@
     <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, device_id, status, temp, humi, power, shine, pressure, smoke, water, electric, `out`, created_at, updated_at, created_by, updated_by
+    id, device_id, status, temp, humi, power, shine, pressure, smoke, water, electric, body,  `out`, created_at, updated_at, created_by, updated_by
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -46,13 +47,13 @@
     insert into t_device_data_intime (device_id, status,
       temp, humi, power, 
       shine, pressure, smoke, 
-      water, electric, out, 
+      water, electric, body, out,
       created_at, updated_at, created_by, 
       updated_by)
     values ( #{deviceId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER},
       #{temp,jdbcType=INTEGER}, #{humi,jdbcType=INTEGER}, #{power,jdbcType=INTEGER}, 
       #{shine,jdbcType=INTEGER}, #{pressure,jdbcType=INTEGER}, #{smoke,jdbcType=SMALLINT}, 
-      #{water,jdbcType=SMALLINT}, #{electric,jdbcType=SMALLINT}, #{out,jdbcType=SMALLINT}, 
+      #{water,jdbcType=SMALLINT}, #{electric,jdbcType=SMALLINT}, #{body,jdbcType=SMALLINT}, #{out,jdbcType=SMALLINT},
       now(), now(), #{createdBy,jdbcType=VARCHAR},
       #{updatedBy,jdbcType=VARCHAR})
   </insert>
@@ -91,6 +92,9 @@
       </if>
       <if test="electric != null" >
         electric,
+      </if>
+      <if test="body != null" >
+        body,
       </if>
       <if test="out != null" >
         out,
@@ -138,6 +142,9 @@
       <if test="electric != null" >
         #{electric,jdbcType=SMALLINT},
       </if>
+      <if test="body != null" >
+        #{body,jdbcType=SMALLINT},
+      </if>
       <if test="out != null" >
         #{out,jdbcType=SMALLINT},
       </if>
@@ -184,6 +191,9 @@
       <if test="electric != null" >
         electric = #{electric,jdbcType=SMALLINT},
       </if>
+      <if test="body != null" >
+        body = #{body,jdbcType=SMALLINT},
+      </if>
       <if test="out != null" >
         out = #{out,jdbcType=SMALLINT},
       </if>
@@ -206,6 +216,7 @@
       smoke = #{smoke,jdbcType=SMALLINT},
       water = #{water,jdbcType=SMALLINT},
       electric = #{electric,jdbcType=SMALLINT},
+      body = #{body,jdbcType=SMALLINT},
       out = #{out,jdbcType=SMALLINT},
       updated_at = now(),
       updated_by = #{updatedBy,jdbcType=VARCHAR}

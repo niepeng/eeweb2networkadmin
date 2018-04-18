@@ -18,12 +18,17 @@ public class DeviceAlarm {
     private long deviceId;
 
     /**
-     * 报警类型按照位存储: 温度 + 湿度 + 电量 + 光照 + 压力 +  烟感(开关量输入) + 浸水(开关量输入)  +停电来电(开关量输入) +  开关量输出(报警器):0低,1高或者不区分;
+     * 所属区域id
      */
-    private int alarmType;
+    private long areaId;
 
     /**
-     * 状态:1系统报警,2系统确认,3人工确认
+     * 设备类型: DeviceTypeEnum 按位存储
+     */
+    private int deviceType;
+
+    /**
+     * AlarmTypeEnum 状态:1报警,2系统确认,3人工确认
      */
     private int status;
 
@@ -53,19 +58,49 @@ public class DeviceAlarm {
     private int pressure;
 
     /**
+     * UpDownEnum:1偏高,2偏低,3离线
+     */
+    private short tempStatus;
+
+    /**
+     * UpDownEnum:1偏高,2偏低,3离线
+     */
+    private short humiStatus;
+
+    /**
+     * UpDownEnum:1偏高,2偏低,3离线
+     */
+    private short powerStatus;
+
+    /**
+     * UpDownEnum:1偏高,2偏低,3离线
+     */
+    private short shineStatus;
+
+    /**
+     * UpDownEnum:1偏高,2偏低,3离线
+     */
+    private short pressureStatus;
+
+    /**
      * 烟感:0没有报警,1报警
      */
     private short smoke;
 
     /**
-     * 浸水:0没有报警,1报警
+     * 跑冒滴漏:0没有报警,1报警
      */
     private short water;
 
     /**
-     * 停电来电:0停电,1来电
+     * 断电来电:0停电,1来电
      */
     private short electric;
+
+    /**
+     * 人体感应:0没有报警,1报警
+     */
+    private short body;
 
     /**
      * 开关量输出(报警器)0没有输出,1有输出
@@ -141,6 +176,5 @@ public class DeviceAlarm {
 
 
     // ==============  扩展方法  =================
-
 
 }

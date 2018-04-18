@@ -17,9 +17,10 @@ public enum DeviceTypeEnum {
   shine(8,"光照", true),
   pressure(16,"压力", true),
   smoke(32,"烟感", false),
-  water(64,"浸水", false),
-  electric(128,"停电来点", false),
-  out(256,"开关量输出", false),
+  water(64,"跑冒滴漏", false),
+  electric(128,"断电来电", false),
+  body(256,"人体感应", false),
+  out(512,"开关量输出", false),
   ;
 
   final int id;

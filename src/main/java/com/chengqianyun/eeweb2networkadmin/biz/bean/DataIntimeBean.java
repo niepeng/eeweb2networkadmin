@@ -226,6 +226,16 @@ public class DataIntimeBean {
         elementDataBean.setDeviceOneType(DeviceTypeEnum.electric.getId());
         elementDataBeanList.add(elementDataBean);
       }
+      if (hasOneDeviceType(DeviceTypeEnum.body.getId()) && DeviceTypeEnum.hasType(tmpType, DeviceTypeEnum.body)) {
+        ElementDataBean elementDataBean = new ElementDataBean();
+        elementDataBean.setDeviceInfo(dataIntime.getDeviceInfo());
+        elementDataBean.setArea(dataIntime.getDeviceInfo().getArea());
+        elementDataBean.setStatus(dataIntime.getStatus());
+        elementDataBean.setTime(dataIntime.getUpdatedAt());
+        elementDataBean.setData(String.valueOf(dataIntime.getBody()));
+        elementDataBean.setDeviceOneType(DeviceTypeEnum.body.getId());
+        elementDataBeanList.add(elementDataBean);
+      }
       if (hasOneDeviceType(DeviceTypeEnum.out.getId()) && DeviceTypeEnum.hasType(tmpType, DeviceTypeEnum.out)) {
         ElementDataBean elementDataBean = new ElementDataBean();
         elementDataBean.setDeviceInfo(dataIntime.getDeviceInfo());

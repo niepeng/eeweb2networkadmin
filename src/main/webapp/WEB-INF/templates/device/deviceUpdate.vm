@@ -209,7 +209,7 @@
     </form>
   </div><!-- /.main-content -->
   <script src="${www}/js/youcaicommon.js?ts=20180416"></script>
-  <script src="${www}/js/xue.js?ts=2018041619"></script>
+  <script src="${www}/js/xue.js?ts=2018041801"></script>
 
   <script>
     changeDeviceType();

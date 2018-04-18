@@ -53,14 +53,19 @@ public class DeviceDataHistory {
     private short smoke;
 
     /**
-     * 浸水:0没有报警,1报警
+     * 跑冒滴漏:0没有报警,1报警
      */
     private short water;
 
     /**
-     * 停电来电:0停电,1来电
+     * 断电来电:0停电,1来电
      */
     private short electric;
+
+    /**
+     * 人体感应:0没有报警,1报警
+     */
+    private short body;
 
     /**
      * 开关量输出(报警器)0没有输出,1有输出

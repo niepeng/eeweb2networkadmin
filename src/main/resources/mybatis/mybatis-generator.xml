@@ -34,20 +34,9 @@
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 
-		<table schema="" tableName="t_device_info" domainObjectName="DeviceInfo"  enableCountByExample="false"
-		enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
-		</table>
-		<table schema="" tableName="t_out_condition" domainObjectName="OutCondition"  enableCountByExample="false"
-		enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
-		</table>
-		<table schema="" tableName="t_device_data_intime" domainObjectName="DeviceDataIntime"  enableCountByExample="false"
-		enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
-		</table>
-		<table schema="" tableName="t_device_alarm" domainObjectName="DeviceAlarm"  enableCountByExample="false"
-		enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
-		</table>
-		<table schema="" tableName="t_device_data_history" domainObjectName="DeviceDataHistory"  enableCountByExample="false"
-		enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
-		</table>
+		<!--<table schema="" tableName="t_device_alarm" domainObjectName="DeviceAlarm"  enableCountByExample="false"-->
+		<!--enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">-->
+		<!--</table>-->
+
 	</context>
 </generatorConfiguration>

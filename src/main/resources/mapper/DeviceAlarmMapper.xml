@@ -1,311 +1,387 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarmMapper" >
-  <resultMap id="BaseResultMap" type="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="device_id" property="deviceId" jdbcType="BIGINT" />
-    <result column="alarm_type" property="alarmType" jdbcType="INTEGER" />
-    <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="temp" property="temp" jdbcType="INTEGER" />
-    <result column="humi" property="humi" jdbcType="INTEGER" />
-    <result column="power" property="power" jdbcType="INTEGER" />
-    <result column="shine" property="shine" jdbcType="INTEGER" />
-    <result column="pressure" property="pressure" jdbcType="INTEGER" />
-    <result column="smoke" property="smoke" jdbcType="SMALLINT" />
-    <result column="water" property="water" jdbcType="SMALLINT" />
-    <result column="electric" property="electric" jdbcType="SMALLINT" />
-    <result column="out" property="out" jdbcType="SMALLINT" />
-    <result column="recently_alarm_time" property="recentlyAlarmTime" jdbcType="TIMESTAMP" />
-    <result column="system_confirm_time" property="systemConfirmTime" jdbcType="TIMESTAMP" />
-    <result column="user_confirm_time" property="userConfirmTime" jdbcType="TIMESTAMP" />
-    <result column="temp_normal" property="tempNormal" jdbcType="VARCHAR" />
-    <result column="humi_normal" property="humiNormal" jdbcType="VARCHAR" />
-    <result column="power_normal" property="powerNormal" jdbcType="VARCHAR" />
-    <result column="shine_normal" property="shineNormal" jdbcType="VARCHAR" />
-    <result column="pressure_normal" property="pressureNormal" jdbcType="VARCHAR" />
-    <result column="note" property="note" jdbcType="VARCHAR" />
-    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
-    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
-    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
-    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarmMapper">
+  <resultMap id="BaseResultMap" type="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="device_id" jdbcType="BIGINT" property="deviceId" />
+    <result column="area_id" jdbcType="BIGINT" property="areaId" />
+    <result column="device_type" jdbcType="INTEGER" property="deviceType" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="temp" jdbcType="INTEGER" property="temp" />
+    <result column="humi" jdbcType="INTEGER" property="humi" />
+    <result column="power" jdbcType="INTEGER" property="power" />
+    <result column="shine" jdbcType="INTEGER" property="shine" />
+    <result column="pressure" jdbcType="INTEGER" property="pressure" />
+    <result column="temp_status" jdbcType="SMALLINT" property="tempStatus" />
+    <result column="humi_status" jdbcType="SMALLINT" property="humiStatus" />
+    <result column="power_status" jdbcType="SMALLINT" property="powerStatus" />
+    <result column="shine_status" jdbcType="SMALLINT" property="shineStatus" />
+    <result column="pressure_status" jdbcType="SMALLINT" property="pressureStatus" />
+    <result column="smoke" jdbcType="SMALLINT" property="smoke" />
+    <result column="water" jdbcType="SMALLINT" property="water" />
+    <result column="electric" jdbcType="SMALLINT" property="electric" />
+    <result column="body" jdbcType="SMALLINT" property="body" />
+    <result column="out" jdbcType="SMALLINT" property="out" />
+    <result column="recently_alarm_time" jdbcType="TIMESTAMP" property="recentlyAlarmTime" />
+    <result column="system_confirm_time" jdbcType="TIMESTAMP" property="systemConfirmTime" />
+    <result column="user_confirm_time" jdbcType="TIMESTAMP" property="userConfirmTime" />
+    <result column="temp_normal" jdbcType="VARCHAR" property="tempNormal" />
+    <result column="humi_normal" jdbcType="VARCHAR" property="humiNormal" />
+    <result column="power_normal" jdbcType="VARCHAR" property="powerNormal" />
+    <result column="shine_normal" jdbcType="VARCHAR" property="shineNormal" />
+    <result column="pressure_normal" jdbcType="VARCHAR" property="pressureNormal" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="updated_by" jdbcType="VARCHAR" property="updatedBy" />
   </resultMap>
-  <sql id="Base_Column_List" >
-    id, device_id, alarm_type, status, temp, humi, power, shine, pressure, smoke, water, 
-    electric, out, recently_alarm_time, system_confirm_time, user_confirm_time, temp_normal, 
+  <sql id="Base_Column_List">
+    id, device_id, area_id, device_type, status, temp, humi, power, shine, pressure, 
+    temp_status, humi_status, power_status, shine_status, pressure_status, smoke, water, 
+    electric, body,  out, recently_alarm_time, system_confirm_time, user_confirm_time, temp_normal,
     humi_normal, power_normal, shine_normal, pressure_normal, note, created_at, updated_at, 
     created_by, updated_by
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from t_device_alarm
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from t_device_alarm
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm" >
-    insert into t_device_alarm ( device_id, alarm_type,
-      status, temp, humi, 
-      power, shine, pressure, 
-      smoke, water, electric, 
+  <insert id="insert" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm">
+    insert into t_device_alarm (device_id, area_id,
+      device_type, status, temp, 
+      humi, power, shine, 
+      pressure, temp_status, humi_status, 
+      power_status, shine_status, pressure_status, 
+      smoke, water, electric, body,
       out, recently_alarm_time, system_confirm_time, 
       user_confirm_time, temp_normal, humi_normal, 
       power_normal, shine_normal, pressure_normal, 
       note, created_at, updated_at, 
       created_by, updated_by)
-    values ( #{deviceId,jdbcType=BIGINT}, #{alarmType,jdbcType=INTEGER},
-      #{status,jdbcType=INTEGER}, #{temp,jdbcType=INTEGER}, #{humi,jdbcType=INTEGER}, 
-      #{power,jdbcType=INTEGER}, #{shine,jdbcType=INTEGER}, #{pressure,jdbcType=INTEGER}, 
-      #{smoke,jdbcType=SMALLINT}, #{water,jdbcType=SMALLINT}, #{electric,jdbcType=SMALLINT}, 
+    values (#{deviceId,jdbcType=BIGINT}, #{areaId,jdbcType=BIGINT},
+      #{deviceType,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{temp,jdbcType=INTEGER}, 
+      #{humi,jdbcType=INTEGER}, #{power,jdbcType=INTEGER}, #{shine,jdbcType=INTEGER}, 
+      #{pressure,jdbcType=INTEGER}, #{tempStatus,jdbcType=SMALLINT}, #{humiStatus,jdbcType=SMALLINT}, 
+      #{powerStatus,jdbcType=SMALLINT}, #{shineStatus,jdbcType=SMALLINT}, #{pressureStatus,jdbcType=SMALLINT}, 
+      #{smoke,jdbcType=SMALLINT}, #{water,jdbcType=SMALLINT}, #{electric,jdbcType=SMALLINT}, #{body,jdbcType=SMALLINT},
       #{out,jdbcType=SMALLINT}, #{recentlyAlarmTime,jdbcType=TIMESTAMP}, #{systemConfirmTime,jdbcType=TIMESTAMP}, 
       #{userConfirmTime,jdbcType=TIMESTAMP}, #{tempNormal,jdbcType=VARCHAR}, #{humiNormal,jdbcType=VARCHAR}, 
       #{powerNormal,jdbcType=VARCHAR}, #{shineNormal,jdbcType=VARCHAR}, #{pressureNormal,jdbcType=VARCHAR}, 
       #{note,jdbcType=VARCHAR}, now(), now(),
       #{createdBy,jdbcType=VARCHAR}, #{updatedBy,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm" >
+  <insert id="insertSelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm">
     insert into t_device_alarm
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="deviceId != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
         device_id,
       </if>
-      <if test="alarmType != null" >
-        alarm_type,
+      <if test="areaId != null">
+        area_id,
       </if>
-      <if test="status != null" >
+      <if test="deviceType != null">
+        device_type,
+      </if>
+      <if test="status != null">
         status,
       </if>
-      <if test="temp != null" >
+      <if test="temp != null">
         temp,
       </if>
-      <if test="humi != null" >
+      <if test="humi != null">
         humi,
       </if>
-      <if test="power != null" >
+      <if test="power != null">
         power,
       </if>
-      <if test="shine != null" >
+      <if test="shine != null">
         shine,
       </if>
-      <if test="pressure != null" >
+      <if test="pressure != null">
         pressure,
       </if>
-      <if test="smoke != null" >
+      <if test="tempStatus != null">
+        temp_status,
+      </if>
+      <if test="humiStatus != null">
+        humi_status,
+      </if>
+      <if test="powerStatus != null">
+        power_status,
+      </if>
+      <if test="shineStatus != null">
+        shine_status,
+      </if>
+      <if test="pressureStatus != null">
+        pressure_status,
+      </if>
+      <if test="smoke != null">
         smoke,
       </if>
-      <if test="water != null" >
+      <if test="water != null">
         water,
       </if>
-      <if test="electric != null" >
+      <if test="electric != null">
         electric,
       </if>
-      <if test="out != null" >
+      <if test="body != null">
+        body,
+      </if>
+      <if test="out != null">
         out,
       </if>
-      <if test="recentlyAlarmTime != null" >
+      <if test="recentlyAlarmTime != null">
         recently_alarm_time,
       </if>
-      <if test="systemConfirmTime != null" >
+      <if test="systemConfirmTime != null">
         system_confirm_time,
       </if>
-      <if test="userConfirmTime != null" >
+      <if test="userConfirmTime != null">
         user_confirm_time,
       </if>
-      <if test="tempNormal != null" >
+      <if test="tempNormal != null">
         temp_normal,
       </if>
-      <if test="humiNormal != null" >
+      <if test="humiNormal != null">
         humi_normal,
       </if>
-      <if test="powerNormal != null" >
+      <if test="powerNormal != null">
         power_normal,
       </if>
-      <if test="shineNormal != null" >
+      <if test="shineNormal != null">
         shine_normal,
       </if>
-      <if test="pressureNormal != null" >
+      <if test="pressureNormal != null">
         pressure_normal,
       </if>
-      <if test="note != null" >
+      <if test="note != null">
         note,
       </if>
         created_at,
         updated_at,
-      <if test="createdBy != null" >
+      <if test="createdBy != null">
         created_by,
       </if>
-      <if test="updatedBy != null" >
+      <if test="updatedBy != null">
         updated_by,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="deviceId != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
         #{deviceId,jdbcType=BIGINT},
       </if>
-      <if test="alarmType != null" >
-        #{alarmType,jdbcType=INTEGER},
+      <if test="areaId != null">
+        #{areaId,jdbcType=BIGINT},
       </if>
-      <if test="status != null" >
+      <if test="deviceType != null">
+        #{deviceType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
         #{status,jdbcType=INTEGER},
       </if>
-      <if test="temp != null" >
+      <if test="temp != null">
         #{temp,jdbcType=INTEGER},
       </if>
-      <if test="humi != null" >
+      <if test="humi != null">
         #{humi,jdbcType=INTEGER},
       </if>
-      <if test="power != null" >
+      <if test="power != null">
         #{power,jdbcType=INTEGER},
       </if>
-      <if test="shine != null" >
+      <if test="shine != null">
         #{shine,jdbcType=INTEGER},
       </if>
-      <if test="pressure != null" >
+      <if test="pressure != null">
         #{pressure,jdbcType=INTEGER},
       </if>
-      <if test="smoke != null" >
+      <if test="tempStatus != null">
+        #{tempStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="humiStatus != null">
+        #{humiStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="powerStatus != null">
+        #{powerStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="shineStatus != null">
+        #{shineStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="pressureStatus != null">
+        #{pressureStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="smoke != null">
         #{smoke,jdbcType=SMALLINT},
       </if>
-      <if test="water != null" >
+      <if test="water != null">
         #{water,jdbcType=SMALLINT},
       </if>
-      <if test="electric != null" >
+      <if test="electric != null">
         #{electric,jdbcType=SMALLINT},
       </if>
-      <if test="out != null" >
+      <if test="body != null">
+        #{body,jdbcType=SMALLINT},
+      </if>
+      <if test="out != null">
         #{out,jdbcType=SMALLINT},
       </if>
-      <if test="recentlyAlarmTime != null" >
+      <if test="recentlyAlarmTime != null">
         #{recentlyAlarmTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="systemConfirmTime != null" >
+      <if test="systemConfirmTime != null">
         #{systemConfirmTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="userConfirmTime != null" >
+      <if test="userConfirmTime != null">
         #{userConfirmTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="tempNormal != null" >
+      <if test="tempNormal != null">
         #{tempNormal,jdbcType=VARCHAR},
       </if>
-      <if test="humiNormal != null" >
+      <if test="humiNormal != null">
         #{humiNormal,jdbcType=VARCHAR},
       </if>
-      <if test="powerNormal != null" >
+      <if test="powerNormal != null">
         #{powerNormal,jdbcType=VARCHAR},
       </if>
-      <if test="shineNormal != null" >
+      <if test="shineNormal != null">
         #{shineNormal,jdbcType=VARCHAR},
       </if>
-      <if test="pressureNormal != null" >
+      <if test="pressureNormal != null">
         #{pressureNormal,jdbcType=VARCHAR},
       </if>
-      <if test="note != null" >
+      <if test="note != null">
         #{note,jdbcType=VARCHAR},
       </if>
       now(),
       now(),
-      <if test="createdBy != null" >
+      <if test="createdBy != null">
         #{createdBy,jdbcType=VARCHAR},
       </if>
-      <if test="updatedBy != null" >
+      <if test="updatedBy != null">
         #{updatedBy,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm">
     update t_device_alarm
-    <set >
-      <if test="deviceId != null" >
+    <set>
+      <if test="deviceId != null">
         device_id = #{deviceId,jdbcType=BIGINT},
       </if>
-      <if test="alarmType != null" >
-        alarm_type = #{alarmType,jdbcType=INTEGER},
+      <if test="areaId != null">
+        area_id = #{areaId,jdbcType=BIGINT},
       </if>
-      <if test="status != null" >
+      <if test="deviceType != null">
+        device_type = #{deviceType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
         status = #{status,jdbcType=INTEGER},
       </if>
-      <if test="temp != null" >
+      <if test="temp != null">
         temp = #{temp,jdbcType=INTEGER},
       </if>
-      <if test="humi != null" >
+      <if test="humi != null">
         humi = #{humi,jdbcType=INTEGER},
       </if>
-      <if test="power != null" >
+      <if test="power != null">
         power = #{power,jdbcType=INTEGER},
       </if>
-      <if test="shine != null" >
+      <if test="shine != null">
         shine = #{shine,jdbcType=INTEGER},
       </if>
-      <if test="pressure != null" >
+      <if test="pressure != null">
         pressure = #{pressure,jdbcType=INTEGER},
       </if>
-      <if test="smoke != null" >
+      <if test="tempStatus != null">
+        temp_status = #{tempStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="humiStatus != null">
+        humi_status = #{humiStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="powerStatus != null">
+        power_status = #{powerStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="shineStatus != null">
+        shine_status = #{shineStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="pressureStatus != null">
+        pressure_status = #{pressureStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="smoke != null">
         smoke = #{smoke,jdbcType=SMALLINT},
       </if>
-      <if test="water != null" >
+      <if test="water != null">
         water = #{water,jdbcType=SMALLINT},
       </if>
-      <if test="electric != null" >
+      <if test="electric != null">
         electric = #{electric,jdbcType=SMALLINT},
       </if>
-      <if test="out != null" >
+      <if test="body != null">
+        body = #{body,jdbcType=SMALLINT},
+      </if>
+      <if test="out != null">
         out = #{out,jdbcType=SMALLINT},
       </if>
-      <if test="recentlyAlarmTime != null" >
+      <if test="recentlyAlarmTime != null">
         recently_alarm_time = #{recentlyAlarmTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="systemConfirmTime != null" >
+      <if test="systemConfirmTime != null">
         system_confirm_time = #{systemConfirmTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="userConfirmTime != null" >
+      <if test="userConfirmTime != null">
         user_confirm_time = #{userConfirmTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="tempNormal != null" >
+      <if test="tempNormal != null">
         temp_normal = #{tempNormal,jdbcType=VARCHAR},
       </if>
-      <if test="humiNormal != null" >
+      <if test="humiNormal != null">
         humi_normal = #{humiNormal,jdbcType=VARCHAR},
       </if>
-      <if test="powerNormal != null" >
+      <if test="powerNormal != null">
         power_normal = #{powerNormal,jdbcType=VARCHAR},
       </if>
-      <if test="shineNormal != null" >
+      <if test="shineNormal != null">
         shine_normal = #{shineNormal,jdbcType=VARCHAR},
       </if>
-      <if test="pressureNormal != null" >
+      <if test="pressureNormal != null">
         pressure_normal = #{pressureNormal,jdbcType=VARCHAR},
       </if>
-      <if test="note != null" >
+      <if test="note != null">
         note = #{note,jdbcType=VARCHAR},
       </if>
-        updated_at = now(),
-      <if test="updatedBy != null" >
+      updated_at = now(),
+      <if test="updatedBy != null">
         updated_by = #{updatedBy,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm" >
+  <update id="updateByPrimaryKey" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm">
     update t_device_alarm
     set device_id = #{deviceId,jdbcType=BIGINT},
-      alarm_type = #{alarmType,jdbcType=INTEGER},
+      area_id = #{areaId,jdbcType=BIGINT},
+      device_type = #{deviceType,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       temp = #{temp,jdbcType=INTEGER},
       humi = #{humi,jdbcType=INTEGER},
       power = #{power,jdbcType=INTEGER},
       shine = #{shine,jdbcType=INTEGER},
       pressure = #{pressure,jdbcType=INTEGER},
+      temp_status = #{tempStatus,jdbcType=SMALLINT},
+      humi_status = #{humiStatus,jdbcType=SMALLINT},
+      power_status = #{powerStatus,jdbcType=SMALLINT},
+      shine_status = #{shineStatus,jdbcType=SMALLINT},
+      pressure_status = #{pressureStatus,jdbcType=SMALLINT},
       smoke = #{smoke,jdbcType=SMALLINT},
       water = #{water,jdbcType=SMALLINT},
       electric = #{electric,jdbcType=SMALLINT},
+      body = #{body,jdbcType=SMALLINT},
       out = #{out,jdbcType=SMALLINT},
       recently_alarm_time = #{recentlyAlarmTime,jdbcType=TIMESTAMP},
       system_confirm_time = #{systemConfirmTime,jdbcType=TIMESTAMP},
