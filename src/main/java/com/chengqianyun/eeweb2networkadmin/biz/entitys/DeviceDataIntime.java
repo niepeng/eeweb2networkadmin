@@ -18,7 +18,7 @@ public class DeviceDataIntime {
     private long deviceId;
 
     /**
-     * 状态:1正常,2报警,3离线
+     * StatusEnum 状态:1正常,2报警,3离线
      */
     private int status;
 
@@ -33,7 +33,7 @@ public class DeviceDataIntime {
     private int humi;
 
     /**
-     * 电量:300,代表3v
+     * 电量:3.6v,存储360
      */
     private int power;
 
@@ -43,7 +43,7 @@ public class DeviceDataIntime {
     private int shine;
 
     /**
-     * 压力:10000,存储实际值
+     * 压力:800.2,存储80020
      */
     private int pressure;
 
@@ -90,8 +90,46 @@ public class DeviceDataIntime {
 
     // ==============  扩展属性  =================
 
+    private long areaId;
+
+    private DeviceInfo deviceInfo;
+
 
     // ==============  扩展方法  =================
 
+    public boolean isTempUp() {
+        return temp - deviceInfo.getTempDev() > deviceInfo.getTempUp();
+    }
+
+    public boolean isTempDown() {
+        return temp + deviceInfo.getTempDev() < deviceInfo.getTempDown();
+    }
+
+
+    public boolean isHumiUp() {
+        return humi - deviceInfo.getHumiDev() > deviceInfo.getHumiUp();
+    }
+
+    public boolean isHumiDown() {
+        return humi + deviceInfo.getHumiDev() < deviceInfo.getHumiDown();
+    }
+
+
+    public boolean isShineUp() {
+        return shine - deviceInfo.getShineDev() > deviceInfo.getShineUp();
+    }
+
+    public boolean isShineDown() {
+        return shine + deviceInfo.getShineDev() < deviceInfo.getShineDown();
+    }
+
+
+    public boolean isPressureUp() {
+        return pressure - deviceInfo.getPressureDev() > deviceInfo.getPressureUp();
+    }
+
+    public boolean isPressureDown() {
+        return pressure + deviceInfo.getPressureDev() < deviceInfo.getPressureDown();
+    }
 
 }

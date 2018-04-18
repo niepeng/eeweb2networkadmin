@@ -2,6 +2,7 @@ package com.chengqianyun.eeweb2networkadmin.service;
 
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.AreaMapper;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntimeMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfoMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutConditionMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -24,4 +25,6 @@ public class BaseService {
   @Autowired
   protected OutConditionMapper outConditionMapper;
 
+  @Autowired
+  protected DeviceDataIntimeMapper dataIntimeMapper;
 }

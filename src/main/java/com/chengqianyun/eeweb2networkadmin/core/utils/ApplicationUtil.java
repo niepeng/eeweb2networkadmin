@@ -2,6 +2,8 @@ package com.chengqianyun.eeweb2networkadmin.core.utils;
 
 
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.UpDownEnum;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +43,19 @@ public class ApplicationUtil {
 
   public static DeviceTypeEnum[] getAllDeviceTypes() {
     return DeviceTypeEnum.values();
+  }
+
+  public static StatusEnum[] getStatus() {
+    return StatusEnum.values();
+  }
+
+
+  public static StatusEnum getStatus(int id) {
+    return StatusEnum.find(id);
+  }
+
+  public static UpDownEnum getUpDownStatus(int id) {
+    return UpDownEnum.find(id);
   }
 
 

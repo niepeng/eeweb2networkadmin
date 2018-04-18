@@ -11,20 +11,20 @@
     font-size:13px; text-align: center;
     padding-top: 7px;
     padding-bottom: 7px;
+    margin-top:20px;
   }
 
-  .blockcell_one_today {
+  .blockcell_one_normal {
     background-color: #aed232;
   }
 
-  .blockcell_one_yesterday {
-    background-color: #5c829c;
+  .blockcell_one_alarm {
+    background-color: #ddbd5f;
   }
 
-  .blockcell_one_all {
-    background-color: #444e81;
+  .blockcell_one_offline {
+    background-color: #bfbfbf;
   }
-
 
 
 </style>
@@ -42,7 +42,7 @@
         <i class="icon-home home-icon"></i>
         <a href="${www}/sp/main">主页</a>
       </li>
-      <li class="active">数据统计</li>
+      <li class="active">实时数据</li>
     </ul><!-- .breadcrumb -->
     <div class="nav-search" id="nav-search">
     </div><!-- #nav-search -->
@@ -63,81 +63,95 @@
           <div class="col-sm-11">
             <form class="form-inline" role="form">
               <div class="form-group">
-                <label>指定日期：</label>
-                <input type="text" class="input-date" id="startTimeStr" name="startTimeStr" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd'})"  value="$dateUtil.getDate($startDate, 'yyyy-MM-dd')">
+                <label>设备区域：</label>
+                #foreach($tmpArea in $areaList)
+                  <input type="checkbox" name="areaIds" value="$tmpArea.id"
+                  #foreach($tmpSelectArea in $dataIntimeBean.areaList)
+                    #if("$tmpSelectArea.id" == "$tmpArea.id")
+                      checked
+                    #end
+                  #end
+                  /> $tmpArea.name &nbsp;&nbsp;
+                #end
               </div>
-
+              <br/><br/>
               <div class="form-group">
-                <label>——</label>
-                <input type="text" class="input-date" id="endTimeStr" name="endTimeStr" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd'})"  value="$dateUtil.getDate($endDate, 'yyyy-MM-dd')">
+                <label>传感器类型：</label>
+                #foreach($tmpDeviceType in $applicationUtil.getAllDeviceTypes())
+                  <input type="checkbox" name="deviceTypes" value="$tmpDeviceType.id"
+                    #foreach($tmpType in $dataIntimeBean.deviceTypeList)
+                      #if("$tmpType.id" == "$tmpDeviceType.id")
+                         checked
+                      #end
+                    #end
+                  /> $tmpDeviceType.name &nbsp;&nbsp;
+                #end
               </div>
-
-
+              <br/><br/>
+              <div class="form-group">
+                <label>设备状态：</label>
+                #foreach($tmpStatus in $applicationUtil.getStatus())
+                  <input type="checkbox" name="statuses" value="$tmpStatus.id"
+                    #foreach($tmpSelectStatus in $dataIntimeBean.statusList)
+                      #if("$tmpSelectStatus.id" == "$tmpStatus.id")
+                         checked
+                      #end
+                    #end
+                  /> $tmpStatus.meaning &nbsp;&nbsp;
+                #end
+              </div>
+              <br/><br/>
               <div class="form-group">
                 <button class="btn btn-xs btn-primary" type="submit">查询</button>
               </div>
             </form>
           </div>
+
+          <div class="col-sm-1 text-right">
+            <a href="${www}/device/xxxx" class="btn btn-success btn-xs">收齐条件?不处理?</a>
+          </div>
         </div>
 
 
-      ## -------------------------- 今日情况 -----------------------------------
-
-        #set($showTime = $dateUtil.getDate($today.time, 'yyyy-MM-dd'))
+      ## -------------------------- 框列表数据 -----------------------------------
 
         <div class="blockcell">
-          <div class="blockcell_one blockcell_one_today">
-            $showTime  <br/>
-            今日放款金额(万元)  <br/>
-            $!arithUtil.div2Str($today.withdrawMoney, 1000000, 2) xxx
-          </div>
-          <div class="blockcell_one blockcell_one_today">
-            $showTime  <br/>
-            今日放款笔数  <br/>
-            $today.withdrawTimes
-          </div>
-          <div class="blockcell_one blockcell_one_today">
-            $showTime  <br/>
-            今日拒绝笔数 <br/>
-            $today.refuseTimes
-          </div>
-          <div class="blockcell_one blockcell_one_today">
-            $showTime <br/>
-            今日申请笔数 <br/>
-            $today.applyTimes
-          </div>
+##          #foreach($i in [1..20])
+##          <div class="blockcell_one blockcell_one_normal">
+##            $!{i}今日应收金额}(万元)  <br/>
+##             <br/>
+##            $showTime <br/>
+##          </div>
+##          #end
+
+          #foreach($tmpElementDataBean in $dataIntimeBean.elementDataBeanList)
+            <div
+            #if("$!{tmpElementDataBean.status}" == "1")
+                class="blockcell_one blockcell_one_normal"
+            #elseif("$!{tmpElementDataBean.status}" == "3")
+                class="blockcell_one blockcell_one_offline"
+            #else
+                class="blockcell_one blockcell_one_alarm"
+            #end
+            >
+              $!{tmpElementDataBean.deviceInfo.name}($!{tmpElementDataBean.area.name})-$!{tmpElementDataBean.deviceInfo.tag} <br/>
+              $!{tmpElementDataBean.data} $!{tmpElementDataBean.unit} &nbsp;
+
+              #set($showStatus = "")
+              #if($tmpElementDataBean.isUp())
+                #set($showStatus = "偏高")
+              #elseif($tmpElementDataBean.isDown())
+                #set($showStatus = "偏低")
+              #end
+              #set($showStatus = $showStatus + $!applicationUtil.getStatus($!{tmpElementDataBean.status}).meaning)
+              $showStatus
+               <br/>
+              $dateUtil.getDate($!{tmpElementDataBean.time}, 'yyyy-MM-dd HH:mm:ss')
+            </div>
+          #end
+
+
         </div>
-
-        <br/> <br/>
-
-
-        <div class="blockcell">
-          <div class="blockcell_one blockcell_one_today">
-            $showTime <br/>
-            今日应收金额(万元)  <br/>
-            $!arithUtil.div2Str($today.receivableMoney, 1000000, 2) zz
-          </div>
-          <div class="blockcell_one blockcell_one_today">
-            $showTime  <br/>
-            今日已收金额(万元)  <br/>
-            $!arithUtil.div2Str($today.receivedMoney, 1000000, 2) zzz1
-          </div>
-          <div class="blockcell_one blockcell_one_today">
-            $showTime  <br/>
-            今日待收金额(万元)  <br/>
-            $!arithUtil.div2Str($today.waitReceivedMoney, 1000000, 2) 3333
-          </div>
-          <div class="blockcell_one blockcell_one_today">
-            $showTime  <br/>
-            今日续期金额(万元)  <br/>
-            $!arithUtil.div2Str($today.renewalMoney, 1000000, 2) 444
-          </div>
-        </div>
-
-
-        <br/> <br/>
-
-
 
 
       </div>

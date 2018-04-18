@@ -136,13 +136,23 @@ CREATE TABLE `t_device_data_intime` (
 CREATE TABLE `t_device_alarm` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `device_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '设备id',
-  `alarm_type` int(11) not NULL  DEFAULT 0 COMMENT '报警类型按照位存储: 温度 + 湿度 + 电量 + 光照 + 压力 +  烟感(开关量输入) + 浸水(开关量输入)  +停电来电(开关量输入) +  开关量输出(报警器):0低,1高或者不区分;',
-  `status` int(11) not NULL  DEFAULT 0 COMMENT '状态:1系统报警,2系统确认,3人工确认',
+  `area_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '所属区域id',
+  `device_type` int(11) NOT NULL DEFAULT 0 COMMENT '设备类型: DeviceTypeEnum 按位存储',
+--  `alarm_type` int(11) not NULL  DEFAULT 0 COMMENT '报警类型按照位存储: 温度 + 湿度 + 电量 + 光照 + 压力 +  烟感(开关量输入) + 浸水(开关量输入)  +停电来电(开关量输入) +  开关量输出(报警器):0低,1高或者不区分;',
+  `status` int(11) not NULL  DEFAULT 0 COMMENT 'AlarmTypeEnum 状态:1报警,2系统确认,3人工确认',
+
   `temp` int(11) not NULL  DEFAULT 0 COMMENT '温度:23.34,存储2334',
   `humi` int(11) not NULL  DEFAULT 0 COMMENT '湿度:45.67,存储4567',
   `power` int(11) not NULL  DEFAULT 0 COMMENT '电量:300,代表3v',
   `shine` int(11) not NULL  DEFAULT 0 COMMENT '光照:20000,存储直接值',
   `pressure` int(11) not NULL  DEFAULT 0 COMMENT '压力:10000,存储实际值',
+
+ `temp_status` smallint(4) unsigned not NULL  DEFAULT 0 COMMENT 'UpDownEnum:1偏高,2偏低,3离线',
+ `humi_status` smallint(4) unsigned not NULL  DEFAULT 0 COMMENT 'UpDownEnum:1偏高,2偏低,3离线',
+ `power_status` smallint(4) unsigned not NULL  DEFAULT 0 COMMENT 'UpDownEnum:1偏高,2偏低,3离线',
+ `shine_status` smallint(4) unsigned not NULL  DEFAULT 0 COMMENT 'UpDownEnum:1偏高,2偏低,3离线',
+ `pressure_status` smallint(4) unsigned not NULL  DEFAULT 0 COMMENT 'UpDownEnum:1偏高,2偏低,3离线',
+
   `smoke` smallint(2) unsigned not NULL  DEFAULT 0 COMMENT '烟感:0没有报警,1报警',
   `water` smallint(2) unsigned not NULL  DEFAULT 0 COMMENT '浸水:0没有报警,1报警',
   `electric` smallint(2) unsigned not NULL  DEFAULT 0 COMMENT '停电来电:0停电,1来电',

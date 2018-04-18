@@ -11,7 +11,7 @@
         <a href="${www}/main">主页</a>
       </li>
 
-      <li class="active">设备管理</li>
+      <li class="active">报警记录</li>
     </ul><!-- .breadcrumb -->
 
     <div class="nav-search" id="nav-search">
@@ -25,7 +25,7 @@
   </div>
   <div class="page-content">
     <div class="page-header">
-      <h1>设备管理</h1>
+      <h1>报警记录</h1>
     </div>
     <div class="container-fluid">
 
@@ -80,15 +80,15 @@
               <td> $!{row.name}($!{row.area.name})-$!{row.tag}</td>
               <td>$!{row.address}</td>
               <td>
-                  #if($!{row.hasTemp()}) 温度: $!unitUtil.changeTemp($!{row.tempDown})℃ ~ $!unitUtil.changeTemp($!{row.tempUp}) ℃ ($!unitUtil.changeTemp($!{row.tempDev})℃)<br/> #end
-                  #if($!{row.hasHumi()}) 湿度: $!unitUtil.changeHumi($!{row.humiDown})%RH ~ $!unitUtil.changeHumi($!{row.humiUp})%RH ($!unitUtil.changeHumi($!{row.humiDev})%RH)<br/> #end
-                  #if($!{row.hasPower()}) 电量 <br/> #end
-                  #if($!{row.hasShine()}) 光照: $!{row.shineDown} Lx ~ $!{row.shineUp}Lx ($!{row.shineDev}Lx)<br/> #end
-                  #if($!{row.hasPressure()}) 压力: $!unitUtil.changePressure($!{row.pressureDown})Pa ~ $!unitUtil.changePressure($!{row.pressureUp})Pa ($!unitUtil.changePressure($!{row.pressureDev})Pa)<br/> #end
-                  #if($!{row.hasSmoke()}) 烟感: <br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
-                  #if($!{row.hasWater()}) 浸水:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
-                  #if($!{row.haslectric()}) 停电来点:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
-                  #if($!{row.hasOut()}) 控制通道: $!{row.controlWay}<br/>#end
+                #if($!{row.hasTemp()}) 温度: $!unitUtil.changeTemp($!{row.tempDown})℃ ~ $!unitUtil.changeTemp($!{row.tempUp}) ℃ ($!unitUtil.changeTemp($!{row.tempDev})℃)<br/> #end
+                #if($!{row.hasHumi()}) 湿度: $!unitUtil.changeHumi($!{row.humiDown})%RH ~ $!unitUtil.changeHumi($!{row.humiUp})%RH ($!unitUtil.changeHumi($!{row.humiDev})%RH)<br/> #end
+                #if($!{row.hasPower()}) 电量 <br/> #end
+                #if($!{row.hasShine()}) 光照: $!{row.shineDown} Lx ~ $!{row.shineUp}Lx ($!{row.shineDev}Lx)<br/> #end
+                #if($!{row.hasPressure()}) 压力: $!unitUtil.changePressure($!{row.pressureDown})Pa ~ $!unitUtil.changePressure($!{row.pressureUp})Pa ($!unitUtil.changePressure($!{row.pressureDev})Pa)<br/> #end
+                #if($!{row.hasSmoke()}) 烟感: <br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
+                #if($!{row.hasWater()}) 浸水:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
+                #if($!{row.haslectric()}) 停电来点:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
+                #if($!{row.hasOut()}) 控制通道: $!{row.controlWay}<br/>#end
               </td>
               <td>
                 #if($!{row.hasOut()})

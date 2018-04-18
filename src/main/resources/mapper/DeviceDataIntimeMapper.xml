@@ -20,8 +20,7 @@
     <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, device_id, status, temp, humi, power, shine, pressure, smoke, water, electric, 
-    out, created_at, updated_at, created_by, updated_by
+    id, device_id, status, temp, humi, power, shine, pressure, smoke, water, electric, `out`, created_at, updated_at, created_by, updated_by
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -30,6 +29,15 @@
     from t_device_data_intime
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="listAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_device_data_intime
+    order by id asc
+  </select>
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from t_device_data_intime
     where id = #{id,jdbcType=BIGINT}
