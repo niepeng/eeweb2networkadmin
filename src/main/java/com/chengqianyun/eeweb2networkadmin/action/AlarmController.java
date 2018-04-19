@@ -1,6 +1,9 @@
 package com.chengqianyun.eeweb2networkadmin.action;
 
 
+import com.chengqianyun.eeweb2networkadmin.biz.HdConstant;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.AlarmNoteBean;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceFormBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.AlarmTypeEnum;
@@ -18,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * 报警记录
@@ -86,4 +90,47 @@ public class AlarmController extends BaseController {
       return "/alarm/alarmList";
     }
   }
+
+  /**
+   * 标记已读
+   */
+  @RequestMapping(value = "/markRead", method = RequestMethod.GET)
+  public String markRead(
+      @RequestParam(value = "id", required = false, defaultValue = "0") long alarmId,
+      Model model, RedirectAttributes redirectAttributes) {
+
+    try {
+      alarmService.markRead(alarmId, null);
+      redirectAttributes.addFlashAttribute(SUCCESS, true);
+      redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_OPERATE_SUCESS);
+      return "redirect:/alarm/alarmList";
+    } catch (Exception ex) {
+      redirectAttributes.addFlashAttribute(SUCCESS, false);
+      redirectAttributes.addFlashAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "redirect:/alarm/alarmList";
+    }
+  }
+
+
+  /**
+   * 标记已读取,并记录备注
+   */
+  @RequestMapping(value = "/writeNote", method = RequestMethod.POST)
+  public String doDeviceAdd(AlarmNoteBean alarmNoteBean, Model model, RedirectAttributes redirectAttributes) {
+    try {
+      alarmService.markRead(alarmNoteBean.getAlarmId(), alarmNoteBean.getUserNote());
+      redirectAttributes.addFlashAttribute(SUCCESS, true);
+      redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_OPERATE_SUCESS);
+      return "redirect:/alarm/alarmList";
+    } catch (Exception ex) {
+      redirectAttributes.addFlashAttribute(SUCCESS, false);
+      redirectAttributes.addFlashAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "redirect:/alarm/alarmList";
+    }
+  }
+
+
+
 }

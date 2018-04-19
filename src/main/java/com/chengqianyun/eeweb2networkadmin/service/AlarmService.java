@@ -3,8 +3,11 @@ package com.chengqianyun.eeweb2networkadmin.service;
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.AlarmConfirmEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
+import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
+import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,30 @@ public class AlarmService extends BaseService {
       log.error("AlarmService.getAlarmList,Error", e);
     }
     return result;
+  }
+
+  public void markRead(long alarmId, String newNote) {
+    DeviceAlarm deviceAlarm = deviceAlarmMapper.selectByPrimaryKey(alarmId);
+    if (deviceAlarm == null) {
+      return;
+    }
+
+    if (!deviceAlarm.isAlarmEnd()) {
+      throw new RuntimeException("当前报警还未结束,不能标记已读");
+    }
+
+    if (AlarmConfirmEnum.find(deviceAlarm.getConfirm()) == AlarmConfirmEnum.no_confirm) {
+      deviceAlarm.setConfirm((short) AlarmConfirmEnum.confirm.getId());
+    }
+
+    if (deviceAlarm.getUserConfirmTime() == null) {
+      deviceAlarm.setUserConfirmTime(new Date());
+    }
+
+    if (!StringUtil.isEmpty(newNote)) {
+      deviceAlarm.setNote(newNote);
+    }
+    deviceAlarmMapper.updateByPrimaryKeySelective(deviceAlarm);
   }
 
 

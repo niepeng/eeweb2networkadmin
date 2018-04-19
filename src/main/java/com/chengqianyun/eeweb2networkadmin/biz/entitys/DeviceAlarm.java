@@ -112,6 +112,9 @@ public class DeviceAlarm {
         return "";
     }
 
+    public boolean isAlarmEnd() {
+        return alarmEndTime != null;
+    }
 
 
 
