@@ -53,7 +53,16 @@
                 </select>
                 <label>名称：</label>
                 <input type="text" name="name" value="$!{name}">
+                <label>报警类型：</label>
+                <select name="status" id="status">
+                  <option value="">全部</option>
+                  #foreach($tmpStatus in $applicationUtil.getStatus())
+                    <option #if("$tmpStatus.id" == "$!status") selected #end value="$tmpStatus.id">$!tmpStatus.meaning</option>
+                  #end
+                </select>
               </div>
+
+
               <div class="form-group">
                 <button class="btn btn-xs btn-primary" type="submit">查询</button>
               </div>
@@ -66,36 +75,39 @@
         <table id="dataTableResizeCol" class="table table-striped table-bordered table-hover dataTable">
           <thead>
           <tr>
-            <th>sn号</th>
+            <th>sn号和地址</th>
             <th>名称(区域)-标签</th>
-            <th>设备地址</th>
+            <th>设备状态</th>
             <th>类型值(校正值)</th>
-            <th>操作</th>
+            <th>创建时间</th>
           </tr>
           </thead>
           <tbody>
-            #foreach($row in $result.rows)
+            #foreach($dataIntime in $dataIntimeList)
+            #set($deviceInfo =  $!dataIntime.deviceInfo)
             <tr>
-              <td>$!{row.sn}</td>
-              <td> $!{row.name}($!{row.area.name})-$!{row.tag}</td>
-              <td>$!{row.address}</td>
+              <td>$!{deviceInfo.sn} <br/>$!{deviceInfo.address}</td>
+              <td> $!{deviceInfo.name}($!{deviceInfo.area.name})-$!{deviceInfo.tag}</td>
+              <td>$!applicationUtil.getStatus($!{dataIntime.status}).meaning</td>
               <td>
-                  #if($!{row.hasTemp()}) 温度: $!unitUtil.changeTemp($!{row.tempDown})℃ ~ $!unitUtil.changeTemp($!{row.tempUp}) ℃ ($!unitUtil.changeTemp($!{row.tempDev})℃)<br/> #end
-                  #if($!{row.hasHumi()}) 湿度: $!unitUtil.changeHumi($!{row.humiDown})%RH ~ $!unitUtil.changeHumi($!{row.humiUp})%RH ($!unitUtil.changeHumi($!{row.humiDev})%RH)<br/> #end
-                  #if($!{row.hasPower()}) 电量 <br/> #end
-                  #if($!{row.hasShine()}) 光照: $!{row.shineDown} Lx ~ $!{row.shineUp}Lx ($!{row.shineDev}Lx)<br/> #end
-                  #if($!{row.hasPressure()}) 压力: $!unitUtil.changePressure($!{row.pressureDown})Pa ~ $!unitUtil.changePressure($!{row.pressureUp})Pa ($!unitUtil.changePressure($!{row.pressureDev})Pa)<br/> #end
-                  #if($!{row.hasSmoke()}) 烟感: <br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
-                  #if($!{row.hasWater()}) 跑冒滴漏:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
-                  #if($!{row.hasElectric()}) 断电来电:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
-                  #if($!{row.hasOut()}) 控制通道: $!{row.controlWay}<br/>#end
+                  #if($!{deviceInfo.hasTemp()}) <div1 #if($dataIntime.isTempUp() || $dataIntime.isTempDown())  style="color:red;" #end>温度: $!unitUtil.changeTemp($!{dataIntime.temp})℃ </div1> 范围: $!unitUtil.changeTemp($!{deviceInfo.tempDown})℃ ~ $!unitUtil.changeTemp($!{deviceInfo.tempUp}) ℃ ($!unitUtil.changeTemp($!{deviceInfo.tempDev})℃)<br/> #end
+                  #if($!{deviceInfo.hasHumi()}) <div1 #if($dataIntime.isHumiUp() || $dataIntime.isHumiDown())  style="color:red;" #end>湿度: $!unitUtil.changeHumi($!{dataIntime.humi})%RH</div1>范围: $!unitUtil.changeHumi($!{deviceInfo.humiDown})%RH ~ $!unitUtil.changeHumi($!{deviceInfo.humiUp})%RH ($!unitUtil.changeHumi($!{deviceInfo.humiDev})%RH)<br/> #end
+                  #if($!{deviceInfo.hasPower()}) <div1 #if($dataIntime.isPowerUp() || $dataIntime.isPowerDown())  style="color:red;" #end>电量:$!unitUtil.changePower($!{dataIntime.power})V </div1> 范围: 3.1V ~ 3.7V<br/> #end
+                  #if($!{deviceInfo.hasShine()}) <div1 #if($dataIntime.isShineUp() || $dataIntime.isShineDown())  style="color:red;" #end>光照: $!{dataIntime.shine} Lx</div1> 范围: $!{deviceInfo.shineDown} Lx ~ $!{deviceInfo.shineUp}Lx ($!{deviceInfo.shineDev}Lx)<br/> #end
+                  #if($!{deviceInfo.hasPressure()}) <div1 #if($dataIntime.isPressureUp() || $dataIntime.isPressureDown())  style="color:red;" #end>压力: $!unitUtil.changePressure($!{dataIntime.pressure}) kPa</div1> 范围: $!unitUtil.changePressure($!{deviceInfo.pressureDown})kPa ~ $!unitUtil.changePressure($!{deviceInfo.pressureUp})kPa ($!unitUtil.changePressure($!{deviceInfo.pressureDev})kPa)<br/> #end
+                  #if($!{deviceInfo.hasSmoke()}) <div1 #if($dataIntime.isSmokeAlarm())  style="color:red;" #end>烟感: </div1><br/>输入通道: $!{deviceInfo.inWay}<br/>联动输出通道和地址: $!{deviceInfo.opencloseWay} ,  $!{deviceInfo.relationOutId}<br/> #end
+                  #if($!{deviceInfo.hasWater()}) <div1 #if($dataIntime.isWaterAlarm())  style="color:red;" #end>跑冒滴漏:</div1> <br/>输入通道: $!{deviceInfo.inWay}<br/>联动输出通道和地址: $!{deviceInfo.opencloseWay} ,  $!{deviceInfo.relationOutId}<br/> #end
+                  #if($!{deviceInfo.hasElectric()}) <div1 #if($dataIntime.isElectricAlarm())  style="color:red;" #end>断电来电:</div1> <br/>输入通道: $!{deviceInfo.inWay}<br/>联动输出通道和地址: $!{deviceInfo.opencloseWay} ,  $!{deviceInfo.relationOutId}<br/> #end
+                  #if($!{deviceInfo.hasBody()}) <div1 #if($dataIntime.isBodyAlarm())  style="color:red;" #end>人体感应: </div1> <br/>输入通道: $!{deviceInfo.inWay}<br/>联动输出通道和地址: $!{deviceInfo.opencloseWay} ,  $!{deviceInfo.relationOutId}<br/> #end
+                  #if($!{deviceInfo.hasOut()}) <div1 #if($dataIntime.isOutAlarm())  style="color:red;" #end>控制通道:  </div1>$!{row.controlWay}<br/>#end
               </td>
               <td>
-                #if($!{row.hasOut()})
-                  <a href="${www}/device/outConditionList?id=${row.id}">配置开关条件</a><br/>
-                #end
-                <a href="${www}/device/deviceUpdate?id=${row.id}">修改</a> ｜
-                <a href="${www}/device/deleteDevice?id=${row.id}" onclick="javascript:return confirm('确认要删除 $!{row.name}?');">删除</a>
+                $dateUtil.getDate($!{dataIntime.createdAt}, 'yyyy-MM-dd HH:mm:ss')
+##                #if($!{row.hasOut()})
+##                  <a href="${www}/device/outConditionList?id=${row.id}">配置开关条件</a><br/>
+##                #end
+##                <a href="${www}/device/deviceUpdate?id=${row.id}">修改</a> ｜
+##                <a href="${www}/device/deleteDevice?id=${row.id}" onclick="javascript:return confirm('确认要删除 $!{row.name}?');">删除</a>
               </td>
             </tr>
             #end

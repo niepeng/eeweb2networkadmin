@@ -32,21 +32,56 @@ public class DeviceIntimeService extends BaseService {
     assembleStatus(dataIntimeBean);
     assembleArea(dataIntimeBean);
 
-    List<DeviceDataIntime> dataList = dataIntimeMapper.listAll();
-    if(dataList != null) {
-      for(DeviceDataIntime data : dataList) {
-        data.setDeviceInfo(deviceInfoMapper.selectByPrimaryKey(data.getDeviceId()));
-        data.setAreaId(data.getDeviceInfo().getAreaId());
-        if(data.getDeviceInfo().getAreaId() > 0) {
-          data.getDeviceInfo().setArea(areaMapper.selectByPrimaryKey(data.getAreaId()));
-        }
-      }
-    }
+    List<DeviceDataIntime> dataList = deviceDataIntimeFor2("","","");
 
     selectConditionData(dataIntimeBean, dataList);
 
     dataIntimeBean.mergeElementData();
   }
+
+  public List<DeviceDataIntime> deviceDataIntimeFor2(String status, String areaId, String name) {
+    List<DeviceDataIntime> dataList = dataIntimeMapper.listAll();
+
+    for (DeviceDataIntime data : dataList) {
+      data.setDeviceInfo(deviceInfoMapper.selectByPrimaryKey(data.getDeviceId()));
+      data.setAreaId(data.getDeviceInfo().getAreaId());
+      if (data.getDeviceInfo().getAreaId() > 0) {
+        data.getDeviceInfo().setArea(areaMapper.selectByPrimaryKey(data.getAreaId()));
+      }
+    }
+
+    if (StringUtil.isEmpty(status) && StringUtil.isEmpty(areaId) && StringUtil.isEmpty(name)) {
+      return dataList;
+    }
+
+    if (dataList != null) {
+      int statusInt = StringUtil.str2int(status);
+      long areaIdLong = StringUtil.str2long(areaId);
+
+      DeviceDataIntime tmpData;
+      for (int i = 0; i < dataList.size(); ) {
+        tmpData = dataList.get(i);
+        if (statusInt > 0 && tmpData.getStatus() != statusInt) {
+          dataList.remove(i);
+          continue;
+        }
+
+        if (areaIdLong > 0 && tmpData.getAreaId() != areaIdLong) {
+          dataList.remove(i);
+          continue;
+        }
+
+        if (!StringUtil.isEmpty(name) && tmpData.getDeviceInfo().getName().indexOf(name) < 0) {
+          dataList.remove(i);
+          continue;
+        }
+        i++;
+      }
+    }
+    return dataList;
+  }
+
+
 
   private void selectConditionData(DataIntimeBean dataIntimeBean, List<DeviceDataIntime> dataList) {
     if (dataList == null) {

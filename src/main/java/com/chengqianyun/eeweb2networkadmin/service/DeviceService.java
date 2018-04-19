@@ -306,7 +306,7 @@ public class DeviceService extends BaseService {
       throw new RuntimeException("当前条件设备sn号不是 " + tmpEnum.getName() + "设备");
     }
 
-    int dataValue = getDataValue(outCondition.getDeviceType(), outCondition.getDataValueStr());
+    int dataValue = UnitUtil.getDataValue(outCondition.getDeviceType(), outCondition.getDataValueStr());
     outCondition.setDataValue(dataValue);
     outConditionMapper.insert(outCondition);
   }
@@ -331,7 +331,7 @@ public class DeviceService extends BaseService {
     fromDB.setOpenClosed(outCondition.getOpenClosed());
     fromDB.setDeviceType(outCondition.getDeviceType());
     fromDB.setMinMax(outCondition.getMinMax());
-    int dataValue = getDataValue(outCondition.getDeviceType(), outCondition.getDataValueStr());
+    int dataValue = UnitUtil.getDataValue(outCondition.getDeviceType(), outCondition.getDataValueStr());
     fromDB.setDataValue(dataValue);
     outConditionMapper.updateByPrimaryKey(fromDB);
   }
@@ -339,29 +339,5 @@ public class DeviceService extends BaseService {
   public void outConditionDelete(long outConditionId) {
     outConditionMapper.deleteByPrimaryKey(outConditionId);
   }
-
-
-
-
-  private int getDataValue(int deviceType, String dataValueStr) {
-    DeviceInfo device = new DeviceInfo();
-    device.setType(deviceType);
-    if (device.hasTemp()) {
-      return UnitUtil.changeTemp(dataValueStr);
-    }
-
-    if (device.hasHumi()) {
-      return UnitUtil.changeHumi(dataValueStr);
-    }
-    if (device.hasPressure()) {
-      return UnitUtil.changePressure(dataValueStr);
-    }
-
-    if (device.hasPower()) {
-      return UnitUtil.changePower(dataValueStr);
-    }
-    return StringUtil.str2int(dataValueStr);
-  }
-
 
 }

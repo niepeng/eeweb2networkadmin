@@ -1,5 +1,6 @@
 package com.chengqianyun.eeweb2networkadmin.core.utils;
 
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 
 /**
@@ -72,6 +73,24 @@ public class UnitUtil {
       return changePressure(data);
     }
     return "";
+  }
+
+  public static int getDataValue(int deviceType, String dataValueStr) {
+    if (deviceType == DeviceTypeEnum.temp.getId()) {
+      return UnitUtil.changeTemp(dataValueStr);
+    }
+
+    if (deviceType == DeviceTypeEnum.humi.getId()) {
+      return UnitUtil.changeHumi(dataValueStr);
+    }
+    if (deviceType == DeviceTypeEnum.pressure.getId()) {
+      return UnitUtil.changePressure(dataValueStr);
+    }
+
+    if (deviceType == DeviceTypeEnum.power.getId()) {
+      return UnitUtil.changePower(dataValueStr);
+    }
+    return StringUtil.str2int(dataValueStr);
   }
 
   public static void main(String[] args) {

@@ -202,6 +202,10 @@ public class DeviceInfo {
         return DeviceTypeEnum.hasType(type, DeviceTypeEnum.electric);
     }
 
+    public boolean hasBody() {
+        return DeviceTypeEnum.hasType(type, DeviceTypeEnum.body);
+    }
+
     public boolean hasOut() {
         return DeviceTypeEnum.hasType(type, DeviceTypeEnum.out);
     }

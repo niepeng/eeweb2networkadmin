@@ -161,5 +161,9 @@ public class DeviceDataIntime {
         return body == (short) 1;
     }
 
+    public boolean isOutAlarm() {
+        return out == (short) 1;
+    }
+
 
 }

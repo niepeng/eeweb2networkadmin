@@ -3,6 +3,7 @@ package com.chengqianyun.eeweb2networkadmin.action;
 
 import com.chengqianyun.eeweb2networkadmin.biz.bean.DataIntimeBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.service.DeviceIntimeService;
@@ -34,7 +35,7 @@ public class IntimeController extends BaseController {
   private DeviceIntimeService deviceIntimeService;
 
   /**
-   * 实时数据展示1
+   * 实时数据展示1:列表,单传感器
    */
   @RequestMapping( value = "/dataList", method = RequestMethod.GET)
   public String dataList(
@@ -68,7 +69,7 @@ public class IntimeController extends BaseController {
   }
 
   /**
-   * 实时数据展示2
+   * 实时数据展示2:总览
    */
   @RequestMapping( value = "/dataList2", method = RequestMethod.GET)
   public String dataList2(
@@ -82,12 +83,14 @@ public class IntimeController extends BaseController {
     try {
       addOptMenu(model, MenuEnum.intime);
       List<Area> areaList = deviceService.getAreaAll();
-//      DataIntimeBean dataIntimeBean = new DataIntimeBean();
-//      dataIntimeBean.setDeviceTypes(deviceTypes);
-//
-//      deviceIntimeService.deviceDataIntime(dataIntimeBean);
+      List<DeviceDataIntime> dataIntimeList = deviceIntimeService.deviceDataIntimeFor2(status, areaId, name);
+
+      model.addAttribute("dataIntimeList", dataIntimeList);
       model.addAttribute("areaList", areaList);
-//      model.addAttribute("dataIntimeBean", dataIntimeBean);
+      model.addAttribute("status", status);
+      model.addAttribute("areaId", areaId);
+      model.addAttribute("name", name);
+
       return "/intime/dataList2";
     } catch (Exception ex) {
       model.addAttribute(SUCCESS, false);
