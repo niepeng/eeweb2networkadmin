@@ -31,12 +31,24 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
 
-  <select id="listAll" resultMap="BaseResultMap">
+  <select id="listDataOneAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_device_data_intime where id in
+    (select max(id) from t_device_data_intime group by device_id)
+    order by id asc
+  </select>
+
+  <select id="listDataOneDevice" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from t_device_data_intime
-    order by id asc
+    WHERE
+        device_id = #{deviceId,jdbcType=BIGINT}
+    order by id desc
+    limit #{recordNum,jdbcType=INTEGER}
   </select>
+
 
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >

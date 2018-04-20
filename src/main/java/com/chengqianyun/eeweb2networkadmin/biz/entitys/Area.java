@@ -1,7 +1,9 @@
 package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import lombok.Data;
 import lombok.ToString;
 
@@ -28,6 +30,8 @@ public class Area {
 
     // ==============  扩展属性  =================
 
+    private List<DeviceInfo> deviceInfoList;
+
 
     // ==============  扩展方法  =================
 
@@ -42,6 +46,13 @@ public class Area {
         }
 
         smsPhones = StringUtil.assemble(smsPhoneArray, ",");
+    }
+
+    public void addDeviceInfo(DeviceInfo deviceInfo) {
+        if (deviceInfoList == null) {
+            deviceInfoList = new ArrayList<DeviceInfo>();
+        }
+        deviceInfoList.add(deviceInfo);
     }
 
 

@@ -40,7 +40,7 @@ public class DeviceIntimeService extends BaseService {
   }
 
   public List<DeviceDataIntime> deviceDataIntimeFor2(String status, String areaId, String name) {
-    List<DeviceDataIntime> dataList = dataIntimeMapper.listAll();
+    List<DeviceDataIntime> dataList = dataIntimeMapper.listDataOneAll();
 
     for (DeviceDataIntime data : dataList) {
       data.setDeviceInfo(deviceInfoMapper.selectByPrimaryKey(data.getDeviceId()));
@@ -81,6 +81,10 @@ public class DeviceIntimeService extends BaseService {
     return dataList;
   }
 
+  public List<DeviceDataIntime> intimeCurveList(long deviceId) {
+    List<DeviceDataIntime> list = dataIntimeMapper.listDataOneDevice(deviceId, 100);
+    return list;
+  }
 
 
   private void selectConditionData(DataIntimeBean dataIntimeBean, List<DeviceDataIntime> dataList) {

@@ -10,6 +10,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.UnitUtil;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,32 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class DeviceService extends BaseService {
+
+  public List<Area> getAreaAndDeviceInfo() {
+    Area area = new Area();
+    area.setId(0L);
+    area.setName("未定义");
+    List<Area> areaList = getAreaAll();
+    List<DeviceInfo> deviceInfoList = deviceInfoMapper.findAll();
+    if (areaList == null || areaList.size() == 0) {
+      areaList = new ArrayList<Area>();
+      areaList.add(area);
+      area.setDeviceInfoList(deviceInfoList);
+      return areaList;
+    }
+
+    areaList.add(0, area);
+
+    for (Area tmpArea : areaList) {
+      for (DeviceInfo deviceInfo : deviceInfoList) {
+        if (tmpArea.getId().longValue() == deviceInfo.getAreaId()) {
+          tmpArea.addDeviceInfo(deviceInfo);
+        }
+      }
+    }
+
+    return areaList;
+  }
 
 
   public PageResult<Area> getAreaList(PaginationQuery query) {

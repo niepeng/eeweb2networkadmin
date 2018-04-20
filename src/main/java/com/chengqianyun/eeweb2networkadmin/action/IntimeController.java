@@ -4,6 +4,7 @@ package com.chengqianyun.eeweb2networkadmin.action;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.DataIntimeBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.service.DeviceIntimeService;
@@ -98,6 +99,52 @@ public class IntimeController extends BaseController {
       log.error(ex);
       return "/intime/dataList2";
     }
+  }
+
+  /**
+   * 实时曲线
+   */
+  @RequestMapping(value = "/intimeCurveList", method = RequestMethod.GET)
+  public String intimeCurveList(
+      // 名称
+      @RequestParam(value = "deviceId", required = false, defaultValue = "0") long deviceId,
+      Model model) {
+
+    List<Area> areaList = deviceService.getAreaAndDeviceInfo();
+    DeviceInfo deviceInfo = findOneDeviceId(areaList, deviceId);
+    List<DeviceDataIntime> dataIntimeList = deviceIntimeService.intimeCurveList(deviceId);
+    model.addAttribute("deviceInfo", deviceInfo);
+    model.addAttribute("areaList", areaList);
+    model.addAttribute("dataIntimeList", dataIntimeList);
+
+    return "/intime/intimeCurveList";
+  }
+
+
+  private DeviceInfo findOneDeviceId(List<Area> areaList, long deviceId) {
+    DeviceInfo deviceInfo = null;
+    if (areaList == null) {
+      return null;
+    }
+
+    for (Area area : areaList) {
+      if (area.getDeviceInfoList() == null || area.getDeviceInfoList().size() == 0) {
+        continue;
+      }
+      if (deviceId < 1) {
+        deviceInfo = area.getDeviceInfoList().get(0);
+        break;
+      }
+
+      for (DeviceInfo tmpDeviceInfo : area.getDeviceInfoList()) {
+        if (tmpDeviceInfo.getId().longValue() == deviceId) {
+          deviceInfo = tmpDeviceInfo;
+          return deviceInfo;
+        }
+      }
+
+    }
+    return deviceInfo;
   }
 
 

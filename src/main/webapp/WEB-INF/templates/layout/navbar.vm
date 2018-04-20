@@ -78,7 +78,7 @@
                     </a>
                     <ul class="submenu" #if($showMenu) style="display: block;" #end >
                       <li><a href="${www}/intime/dataList">实时数据</a></li>
-                      <li><a href="${www}/aaa.html">实时曲线</a></li>
+                      <li><a href="${www}/intime/intimeCurveList">实时曲线</a></li>
                     </ul>
                   </li>
 

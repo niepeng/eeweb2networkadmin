@@ -65,6 +65,11 @@
     <![CDATA[ limit ${startRecord},${endRecord} ]]>
   </select>
 
+  <select id="findAll"  resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> from t_device_info
+    ORDER BY id desc
+  </select>
+
 
 
   <select id="selectBySn" resultMap="BaseResultMap" parameterType="java.lang.String" >

@@ -22,4 +22,5 @@ public interface DeviceInfoMapper {
 
     List<DeviceInfo> findPage(Map<String,String> map);
 
+    List<DeviceInfo> findAll();
 }

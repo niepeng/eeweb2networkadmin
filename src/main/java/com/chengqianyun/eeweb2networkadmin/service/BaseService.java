@@ -1,11 +1,13 @@
 package com.chengqianyun.eeweb2networkadmin.service;
 
 
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.AreaMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarmMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntimeMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfoMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutConditionMapper;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,4 +33,5 @@ public class BaseService {
 
   @Autowired
   protected DeviceAlarmMapper deviceAlarmMapper;
+
 }
