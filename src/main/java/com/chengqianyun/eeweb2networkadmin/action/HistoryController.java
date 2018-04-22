@@ -59,8 +59,8 @@ public class HistoryController extends BaseController {
       DeviceInfo deviceInfo = findOneDeviceId(areaList, deviceId);
       if (StringUtil.isEmpty(startTime) || StringUtil.isEmpty(endTime)) {
         Date now = new Date();
-        endTime = DateUtil.getDate(now, DateUtil.dateFullPattern);
-        startTime = DateUtil.getDate(DateUtil.addDate(now, -1), DateUtil.dateFullPattern);
+        endTime = DateUtil.getDate(now, DateUtil.dateFullPatternNoSecond);
+        startTime = DateUtil.getDate(DateUtil.addDate(now, -1), DateUtil.dateFullPatternNoSecond);
       }
 
       PaginationQuery query = new PaginationQuery();
@@ -71,20 +71,24 @@ public class HistoryController extends BaseController {
       query.addQueryData("endTime", endTime);
 
       model.addAttribute("deviceInfo", deviceInfo);
+      model.addAttribute("area", deviceService.getArea(deviceInfo.getAreaId()));
       model.addAttribute("areaList", areaList);
       model.addAttribute("startTime", startTime);
       model.addAttribute("endTime", endTime);
 
 
       // 检查时间段不能超过一天
-      Date startTimeDate = DateUtil.getDate(startTime, DateUtil.dateFullPattern);
-      Date endTimeDate = DateUtil.getDate(endTime, DateUtil.dateFullPattern);
-      if(startTimeDate.getTime() + BizConstant.Times.day > endTimeDate.getTime()) {
+      Date startTimeDate = DateUtil.getDate(startTime, DateUtil.dateFullPatternNoSecond);
+      Date endTimeDate = DateUtil.getDate(endTime, DateUtil.dateFullPatternNoSecond);
+      if(startTimeDate.getTime() > endTimeDate.getTime()) {
+        throw new Exception("开始时间不能大于结束时间");
+      }
+      if(startTimeDate.getTime() + BizConstant.Times.day < endTimeDate.getTime()) {
         throw new Exception("开始时间和结束时间的 间隔不能超过1天");
       }
 
 
-      PageResult<DeviceDataHistory> params = historyService.historyDataList(query);
+      PageResult<DeviceDataHistory> params = historyService.historyDataList(query, deviceInfo);
       model.addAttribute("result", params);
 
 
@@ -115,19 +119,23 @@ public class HistoryController extends BaseController {
       DeviceInfo deviceInfo = findOneDeviceId(areaList, deviceId);
       if (StringUtil.isEmpty(startTime) || StringUtil.isEmpty(endTime)) {
         Date now = new Date();
-        endTime = DateUtil.getDate(now, DateUtil.dateFullPattern);
-        startTime = DateUtil.getDate(DateUtil.addDate(now, -1), DateUtil.dateFullPattern);
+        endTime = DateUtil.getDate(now, DateUtil.dateFullPatternNoSecond);
+        startTime = DateUtil.getDate(DateUtil.addDate(now, -1), DateUtil.dateFullPatternNoSecond);
       }
 
       model.addAttribute("deviceInfo", deviceInfo);
+      model.addAttribute("area", deviceService.getArea(deviceInfo.getAreaId()));
       model.addAttribute("areaList", areaList);
       model.addAttribute("startTime", startTime);
       model.addAttribute("endTime", endTime);
 
       // 检查时间段不能超过一天
-      Date startTimeDate = DateUtil.getDate(startTime, DateUtil.dateFullPattern);
-      Date endTimeDate = DateUtil.getDate(endTime, DateUtil.dateFullPattern);
-      if (startTimeDate.getTime() + BizConstant.Times.day > endTimeDate.getTime()) {
+      Date startTimeDate = DateUtil.getDate(startTime, DateUtil.dateFullPatternNoSecond);
+      Date endTimeDate = DateUtil.getDate(endTime, DateUtil.dateFullPatternNoSecond);
+      if(startTimeDate.getTime() > endTimeDate.getTime()) {
+        throw new Exception("开始时间不能大于结束时间");
+      }
+      if (startTimeDate.getTime() + BizConstant.Times.day < endTimeDate.getTime()) {
         throw new Exception("开始时间和结束时间的 间隔不能超过1天");
       }
 

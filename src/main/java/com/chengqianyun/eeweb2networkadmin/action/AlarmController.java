@@ -62,6 +62,7 @@ public class AlarmController extends BaseController {
         startTime = DateUtil.getDate(DateUtil.formatCurrentMin(now), DateUtil.dateFullPattern);
         endTime = DateUtil.getDate(now, DateUtil.dateFullPattern);
       }
+
       addOptMenu(model, MenuEnum.alarm);
       PaginationQuery query = new PaginationQuery();
       query.setPageIndex(pageIndex);
@@ -72,15 +73,21 @@ public class AlarmController extends BaseController {
       query.addQueryData("startTime", startTime);
       query.addQueryData("endTime", endTime);
 
-      PageResult<DeviceAlarm> params = alarmService.getAlarmList(query);
-      model.addAttribute("result", params);
       model.addAttribute("areaList", deviceService.getAreaAll());
-
       model.addAttribute("deviceName", deviceName);
       model.addAttribute("alarmType", alarmType);
       model.addAttribute("alarmConfirm", alarmConfirm);
       model.addAttribute("startTime", startTime);
       model.addAttribute("endTime", endTime);
+
+      Date startTimeDate = DateUtil.getDate(startTime, DateUtil.dateFullPattern);
+      Date endTimeDate = DateUtil.getDate(endTime, DateUtil.dateFullPattern);
+      if(startTimeDate.getTime() > endTimeDate.getTime()) {
+        throw new Exception("开始时间不能大于结束时间");
+      }
+
+      PageResult<DeviceAlarm> params = alarmService.getAlarmList(query);
+      model.addAttribute("result", params);
 
       return "/alarm/alarmList";
     } catch (Exception ex) {

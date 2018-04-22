@@ -1,9 +1,9 @@
 package com.chengqianyun.eeweb2networkadmin.service;
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistory;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class HistoryService extends BaseService {
 
-    public PageResult<DeviceDataHistory> historyDataList(PaginationQuery query) {
+    public PageResult<DeviceDataHistory> historyDataList(PaginationQuery query, DeviceInfo deviceInfo) {
       PageResult<DeviceDataHistory> result = null;
       try {
         Integer count = deviceDataHistoryMapper.findPageCount(query.getQueryData());
@@ -32,10 +32,7 @@ public class HistoryService extends BaseService {
           List<DeviceDataHistory> list = deviceDataHistoryMapper.findPage(query.getQueryData());
           if(list != null) {
             for(DeviceDataHistory history : list) {
-              history.setDeviceInfo(deviceInfoMapper.selectByPrimaryKey(history.getDeviceId()));
-              if(history.getDeviceInfo() != null && history.getDeviceInfo().getAreaId() > 0) {
-                history.getDeviceInfo().setArea(areaMapper.selectByPrimaryKey(history.getDeviceInfo().getAreaId()));
-              }
+              history.setDeviceInfo(deviceInfo);
             }
           }
           result = new PageResult<DeviceDataHistory>(list, count, query);

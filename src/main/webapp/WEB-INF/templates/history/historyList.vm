@@ -46,9 +46,9 @@
               #end
 
               <label>开始时间：</label>
-              <input type="text" class="input-date" name="startTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="$!{startTime}">
+              <input type="text" class="input-date" name="startTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm'})" value="$!{startTime}">
               <label>结束时间：</label>
-              <input type="text" class="input-date" name="endTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="$!{endTime}">
+              <input type="text" class="input-date" name="endTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm'})" value="$!{endTime}">
 
               <div class="form-group">
                 <button class="btn btn-xs btn-primary" type="submit">查询</button> <tts style="margin-left:20px;color: red;">有效查询时间范围是 1天(1440分钟)</tts>
@@ -85,7 +85,7 @@
             #set($tmpDeviceInfo = $!{row.deviceInfo})
             <tr>
               <td>$!{tmpDeviceInfo.sn} <br/>$!{tmpDeviceInfo.address}</td>
-              <td> $!{tmpDeviceInfo.name}($!{tmpDeviceInfo.area.name})-$!{tmpDeviceInfo.tag}</td>
+              <td> $!{tmpDeviceInfo.name}($!{area.name})-$!{tmpDeviceInfo.tag}</td>
               <td>$!applicationUtil.getStatus($!{row.status}).meaning</td>
               <td>
                 #if($!{tmpDeviceInfo.hasTemp()}) <div1 #if($row.isTempUp() || $row.isTempDown())  style="color:red;" #end>温度: $!unitUtil.changeTemp($!{row.temp})℃ </div1> 范围: $!unitUtil.changeTemp($!{deviceInfo.tempDown})℃ ~ $!unitUtil.changeTemp($!{deviceInfo.tempUp}) ℃ ($!unitUtil.changeTemp($!{deviceInfo.tempDev})℃)<br/> #end
