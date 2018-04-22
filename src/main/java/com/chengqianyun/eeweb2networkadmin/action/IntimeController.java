@@ -110,42 +110,21 @@ public class IntimeController extends BaseController {
       @RequestParam(value = "deviceId", required = false, defaultValue = "0") long deviceId,
       Model model) {
 
-    List<Area> areaList = deviceService.getAreaAndDeviceInfo();
-    DeviceInfo deviceInfo = findOneDeviceId(areaList, deviceId);
-    List<DeviceDataIntime> dataIntimeList = deviceIntimeService.intimeCurveList(deviceId);
-    model.addAttribute("deviceInfo", deviceInfo);
-    model.addAttribute("areaList", areaList);
-    model.addAttribute("dataIntimeList", dataIntimeList);
-
-    return "/intime/intimeCurveList";
-  }
-
-
-  private DeviceInfo findOneDeviceId(List<Area> areaList, long deviceId) {
-    DeviceInfo deviceInfo = null;
-    if (areaList == null) {
-      return null;
+    try {
+      addOptMenu(model, MenuEnum.intime);
+      List<Area> areaList = deviceService.getAreaAndDeviceInfo();
+      DeviceInfo deviceInfo = findOneDeviceId(areaList, deviceId);
+      List<DeviceDataIntime> dataIntimeList = deviceIntimeService.intimeCurveList(deviceInfo.getId().longValue());
+      model.addAttribute("deviceInfo", deviceInfo);
+      model.addAttribute("areaList", areaList);
+      model.addAttribute("dataIntimeList", dataIntimeList);
+      return "/intime/intimeCurveList";
+    } catch (Exception ex) {
+      model.addAttribute(SUCCESS, false);
+      model.addAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "/intime/intimeCurveList";
     }
-
-    for (Area area : areaList) {
-      if (area.getDeviceInfoList() == null || area.getDeviceInfoList().size() == 0) {
-        continue;
-      }
-      if (deviceId < 1) {
-        deviceInfo = area.getDeviceInfoList().get(0);
-        break;
-      }
-
-      for (DeviceInfo tmpDeviceInfo : area.getDeviceInfoList()) {
-        if (tmpDeviceInfo.getId().longValue() == deviceId) {
-          deviceInfo = tmpDeviceInfo;
-          return deviceInfo;
-        }
-      }
-
-    }
-    return deviceInfo;
   }
-
 
 }

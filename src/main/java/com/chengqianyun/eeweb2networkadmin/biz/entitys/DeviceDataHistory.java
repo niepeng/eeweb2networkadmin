@@ -1,5 +1,6 @@
 package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
+import com.chengqianyun.eeweb2networkadmin.core.utils.BizConstant;
 import java.util.Date;
 import lombok.Data;
 import lombok.ToString;
@@ -95,8 +96,72 @@ public class DeviceDataHistory {
 
     // ==============  扩展属性  =================
 
+    private DeviceInfo deviceInfo;
+
 
     // ==============  扩展方法  =================
+
+    public boolean isTempUp() {
+        return temp - deviceInfo.getTempDev() > deviceInfo.getTempUp();
+    }
+
+    public boolean isTempDown() {
+        return temp + deviceInfo.getTempDev() < deviceInfo.getTempDown();
+    }
+
+
+    public boolean isHumiUp() {
+        return humi - deviceInfo.getHumiDev() > deviceInfo.getHumiUp();
+    }
+
+    public boolean isHumiDown() {
+        return humi + deviceInfo.getHumiDev() < deviceInfo.getHumiDown();
+    }
+
+    public boolean isPowerUp() {
+        return power > BizConstant.power_max;
+    }
+
+    public boolean isPowerDown() {
+        return power < BizConstant.power_min;
+    }
+
+    public boolean isShineUp() {
+        return shine - deviceInfo.getShineDev() > deviceInfo.getShineUp();
+    }
+
+    public boolean isShineDown() {
+        return shine + deviceInfo.getShineDev() < deviceInfo.getShineDown();
+    }
+
+
+    public boolean isPressureUp() {
+        return pressure - deviceInfo.getPressureDev() > deviceInfo.getPressureUp();
+    }
+
+    public boolean isPressureDown() {
+        return pressure + deviceInfo.getPressureDev() < deviceInfo.getPressureDown();
+    }
+
+    public boolean isSmokeAlarm() {
+        return smoke == (short) 1;
+    }
+
+    public boolean isWaterAlarm() {
+        return water == (short) 1;
+    }
+
+    public boolean isElectricAlarm() {
+        return electric == (short) 1;
+    }
+
+    public boolean isBodyAlarm() {
+        return body == (short) 1;
+    }
+
+    public boolean isOutAlarm() {
+        return out == (short) 1;
+    }
 
 
 

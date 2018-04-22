@@ -103,8 +103,8 @@
                       <b class="arrow icon-angle-down"></b>
                     </a>
                     <ul class="submenu" #if($showMenu) style="display: block;" #end >
-                      <li><a href="${www}/aaa.html">历史数据</a></li>
-                      <li><a href="${www}/aaa.html">历史曲线</a></li>
+                      <li><a href="${www}/history/historyList">历史数据</a></li>
+                      <li><a href="${www}/history/historyCurveList">历史曲线</a></li>
                     </ul>
                   </li>
 

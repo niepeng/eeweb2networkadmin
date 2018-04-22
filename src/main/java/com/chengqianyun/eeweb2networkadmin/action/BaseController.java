@@ -1,12 +1,15 @@
 package com.chengqianyun.eeweb2networkadmin.action;
 
 import com.alibaba.fastjson.JSON;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.ConsoleLoginAccount;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.HttpSessionUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.PageUtilFactory;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -99,6 +102,35 @@ public abstract class BaseController {
 		ConsoleLoginAccount loginSession = getLoginAccount();
 		return loginSession.getId();
 	}
+
+
+	protected DeviceInfo findOneDeviceId(List<Area> areaList, long deviceId) {
+		DeviceInfo deviceInfo = null;
+		if (areaList == null) {
+			return null;
+		}
+
+		for (Area area : areaList) {
+			if (area.getDeviceInfoList() == null || area.getDeviceInfoList().size() == 0) {
+				continue;
+			}
+			if (deviceId < 1) {
+				deviceInfo = area.getDeviceInfoList().get(0);
+				break;
+			}
+
+			for (DeviceInfo tmpDeviceInfo : area.getDeviceInfoList()) {
+				if (tmpDeviceInfo.getId().longValue() == deviceId) {
+					deviceInfo = tmpDeviceInfo;
+					return deviceInfo;
+				}
+			}
+
+		}
+		return deviceInfo;
+	}
+
+
 
 //	protected OperationLog convertOperationLog(String name,HttpServletRequest request,Object object,OperationResultEnum resultEnum,OperationTypeEnum operationTypeEnum){
 //		OperationLog operationLog = new OperationLog();

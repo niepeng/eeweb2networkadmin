@@ -22,8 +22,38 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, device_id, status, temp, humi, power, shine, pressure, smoke, water, electric, body,
-    out, created_at, updated_at, created_by, updated_by
+    `out`, created_at, updated_at, created_by, updated_by
   </sql>
+
+
+  <sql id="pageSearch">
+    <where>
+      <if test="deviceId != null and deviceId !=''" >
+        device_id = #{deviceId,jdbcType=BIGINT}
+      </if>
+      <if test="startTime != null and startTime !=''" >
+        AND created_at >= #{startTime}
+      </if>
+      <if test="endTime != null and endTime !=''" >
+        AND created_at  <![CDATA[ < ]]>  #{endTime}
+      </if>
+    </where>
+  </sql>
+
+
+  <select id="findPageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    SELECT count(*) from  t_device_data_history
+    <include refid="pageSearch"/>
+  </select>
+
+  <select id="findPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> from t_device_data_history
+    <include refid="pageSearch"/>
+    ORDER BY id ASC
+    <![CDATA[ limit ${startRecord},${endRecord} ]]>
+  </select>
+
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />

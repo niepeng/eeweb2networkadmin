@@ -1,0 +1,136 @@
+
+
+<script src="${www}/js/my97DatePicker/WdatePicker.js"></script>
+
+
+<div class="main-content">
+  <div class="breadcrumbs" id="breadcrumbs">
+    <script type="text/javascript">
+      try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+    </script>
+    <ul class="breadcrumb">
+      <li>
+        <i class="icon-home home-icon"></i>
+        <a href="${www}/sp/main">主页</a>
+      </li>
+      <li class="active">历史数据</li>
+    </ul><!-- .breadcrumb -->
+    <div class="nav-search" id="nav-search">
+    </div><!-- #nav-search -->
+  </div>
+  <div class="page-content">
+    <div class="container-fluid">
+      #if(${msg})
+        <div>
+          #if(${success})
+            <li class="text-success">$!{msg}</li>
+          #else
+            <li class="text-danger">$!{msg}</li>
+          #end
+        </div>
+      #end
+      <div class="dataTables_wrapper">
+        <div class="row">
+          <div class="col-sm-11">
+            <form class="form-inline" role="form">
+
+
+              #foreach($tmpArea in $areaList)
+                <div class="form-group">
+                  <label>$!{tmpArea.name} ：</label>
+                  #foreach($tmpDeviceInfo in $tmpArea.deviceInfoList)
+                    <input type="radio" name="deviceId" value="$!tmpDeviceInfo.id" #if($!deviceInfo.id == $!tmpDeviceInfo.id) checked #end /> $!{tmpDeviceInfo.name}-($!{tmpDeviceInfo.tag}) &nbsp;&nbsp;
+                  #end
+                </div>
+                <br/><br/>
+              #end
+
+              <label>开始时间：</label>
+              <input type="text" class="input-date" name="startTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="$!{startTime}">
+              <label>结束时间：</label>
+              <input type="text" class="input-date" name="endTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="$!{endTime}">
+
+              <div class="form-group">
+                <button class="btn btn-xs btn-primary" type="submit">查询</button>
+              </div>
+            </form>
+          </div>
+
+##          <div class="col-sm-1 text-right">
+##            <a href="${www}/intime/dataList2" class="btn btn-success btn-xs">切换总览</a>
+##          </div>
+        </div>
+
+
+
+        <table id="dataTableResizeCol" class="table table-striped table-bordered table-hover dataTable">
+          <thead>
+          <tr>
+            <th>sn号和地址</th>
+            <th>名称(区域)-标签</th>
+            <th>设备状态</th>
+            <th>类型值(校正值)</th>
+            <th>创建时间</th>
+          </tr>
+          </thead>
+          <tbody>
+            #if(!$!result)
+              <tr>
+                <td colspan="5" align="center">暂无数据</td>
+              </tr>
+            #end
+
+
+            #foreach($row in $result.rows)
+            #set($tmpDeviceInfo = $!{row.deviceInfo})
+            <tr>
+              <td>$!{tmpDeviceInfo.sn} <br/>$!{tmpDeviceInfo.address}</td>
+              <td> $!{tmpDeviceInfo.name}($!{tmpDeviceInfo.area.name})-$!{tmpDeviceInfo.tag}</td>
+              <td>$!applicationUtil.getStatus($!{row.status}).meaning</td>
+              <td>
+                #if($!{tmpDeviceInfo.hasTemp()}) <div1 #if($row.isTempUp() || $row.isTempDown())  style="color:red;" #end>温度: $!unitUtil.changeTemp($!{row.temp})℃ </div1> 范围: $!unitUtil.changeTemp($!{deviceInfo.tempDown})℃ ~ $!unitUtil.changeTemp($!{deviceInfo.tempUp}) ℃ ($!unitUtil.changeTemp($!{deviceInfo.tempDev})℃)<br/> #end
+                #if($!{tmpDeviceInfo.hasHumi()}) <div1 #if($row.isHumiUp() || $row.isHumiDown())  style="color:red;" #end>湿度: $!unitUtil.changeHumi($!{row.humi})%RH</div1>范围: $!unitUtil.changeHumi($!{deviceInfo.humiDown})%RH ~ $!unitUtil.changeHumi($!{deviceInfo.humiUp})%RH ($!unitUtil.changeHumi($!{deviceInfo.humiDev})%RH)<br/> #end
+                #if($!{tmpDeviceInfo.hasPower()}) <div1 #if($row.isPowerUp() || $row.isPowerDown())  style="color:red;" #end>电量:$!unitUtil.changePower($!{row.power})V </div1> 范围: 3.1V ~ 3.7V<br/> #end
+                #if($!{tmpDeviceInfo.hasShine()}) <div1 #if($row.isShineUp() || $row.isShineDown())  style="color:red;" #end>光照: $!{row.shine} Lx</div1> 范围: $!{deviceInfo.shineDown} Lx ~ $!{deviceInfo.shineUp}Lx ($!{deviceInfo.shineDev}Lx)<br/> #end
+                #if($!{tmpDeviceInfo.hasPressure()}) <div1 #if($row.isPressureUp() || $row.isPressureDown())  style="color:red;" #end>压力: $!unitUtil.changePressure($!{row.pressure}) kPa</div1> 范围: $!unitUtil.changePressure($!{deviceInfo.pressureDown})kPa ~ $!unitUtil.changePressure($!{deviceInfo.pressureUp})kPa ($!unitUtil.changePressure($!{deviceInfo.pressureDev})kPa)<br/> #end
+                #if($!{tmpDeviceInfo.hasSmoke()}) <div1 #if($row.isSmokeAlarm())  style="color:red;" #end>烟感: </div1><br/>输入通道: $!{deviceInfo.inWay}<br/>联动输出通道和地址: $!{deviceInfo.opencloseWay} ,  $!{deviceInfo.relationOutId}<br/> #end
+                #if($!{tmpDeviceInfo.hasWater()}) <div1 #if($row.isWaterAlarm())  style="color:red;" #end>跑冒滴漏:</div1> <br/>输入通道: $!{deviceInfo.inWay}<br/>联动输出通道和地址: $!{deviceInfo.opencloseWay} ,  $!{deviceInfo.relationOutId}<br/> #end
+                #if($!{tmpDeviceInfo.hasElectric()}) <div1 #if($row.isElectricAlarm())  style="color:red;" #end>断电来电:</div1> <br/>输入通道: $!{deviceInfo.inWay}<br/>联动输出通道和地址: $!{deviceInfo.opencloseWay} ,  $!{deviceInfo.relationOutId}<br/> #end
+                #if($!{tmpDeviceInfo.hasBody()}) <div1 #if($row.isBodyAlarm())  style="color:red;" #end>人体感应: </div1> <br/>输入通道: $!{deviceInfo.inWay}<br/>联动输出通道和地址: $!{deviceInfo.opencloseWay} ,  $!{deviceInfo.relationOutId}<br/> #end
+                #if($!{tmpDeviceInfo.hasOut()}) <div1 #if($row.isOutAlarm())  style="color:red;" #end>控制通道:  </div1>$!{row.controlWay}<br/>#end
+              </td>
+              <td>
+                $dateUtil.getDate($!{row.createdAt}, 'yyyy-MM-dd HH:mm:ss')
+##                #if($!{row.hasOut()})
+##                  <a href="${www}/device/outConditionList?id=${row.id}">配置开关条件</a><br/>
+##                #end
+##                <a href="${www}/device/deviceUpdate?id=${row.id}">修改</a> ｜
+##                <a href="${www}/device/deleteDevice?id=${row.id}" onclick="javascript:return confirm('确认要删除 $!{row.name}?');">删除</a>
+              </td>
+            </tr>
+            #end
+          </tbody>
+        </table>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="dataTables_paginate paging_bootstrap">
+              <ul class="pagination">
+                #set($pageRequestURL="${www}/history/historyList?pageIndex=[PAGINATION_PAGE_INDEX]#if($!{result.queryParameters})&$!{result.queryParameters}#end")
+                #paginationHelper($result $pageRequestURL)
+              </ul>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div><!-- /.page-content -->
+</div><!-- /.main-content -->

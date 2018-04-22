@@ -1,6 +1,7 @@
 package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
-import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistory;
+import java.util.List;
+import java.util.Map;
 
 public interface DeviceDataHistoryMapper {
     int deleteByPrimaryKey(Long id);
@@ -14,4 +15,9 @@ public interface DeviceDataHistoryMapper {
     int updateByPrimaryKeySelective(DeviceDataHistory record);
 
     int updateByPrimaryKey(DeviceDataHistory record);
+
+    Integer findPageCount(Map<String,String> map);
+
+    List<DeviceDataHistory> findPage(Map<String,String> map);
+
 }
