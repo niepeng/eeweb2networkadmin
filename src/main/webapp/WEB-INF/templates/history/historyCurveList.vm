@@ -1,0 +1,553 @@
+
+
+
+<style>
+  .blockcell {
+    height: 30px;line-height: 80x;margin-top:20px;
+  }
+
+  .blockcell_one {
+    color: #fff;
+    float: left;width: 180px;
+    margin-left: 20px;
+    font-size:13px; text-align: center;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    margin-top:20px;
+  }
+
+  .blockcell_one_normal {
+    background-color: #aed232;
+  }
+
+  .blockcell_one_alarm {
+    background-color: #ddbd5f;
+  }
+
+  .blockcell_one_offline {
+    background-color: #bfbfbf;
+  }
+
+
+</style>
+
+<script src="${www}/js/my97DatePicker/WdatePicker.js"></script>
+<script src="${www}/js/echarts/echarts.js"></script>
+
+
+
+<div class="main-content">
+  <div class="breadcrumbs" id="breadcrumbs">
+    <script type="text/javascript">
+      try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+    </script>
+    <ul class="breadcrumb">
+      <li>
+        <i class="icon-home home-icon"></i>
+        <a href="${www}/sp/main">主页</a>
+      </li>
+      <li class="active">历史曲线</li>
+    </ul><!-- .breadcrumb -->
+    <div class="nav-search" id="nav-search">
+    </div><!-- #nav-search -->
+  </div>
+  <div class="page-content">
+    <div class="container-fluid">
+      #if(${msg})
+        <div>
+          #if(${success})
+            <li class="text-success">$!{msg}</li>
+          #else
+            <li class="text-danger">$!{msg}</li>
+          #end
+        </div>
+      #end
+      <div class="dataTables_wrapper">
+        <div class="row">
+          <div class="col-sm-11">
+            <form class="form-inline" role="form">
+
+
+              #foreach($tmpArea in $areaList)
+                <div class="form-group">
+                  <label>$!{tmpArea.name} ：</label>
+                  #foreach($tmpDeviceInfo in $tmpArea.deviceInfoList)
+                    <input type="radio" name="deviceId" value="$!tmpDeviceInfo.id" #if($!deviceInfo.id == $!tmpDeviceInfo.id) checked #end /> $!{tmpDeviceInfo.name}-($!{tmpDeviceInfo.tag}) &nbsp;&nbsp;
+                  #end
+                </div>
+                <br/><br/>
+              #end
+
+              <label>开始时间：</label>
+              <input type="text" class="input-date" name="startTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="$!{startTime}">
+              <label>结束时间：</label>
+              <input type="text" class="input-date" name="endTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="$!{endTime}">
+
+              <div class="form-group">
+                <button class="btn btn-xs btn-primary" type="submit">查询</button> <tts style="margin-left:20px;color: red;">有效查询时间范围是 1天(1440分钟)</tts>
+              </div>
+
+            </form>
+          </div>
+
+##          <div class="col-sm-1 text-right">
+##            <a href="${www}/intime/dataList2" class="btn btn-success btn-xs">切换总览</a>
+##          </div>
+        </div>
+
+
+      ## -------------------------- 曲线展示 -----------------------------------
+        #if("$!deviceInfo" == "")
+          <div style="font-size: 15px;margin-left: 100px;width 100px; margin-top: 50px;color:red;">该设备没有展示的曲线,请更换</div>
+          #else
+
+##            temp(1,"温度", true, "℃"),
+##            humi(2,"湿度", true, "%RH"),
+##            power(4,"电量", true, "V"),
+##            shine(8,"光照", true, "Lx"),
+##            pressure(16,"压力", true, "kPa"),
+##            smoke(32,"烟感", false, ""),
+##            water(64,"跑冒滴漏", false, ""),
+##            electric(128,"断电来电", false, ""),
+##            body(256,"人体感应", false, ""),
+##            out(512,"开关量输出", false, ""),
+
+            #set($showTemp = $applicationUtil.hasDeviceType($deviceInfo.type, 1))
+            #set($dataIntimeSize = $dataHistoryList.size())
+            #if($showTemp)
+              #if($dataIntimeSize > 0)
+                <div id="mainTemp" style="top:30px;width: 100px;height:200px;"></div>
+              #else
+                <div id="mainTemp" style="top:30px;width: 100px;height:50px;text-align: center;margin-top:50px;">暂无温度数据</div>
+              #end
+            #end
+
+            #set($showHumi = $applicationUtil.hasDeviceType($deviceInfo.type, 2))
+            #if($showHumi)
+              #if($dataIntimeSize > 0)
+                <div id="mainHumi" style="top:50px;width: 100px;height:200px;"></div>
+              #else
+                <div id="mainHumi" style="top:30px;width: 100px;height:50px;text-align: center;margin-top:50px;">暂无湿度数据</div>
+              #end
+            #end
+
+            #set($showPower = $applicationUtil.hasDeviceType($deviceInfo.type, 4))
+            #if($showPower)
+              #if($dataIntimeSize > 0)
+                <div id="mainPower" style="top:50px;width: 100px;height:200px;"></div>
+              #else
+                <div id="mainPower" style="top:30px;width: 100px;height:50px;text-align: center;margin-top:50px;">暂无电量数据</div>
+              #end
+            #end
+
+            #set($showShine = $applicationUtil.hasDeviceType($deviceInfo.type, 8))
+            #if($showShine)
+              #if($dataIntimeSize > 0)
+                <div id="mainShine" style="top:50px;width: 100px;height:200px;"></div>
+              #else
+                <div id="mainShine" style="top:30px;width: 100px;height:50px;text-align: center;margin-top:50px;">暂无光照数据</div>
+              #end
+            #end
+
+            #set($showPressure = $applicationUtil.hasDeviceType($deviceInfo.type, 16))
+            #if($showPressure)
+              #if($dataIntimeSize > 0)
+                <div id="mainPressure" style="top:50px;width: 100px;height:200px;"></div>
+              #else
+                <div id="mainPressure" style="top:30px;width: 100px;height:50px;text-align: center;margin-top:50px;">暂无压力数据</div>
+              #end
+            #end
+
+        #end
+
+
+      </div>
+    </div>
+  </div><!-- /.page-content -->
+</div><!-- /.main-content -->
+
+
+#if("$!deviceInfo" != "")
+<script type="text/javascript">
+
+// http://echarts.baidu.com/tutorial.html#5%20%E5%88%86%E9%92%9F%E4%B8%8A%E6%89%8B%20ECharts
+//  http://www.echartsjs.com/gallery/editor.html?c=doc-example/getting-started
+
+  var body = (document.compatMode && document.compatMode == 'CSS1Compat') ? document.documentElement : document.body;
+  var widthValue = (body.clientWidth) * 0.8;
+  #if($showTemp)
+    document.getElementById('mainTemp').style.width = widthValue + 'px';
+  #end
+  #if($showHumi)
+    document.getElementById('mainHumi').style.width = widthValue + 'px';
+  #end
+  #if($showPower)
+    document.getElementById('mainPower').style.width = widthValue + 'px';
+  #end
+  #if($showShine)
+    document.getElementById('mainShine').style.width = widthValue + 'px';
+  #end
+  #if($showPressure)
+    document.getElementById('mainPressure').style.width = widthValue + 'px';
+  #end
+
+
+
+
+
+  #if($showTemp && $dataIntimeSize > 0)
+  // 基于准备好的dom，初始化echarts实例
+  var myChart1 = echarts.init(document.getElementById('mainTemp'));
+
+  // 指定图表的配置项和数据
+  option1 = {
+    title: {
+      text: '温度曲线图'
+    },
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      data:['温度']
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    toolbox: {
+      feature: {
+        saveAsImage: {}
+      }
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: [
+//        '周一','周二','周三','周四','周五','周六','周日'
+          #set($tmpDataIntimeNum = 0)
+          #foreach($tmpDataIntime in $dataHistoryList)
+            #if($tmpDataIntimeNum > 0)
+              ,
+            #end
+            #set($dateTime = $dateUtil.getDate($!{tmpDataIntime.createdAt}, 'yyyy-MM-dd HH:mm'))
+            '$dateTime'
+            #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
+          #end
+      ]
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        name:'温度(℃)',
+        type:'line',
+        stack: '值',
+        data:[
+//          120.1, 132.1, 101, 134.1, 90.23, 230.23, 210.23
+          #set($tmpDataIntimeNum = 0)
+          #foreach($tmpDataIntime in $dataHistoryList)
+            #if($tmpDataIntimeNum > 0)
+              ,
+            #end
+            '$unitUtil.changeTemp($tmpDataIntime.temp)'
+            #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
+          #end
+        ]
+      }
+    ]
+  };
+
+  // 使用刚指定的配置项和数据显示图表。
+  myChart1.setOption(option1);
+  #end
+
+
+
+  #if($showHumi && $dataIntimeSize > 0)
+  // 基于准备好的dom，初始化echarts实例
+  var myChart2 = echarts.init(document.getElementById('mainHumi'));
+
+  // 指定图表的配置项和数据
+  option2 = {
+    title: {
+      text: '湿度曲线图'
+    },
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      data:['湿度']
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    toolbox: {
+      feature: {
+        saveAsImage: {}
+      }
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: [
+//        '周一','周二','周三','周四','周五','周六','周日'
+        #set($tmpDataIntimeNum = 0)
+        #foreach($tmpDataIntime in $dataHistoryList)
+          #if($tmpDataIntimeNum > 0)
+            ,
+          #end
+          #set($dateTime = $dateUtil.getDate($!{tmpDataIntime.createdAt}, 'yyyy-MM-dd HH:mm'))
+          '$dateTime'
+          #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
+        #end
+      ]
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        name:'湿度(%RH)',
+        type:'line',
+        stack: '值',
+        data:[
+//          120.1, 132.1, 101, 134.1, 90.23, 230.23, 210.23
+          #set($tmpDataIntimeNum = 0)
+          #foreach($tmpDataIntime in $dataHistoryList)
+            #if($tmpDataIntimeNum > 0)
+              ,
+            #end
+            '$unitUtil.changeHumi($tmpDataIntime.humi)'
+            #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
+          #end
+        ]
+      }
+    ]
+  };
+
+  // 使用刚指定的配置项和数据显示图表。
+  myChart2.setOption(option2);
+  #end
+
+
+  #if($showPower && $dataIntimeSize > 0)
+  // 基于准备好的dom，初始化echarts实例
+  var myChart3 = echarts.init(document.getElementById('mainPower'));
+
+  // 指定图表的配置项和数据
+  option3 = {
+    title: {
+      text: '电量曲线图'
+    },
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      data:['电量']
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    toolbox: {
+      feature: {
+        saveAsImage: {}
+      }
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: [
+//        '周一','周二','周三','周四','周五','周六','周日'
+        #set($tmpDataIntimeNum = 0)
+        #foreach($tmpDataIntime in $dataHistoryList)
+          #if($tmpDataIntimeNum > 0)
+            ,
+          #end
+          #set($dateTime = $dateUtil.getDate($!{tmpDataIntime.createdAt}, 'yyyy-MM-dd HH:mm'))
+          '$dateTime'
+          #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
+        #end
+      ]
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        name:'电量(V)',
+        type:'line',
+        stack: '值',
+        data:[
+//          120.1, 132.1, 101, 134.1, 90.23, 230.23, 210.23
+          #set($tmpDataIntimeNum = 0)
+          #foreach($tmpDataIntime in $dataHistoryList)
+            #if($tmpDataIntimeNum > 0)
+              ,
+            #end
+            '$unitUtil.changePower($tmpDataIntime.power)'
+            #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
+          #end
+        ]
+      }
+    ]
+  };
+
+  // 使用刚指定的配置项和数据显示图表。
+  myChart3.setOption(option3);
+  #end
+
+
+
+  #if($showShine && $dataIntimeSize > 0)
+  // 基于准备好的dom，初始化echarts实例
+  var myChart4 = echarts.init(document.getElementById('mainShine'));
+
+  // 指定图表的配置项和数据
+  option4 = {
+    title: {
+      text: '光照曲图'
+    },
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      data:['光照']
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    toolbox: {
+      feature: {
+        saveAsImage: {}
+      }
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: [
+//        '周一','周二','周三','周四','周五','周六','周日'
+        #set($tmpDataIntimeNum = 0)
+        #foreach($tmpDataIntime in $dataHistoryList)
+          #if($tmpDataIntimeNum > 0)
+            ,
+          #end
+          #set($dateTime = $dateUtil.getDate($!{tmpDataIntime.createdAt}, 'yyyy-MM-dd HH:mm'))
+          '$dateTime'
+          #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
+        #end
+      ]
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        name:'光照(Lx)',
+        type:'line',
+        stack: '值',
+        data:[
+//          120.1, 132.1, 101, 134.1, 90.23, 230.23, 210.23
+          #set($tmpDataIntimeNum = 0)
+          #foreach($tmpDataIntime in $dataHistoryList)
+            #if($tmpDataIntimeNum > 0)
+              ,
+            #end
+            '$tmpDataIntime.shine'
+            #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
+          #end
+        ]
+      }
+    ]
+  };
+
+  // 使用刚指定的配置项和数据显示图表。
+  myChart4.setOption(option4);
+  #end
+
+
+
+
+  #if($showPressure && $dataIntimeSize > 0)
+  // 基于准备好的dom，初始化echarts实例
+  var myChart5 = echarts.init(document.getElementById('mainPressure'));
+
+  // 指定图表的配置项和数据
+  option5 = {
+    title: {
+      text: '压力曲线图'
+    },
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      data:['压力']
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    toolbox: {
+      feature: {
+        saveAsImage: {}
+      }
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: [
+//        '周一','周二','周三','周四','周五','周六','周日'
+        #set($tmpDataIntimeNum = 0)
+        #foreach($tmpDataIntime in $dataHistoryList)
+          #if($tmpDataIntimeNum > 0)
+            ,
+          #end
+          #set($dateTime = $dateUtil.getDate($!{tmpDataIntime.createdAt}, 'yyyy-MM-dd HH:mm'))
+          '$dateTime'
+          #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
+        #end
+      ]
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        name:'压力(kPa)',
+        type:'line',
+        stack: '值',
+        data:[
+//          120.1, 132.1, 101, 134.1, 90.23, 230.23, 210.23
+          #set($tmpDataIntimeNum = 0)
+          #foreach($tmpDataIntime in $dataHistoryList)
+            #if($tmpDataIntimeNum > 0)
+              ,
+            #end
+            '$unitUtil.changePressure($tmpDataIntime.pressure)'
+            #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
+          #end
+        ]
+      }
+    ]
+  };
+
+  // 使用刚指定的配置项和数据显示图表。
+  myChart5.setOption(option5);
+  #end
+
+
+</script>
+#end
