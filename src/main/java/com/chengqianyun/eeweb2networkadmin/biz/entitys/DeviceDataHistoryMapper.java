@@ -20,4 +20,6 @@ public interface DeviceDataHistoryMapper {
 
     List<DeviceDataHistory> findPage(Map<String,String> map);
 
+    List<DeviceDataHistory> findPageAll(Map<String,String> map);
+
 }

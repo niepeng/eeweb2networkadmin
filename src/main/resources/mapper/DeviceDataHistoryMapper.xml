@@ -53,6 +53,12 @@
     <![CDATA[ limit ${startRecord},${endRecord} ]]>
   </select>
 
+  <select id="findPageAll" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> from t_device_data_history
+    <include refid="pageSearch"/>
+    ORDER BY id ASC
+  </select>
+
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 

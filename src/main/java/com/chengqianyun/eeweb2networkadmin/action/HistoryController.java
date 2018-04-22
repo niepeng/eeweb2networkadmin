@@ -96,4 +96,52 @@ public class HistoryController extends BaseController {
       return "/history/historyList";
     }
   }
+
+
+
+  /**
+   * 历史曲线
+   */
+  @RequestMapping(value = "/historyCurveList", method = RequestMethod.GET)
+  public String historyCurveList(
+      @RequestParam(value = "deviceId", required = false, defaultValue = "0") long deviceId,
+      @RequestParam(value = "startTime", required = false) String startTime,
+      @RequestParam(value = "endTime", required = false) String endTime,
+      Model model) {
+
+    try {
+      addOptMenu(model, MenuEnum.history);
+      List<Area> areaList = deviceService.getAreaAndDeviceInfo();
+      DeviceInfo deviceInfo = findOneDeviceId(areaList, deviceId);
+      if (StringUtil.isEmpty(startTime) || StringUtil.isEmpty(endTime)) {
+        Date now = new Date();
+        endTime = DateUtil.getDate(now, DateUtil.dateFullPattern);
+        startTime = DateUtil.getDate(DateUtil.addDate(now, -1), DateUtil.dateFullPattern);
+      }
+
+      model.addAttribute("deviceInfo", deviceInfo);
+      model.addAttribute("areaList", areaList);
+      model.addAttribute("startTime", startTime);
+      model.addAttribute("endTime", endTime);
+
+      // 检查时间段不能超过一天
+      Date startTimeDate = DateUtil.getDate(startTime, DateUtil.dateFullPattern);
+      Date endTimeDate = DateUtil.getDate(endTime, DateUtil.dateFullPattern);
+      if (startTimeDate.getTime() + BizConstant.Times.day > endTimeDate.getTime()) {
+        throw new Exception("开始时间和结束时间的 间隔不能超过1天");
+      }
+
+      List<DeviceDataHistory> dataHistoryList = historyService.historyDataList(deviceInfo.getId(), startTime, endTime);
+      model.addAttribute("dataHistoryList", dataHistoryList);
+
+      return "/history/historyCurveList";
+    } catch (Exception ex) {
+      model.addAttribute(SUCCESS, false);
+      model.addAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "/history/historyCurveList";
+    }
+  }
+
+
 }

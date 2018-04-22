@@ -116,12 +116,16 @@ public abstract class BaseController {
 			}
 			if (deviceId < 1) {
 				deviceInfo = area.getDeviceInfoList().get(0);
+//				注意: 这里不能添加area对象 到 deviceInfo, velocity中输出会导致输出的时候 StackOverflowError问题,因为本身存在循环依赖
+//				deviceInfo.setArea(area);
 				break;
 			}
 
 			for (DeviceInfo tmpDeviceInfo : area.getDeviceInfoList()) {
 				if (tmpDeviceInfo.getId().longValue() == deviceId) {
 					deviceInfo = tmpDeviceInfo;
+					//	注意:这里不能添加area对象 到 deviceInfo, velocity中输出会导致输出的时候 StackOverflowError问题,因为本身存在循环依赖
+//					deviceInfo.setArea(area);
 					return deviceInfo;
 				}
 			}

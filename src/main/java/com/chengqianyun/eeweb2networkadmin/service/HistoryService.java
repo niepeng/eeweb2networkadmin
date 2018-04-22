@@ -3,7 +3,10 @@ package com.chengqianyun.eeweb2networkadmin.service;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistory;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +44,14 @@ public class HistoryService extends BaseService {
         log.error("HistoryService.getDeviceInfoList,Error", e);
       }
     return result;
+  }
+
+  public List<DeviceDataHistory> historyDataList(long deviceId, String startTime, String endTime) {
+    Map<String, String> map = new HashMap<String, String>();
+    map.put("deviceId", String.valueOf(deviceId));
+    map.put("startTime", startTime);
+    map.put("endTime", endTime);
+    List<DeviceDataHistory> list = deviceDataHistoryMapper.findPageAll(map);
+    return list;
   }
 }
