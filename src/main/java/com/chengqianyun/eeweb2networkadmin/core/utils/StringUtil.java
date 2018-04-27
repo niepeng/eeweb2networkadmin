@@ -14,6 +14,22 @@ public class StringUtil extends StringUtils {
   public StringUtil() {
   }
 
+  public static char[] subCharArray(char[] array, int startIndex, int endIndex) {
+    if (array == null) {
+      return null;
+    }
+
+    if (startIndex < 1 || startIndex >= endIndex || array.length < endIndex) {
+      return null;
+    }
+    char[] result = new char[endIndex - startIndex];
+    for (int i = startIndex; i < endIndex; i++) {
+      result[i - startIndex] = array[i];
+    }
+
+    return result;
+  }
+
   public static double str2Double(String str) {
     if (isEmpty(str)) {
       return 0D;

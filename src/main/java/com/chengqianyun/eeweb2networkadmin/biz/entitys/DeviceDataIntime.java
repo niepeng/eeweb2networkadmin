@@ -1,5 +1,6 @@
 package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
+import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.BizConstant;
 import java.util.Date;
 import lombok.Data;
@@ -99,6 +100,14 @@ public class DeviceDataIntime {
     private long areaId;
 
     private DeviceInfo deviceInfo;
+
+    private StatusEnum smokeStatusEnum;
+
+    private StatusEnum waterStatusEnum;
+
+    private StatusEnum electricStatusEnum;
+
+    private StatusEnum bodyStatusEnum;
 
 
     // ==============  扩展方法  =================
