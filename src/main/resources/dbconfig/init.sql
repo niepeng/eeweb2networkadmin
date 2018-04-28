@@ -114,6 +114,8 @@ CREATE TABLE `t_device_data_intime` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `device_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '设备id',
   `status` int(11) not NULL  DEFAULT 0 COMMENT '状态:1正常,2报警,3离线',
+  `in_status` int(11) not NULL  DEFAULT 0 COMMENT '开关量输入状态:1正常,2报警,3离线',
+  `out_status` int(11) not NULL  DEFAULT 0 COMMENT '开关量输出状态:1正常,2报警,3离线',
   `temp` int(11) not NULL  DEFAULT 0 COMMENT '温度:23.34,存储2334',
   `humi` int(11) not NULL  DEFAULT 0 COMMENT '湿度:45.67,存储4567',
   `power` int(11) not NULL  DEFAULT 0 COMMENT '电量:300,代表3v',

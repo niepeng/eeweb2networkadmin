@@ -19,7 +19,7 @@ import com.chengqianyun.eeweb2networkadmin.core.utils.data.FunctionUnit;
 public class InstructionManager {
 
   // 读取设备的地址
-  private static char[] readAddress = {
+  private static char[] readSnAddress = {
       0xFB,0x67,0x06,0x00,0x00,0x00,0x00,0x00,0x00,0x5C,0x0A
   };
 
@@ -29,8 +29,8 @@ public class InstructionManager {
    * 获取设备地址和sn号指令
    * @return
    */
-  public static char[] genGetAddress() {
-    return readAddress;
+  public static char[] genGetSnAddress() {
+    return readSnAddress;
   }
 
   /**
@@ -38,7 +38,7 @@ public class InstructionManager {
    * @param responses
    * @return
    */
-  public static Tuple2<String, Integer> parseGetAddress(char[] responses) {
+  public static Tuple2<String, Integer> parseGetSnAddress(char[] responses) {
     // FC 67 09 00 15 00 00 00 00 01 15 08 9C EC
     if (responses == null || responses.length != 14) {
       return null;
@@ -86,11 +86,11 @@ public class InstructionManager {
    压力 27 E7 转10进制为10215，实际值为102.15kpa
    */
   public static DeviceDataIntime parseGetEnv(char[] response, int address) {
-    if(response.length != 19 || !CalcCRC.checkCrc16(response) || response[0] != address) {
-      return null;
-    }
-
     DeviceDataIntime intime = new DeviceDataIntime();
+    if(response == null || response.length != 19 || !CalcCRC.checkCrc16(response) || response[0] != address) {
+      intime.setStatus(StatusEnum.offline.getId());
+      return intime;
+    }
 
     int temp, humi, shine, pressure, power;
     humi = (response[3] << 8) + response[4];
@@ -132,39 +132,41 @@ public class InstructionManager {
    * @param address
    * @return
    */
-  public static DeviceDataIntime parseGetIn(char[] response, int address) {
-    if(response.length != 13 || !CalcCRC.checkCrc16(response) || response[0] != address) {
-      return null;
+  public static DeviceDataIntime parseGetIn(char[] response, int address, DeviceDataIntime intime) {
+    if (intime == null) {
+      intime = new DeviceDataIntime();
     }
 
-    DeviceDataIntime intime = new DeviceDataIntime();
+    if (response == null || response.length != 13 || !CalcCRC.checkCrc16(response) || response[0] != address) {
+      intime.setInStatus(StatusEnum.offline.getId());
+      return intime;
+    }
 
-    if(response[3] == 0xFF) {
+    if (response[3] == 0xFF) {
       intime.setSmokeStatusEnum(StatusEnum.offline);
     } else {
-      intime.setSmoke((short)response[4]);
+      intime.setSmoke((short) response[4]);
       intime.setSmokeStatusEnum(response[4] == 1 ? StatusEnum.alarm : StatusEnum.normal);
     }
 
-    if(response[5] == 0xFF) {
+    if (response[5] == 0xFF) {
       intime.setWaterStatusEnum(StatusEnum.offline);
     } else {
-      intime.setWater((short)response[6]);
+      intime.setWater((short) response[6]);
       intime.setWaterStatusEnum(response[6] == 1 ? StatusEnum.alarm : StatusEnum.normal);
     }
 
-
-    if(response[7] == 0xFF) {
+    if (response[7] == 0xFF) {
       intime.setElectricStatusEnum(StatusEnum.offline);
     } else {
-      intime.setElectric((short)response[8]);
+      intime.setElectric((short) response[8]);
       intime.setElectricStatusEnum(response[8] == 1 ? StatusEnum.alarm : StatusEnum.normal);
     }
 
-    if(response[9] == 0xFF) {
+    if (response[9] == 0xFF) {
       intime.setBodyStatusEnum(StatusEnum.offline);
     } else {
-      intime.setBody((short)response[10]);
+      intime.setBody((short) response[10]);
       intime.setBodyStatusEnum(response[10] == 1 ? StatusEnum.alarm : StatusEnum.normal);
     }
 
@@ -201,8 +203,8 @@ public class InstructionManager {
    *         Boolean 继电器是否打开: true==打开, false == 关闭
    */
   public static Tuple2<StatusEnum, Boolean> parseGetOut(char[] response, int address) {
-    if (response.length != 7 || !CalcCRC.checkCrc16(response) || response[0] != address) {
-      return null;
+    if (response == null || response.length != 7 || !CalcCRC.checkCrc16(response) || response[0] != address) {
+      return new Tuple2<StatusEnum, Boolean>(StatusEnum.offline, null);
     }
 
     StatusEnum tmp;
@@ -245,7 +247,7 @@ public class InstructionManager {
    * @return 操作是否成功 true:成功, false:失败
    */
   public static boolean optOutResult(char[] response, int address) {
-    if (response.length != 7 || !CalcCRC.checkCrc16(response) || response[0] != address) {
+    if (response == null || response.length != 7 || !CalcCRC.checkCrc16(response) || response[0] != address) {
       return false;
     }
     return response[3] == 0x55 && response[4] == 0x55;

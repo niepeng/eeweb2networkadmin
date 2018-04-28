@@ -5,6 +5,8 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="device_id" property="deviceId" jdbcType="BIGINT" />
     <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="in_status" property="inStatus" jdbcType="INTEGER" />
+    <result column="out_status" property="outStatus" jdbcType="INTEGER" />
     <result column="temp" property="temp" jdbcType="INTEGER" />
     <result column="humi" property="humi" jdbcType="INTEGER" />
     <result column="power" property="power" jdbcType="INTEGER" />
@@ -21,7 +23,7 @@
     <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, device_id, status, temp, humi, power, shine, pressure, smoke, water, electric, body,  `out`, created_at, updated_at, created_by, updated_by
+    id, device_id, status, in_status, out_status, temp, humi, power, shine, pressure, smoke, water, electric, body,  `out`, created_at, updated_at, created_by, updated_by
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -56,13 +58,13 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime" >
-    insert into t_device_data_intime (device_id, status,
+    insert into t_device_data_intime (device_id, status, in_status, out_status,
       temp, humi, power, 
       shine, pressure, smoke, 
       water, electric, body, out,
       created_at, updated_at, created_by, 
       updated_by)
-    values ( #{deviceId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER},
+    values ( #{deviceId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER},#{inStatus,jdbcType=INTEGER},#{outStatus,jdbcType=INTEGER},
       #{temp,jdbcType=INTEGER}, #{humi,jdbcType=INTEGER}, #{power,jdbcType=INTEGER}, 
       #{shine,jdbcType=INTEGER}, #{pressure,jdbcType=INTEGER}, #{smoke,jdbcType=SMALLINT}, 
       #{water,jdbcType=SMALLINT}, #{electric,jdbcType=SMALLINT}, #{body,jdbcType=SMALLINT}, #{out,jdbcType=SMALLINT},
@@ -80,6 +82,12 @@
       </if>
       <if test="status != null" >
         status,
+      </if>
+      <if test="inStatus != null" >
+        in_status,
+      </if>
+      <if test="outStatus != null" >
+        out_status,
       </if>
       <if test="temp != null" >
         temp,
@@ -130,6 +138,12 @@
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
       </if>
+      <if test="inStatus != null" >
+        #{inStatus,jdbcType=INTEGER},
+      </if>
+      <if test="outStatus != null" >
+        #{outStatus,jdbcType=INTEGER},
+      </if>
       <if test="temp != null" >
         #{temp,jdbcType=INTEGER},
       </if>
@@ -179,6 +193,12 @@
       <if test="status != null" >
         status = #{status,jdbcType=INTEGER},
       </if>
+      <if test="inStatus != null" >
+        in_status = #{inStatus,jdbcType=INTEGER},
+      </if>
+      <if test="outStatus != null" >
+        out_status = #{outStatus,jdbcType=INTEGER},
+      </if>
       <if test="temp != null" >
         temp = #{temp,jdbcType=INTEGER},
       </if>
@@ -220,6 +240,8 @@
     update t_device_data_intime
     set device_id = #{deviceId,jdbcType=BIGINT},
       status = #{status,jdbcType=INTEGER},
+      in_status = #{inStatus,jdbcType=INTEGER},
+      out_status = #{outStatus,jdbcType=INTEGER},
       temp = #{temp,jdbcType=INTEGER},
       humi = #{humi,jdbcType=INTEGER},
       power = #{power,jdbcType=INTEGER},

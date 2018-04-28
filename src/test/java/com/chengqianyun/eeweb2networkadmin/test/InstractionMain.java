@@ -15,7 +15,7 @@ public class InstractionMain {
 
   public static void main1(String[] args) {
     char[] result = {0xFC, 0x67, 0x09, 0x02, 0x00, 0x00, 0x01, 0xCE, 0x5E, 0x01, 0x17, 0x03, 0x7F, 0xF1};
-    Tuple2<String, Integer> tuple = InstructionManager.parseGetAddress(result);
+    Tuple2<String, Integer> tuple = InstructionManager.parseGetSnAddress(result);
     System.out.println(tuple.getT1());
     System.out.println(tuple.getT2());
   }

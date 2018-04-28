@@ -45,6 +45,18 @@ public enum DeviceTypeEnum {
     return null;
   }
 
+  public static boolean hasEnv(int paramValue) {
+    return hasType(paramValue, temp) || hasType(paramValue, humi) || hasType(paramValue, power) || hasType(paramValue, shine) || hasType(paramValue, pressure);
+  }
+
+  public static boolean hasIn(int paramValue) {
+    return hasType(paramValue, smoke) || hasType(paramValue, water) || hasType(paramValue, electric) || hasType(paramValue, body);
+  }
+
+  public static boolean hasOut(int paramValue) {
+    return hasType(paramValue, out);
+  }
+
   public static boolean hasType(int idValue, DeviceTypeEnum deviceTypeEnum) {
     if(deviceTypeEnum == null) {
       return false;

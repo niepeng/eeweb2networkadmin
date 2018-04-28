@@ -1,6 +1,10 @@
 package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
+import com.chengqianyun.eeweb2networkadmin.core.utils.UnitUtil;
+import com.chengqianyun.eeweb2networkadmin.data.ServerClientHandler;
+import com.google.gson.annotations.Until;
+import java.net.Socket;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
@@ -155,6 +159,9 @@ public class DeviceInfo {
     private List<OutCondition> outConditionList;
 
 
+    private ServerClientHandler serverClientHandler;
+
+
     // ==============  扩展方法  =================
 
     public void optArea(List<Area> list) {
@@ -169,6 +176,28 @@ public class DeviceInfo {
             }
         }
     }
+
+    public String getTempScope() {
+        return UnitUtil.showValueAndUnit(tempDown - tempDev, DeviceTypeEnum.temp) + " ~ " + UnitUtil.showValueAndUnit(tempUp + tempDev, DeviceTypeEnum.temp);
+    }
+
+    public String getHumiScope() {
+        return UnitUtil.showValueAndUnit(humiDown - humiDev, DeviceTypeEnum.humi) + " ~ " + UnitUtil.showValueAndUnit(humiUp + humiDev, DeviceTypeEnum.humi);
+    }
+
+    public String getShineScope() {
+        return UnitUtil.showValueAndUnit(shineDown - shineDev, DeviceTypeEnum.shine) + " ~ " + UnitUtil.showValueAndUnit(shineUp + shineDev, DeviceTypeEnum.shine);
+    }
+
+    public String getPowerScope() {
+        //TODO. 电压范围..
+        return UnitUtil.showValueAndUnit(150, DeviceTypeEnum.power) + " ~ " + UnitUtil.showValueAndUnit(360, DeviceTypeEnum.power);
+    }
+
+    public String getPressureScope() {
+        return UnitUtil.showValueAndUnit(pressureDown - pressureDev, DeviceTypeEnum.pressure) + " ~ " + UnitUtil.showValueAndUnit(pressureUp + pressureDev, DeviceTypeEnum.pressure);
+    }
+
 
     public boolean hasTemp() {
         return DeviceTypeEnum.hasType(type, DeviceTypeEnum.temp);

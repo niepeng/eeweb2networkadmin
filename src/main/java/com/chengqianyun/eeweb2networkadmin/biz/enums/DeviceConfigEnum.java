@@ -63,6 +63,15 @@ public enum DeviceConfigEnum {
     this.deviceType = deviceType;
   }
 
+  public static DeviceConfigEnum getById(String id) {
+    for(DeviceConfigEnum tmp : DeviceConfigEnum.values()) {
+      if(tmp.getId().equalsIgnoreCase(id)) {
+        return tmp;
+      }
+    }
+    return null;
+  }
+
 
 
 

@@ -1,8 +1,14 @@
 package com.chengqianyun.eeweb2networkadmin.data;
 
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DataStatusEnum;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.IoUtil;
+import com.chengqianyun.eeweb2networkadmin.core.utils.SpringContextHolder;
 import com.chengqianyun.eeweb2networkadmin.core.utils.SystemClock;
+import com.chengqianyun.eeweb2networkadmin.core.utils.Tuple2;
 import com.chengqianyun.eeweb2networkadmin.core.utils.data.CalcCRC;
 import com.chengqianyun.eeweb2networkadmin.core.utils.data.Char55util;
 import com.chengqianyun.eeweb2networkadmin.core.utils.data.FunctionUnit;
@@ -11,6 +17,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -19,19 +26,29 @@ import lombok.extern.slf4j.Slf4j;
  * @author niepeng
  */
 @Slf4j
-public class ServerHandler implements Runnable {
+@Getter
+public class ServerClientHandler implements Runnable {
 
   private Socket socket;
 
-  public ServerHandler(Socket socket) {
+  private static OptDataHelper optDataHelper;
+
+  public ServerClientHandler(Socket socket) {
     this.socket = socket;
   }
 
+
+
   @Override
   public void run() {
+
+    if (optDataHelper == null) {
+      optDataHelper = SpringContextHolder.getBean(OptDataHelper.class);
+    }
+
     /**
      * 1.接收到第一次客户端连接上来
-     * 2.建立sokcet和地址的关系
+     * 2.建立sokcet和设备的关系
      * 3.持续发送和获取数据(一段时间发送和接收),如果连接断了,释放当前链路,重新尝试
      */
     InputStream in = null;
@@ -45,9 +62,9 @@ public class ServerHandler implements Runnable {
       log.info("tmpData1==>(" + tmpData1 + ")");
 
       // 2.建立sokcet和地址的关系
-      log.info("发送获取地址指令：" + FunctionUnit.bytesToHexString(InstructionManager.genGetAddress()));
+      log.info("发送获取sn和地址指令：" + FunctionUnit.bytesToHexString(InstructionManager.genGetSnAddress()));
 
-      writePort(InstructionManager.genGetAddress(), socket);
+      writePort(InstructionManager.genGetSnAddress(), socket);
 
       SystemClock.sleep(6000);
 
@@ -55,37 +72,42 @@ public class ServerHandler implements Runnable {
       String tmpData2 = FunctionUnit.bytesToHexString(readData2);
       readData2 = Char55util.dealwith55NewV2(readData2);
       log.info("tmpData2==>(" + tmpData2 + ")");
-//      int address = InstructionManager.parseGetAddress(readData2);
-      int address = 1;
-      log.info("address====>" + address);
+
+      Tuple2<String, Integer> snAddressTuple = InstructionManager.parseGetSnAddress(readData2);
+      if(snAddressTuple == null) {
+        return;
+      }
+
+      String sn = snAddressTuple.getT1();
+      int address = snAddressTuple.getT2();
+      DeviceInfo deviceInfo = ServerConnectionManager.addSnConnection(sn, address, this);
 
       //  3.持续发送和获取数据(一段时间发送和接收),如果连接断了,释放当前链路,重新尝试
-      int dataLen = 4;
-      DataStatusEnum tmpDataStatusEnum = null;
-//      EquipDataDOMapper equipDataDOMapper = SpringHelper.getBean("equipDataDOMapper", EquipDataDOMapper.class);
-      int failTimes = 0;
+      DeviceDataIntime tmpDeviceData = null;
+      Tuple2<StatusEnum, Boolean> tuple = null;
       while (true) {
-//        char[] writeData = InstructionManager.genGetInfo(address, dataLen);
-        char[] writeData = InstructionManager.genGetEnv(address);
-        log.info("发送获取数据指令:" + FunctionUnit.bytesToHexString(writeData));
-        writePort(writeData, socket);
-        SystemClock.sleep(ServerNormal.GET_DATA_CYCLE * 1000);
-        char[] readData3 = read(in);
-        log.info("接收到数据结果====>" + FunctionUnit.bytesToHexString(readData3));
-        readData3 = Char55util.dealwith55NewV2(readData3);
-        tmpDataStatusEnum = checkReturn(readData3, address);
-        if (!DataStatusEnum.isSuccess(tmpDataStatusEnum)) {
-          failTimes++;
-          log.info("接收到数据有问题:" + tmpDataStatusEnum.getMeaning());
-          if (failTimes >= ServerNormal.FAIL_TIMES_RETURN) {
-            break;
-          }
-          continue;
+        if (DeviceTypeEnum.hasEnv(deviceInfo.getType())) {
+          char[] data = writeInstruction(address, InstructionManager.genGetEnv(address));
+          tmpDeviceData = InstructionManager.parseGetEnv(data, address);
+          log.info("接收到环境数据结果解析==>" + tmpDeviceData);
         }
-        failTimes = 0;
-//        EquipDataDO data = InstructionManager.parseGetInfo(readData3, dataLen, address);
-//        log.info("接收到数据结果解析==>" + data.toString());
-//        equipDataDOMapper.insert(data);
+
+        if (DeviceTypeEnum.hasIn(deviceInfo.getType())) {
+          char[] data = writeInstruction(address, InstructionManager.genGetIn(address));
+          tmpDeviceData = InstructionManager.parseGetIn(data, address, tmpDeviceData);
+          log.info("接收到开关量输入数据结果解析==>" + tmpDeviceData);
+        }
+
+        if (DeviceTypeEnum.hasOut(deviceInfo.getType())) {
+          char[] data = writeInstruction(address, InstructionManager.genGetOut(address, deviceInfo.getControlWay()));
+          tuple = InstructionManager.parseGetOut(data, address);
+          log.info("接收到开关量输出数据结果解析==>" + tuple);
+        }
+
+        optDataHelper.optData(tmpDeviceData, tuple, deviceInfo);
+
+        tuple = null;
+        tmpDeviceData = null;
       }
     } catch (Exception e) {
       log.error("ServerHandler.runError", e);
@@ -97,6 +119,26 @@ public class ServerHandler implements Runnable {
       IoUtil.close(socket);
       socket = null;
     }
+  }
+
+  private char[] writeInstruction(int address, char[] writeData) throws IOException {
+    DataStatusEnum tmpDataStatusEnum;
+    for (int i = 0; i < ServerConnectionManager.FAIL_TIMES_RETURN; i++) {
+      log.info("发送指令:" + FunctionUnit.bytesToHexString(writeData));
+      writePort(writeData, socket);
+      SystemClock.sleep(ServerConnectionManager.GET_DATA_CYCLE * 1000);
+      char[] readData3 = read(socket.getInputStream());
+      log.info("接收到数据结果====>" + FunctionUnit.bytesToHexString(readData3));
+//      readData3 = Char55util.dealwith55NewV2(readData3);
+      tmpDataStatusEnum = checkReturn(readData3, address);
+      if (!DataStatusEnum.isSuccess(tmpDataStatusEnum)) {
+        i++;
+        log.info("接收到数据有问题:" + tmpDataStatusEnum.getMeaning());
+        continue;
+      }
+      return readData3;
+    }
+    return null;
   }
 
   public char[] read(InputStream in) throws IOException {

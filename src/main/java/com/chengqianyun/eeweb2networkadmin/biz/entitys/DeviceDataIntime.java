@@ -1,5 +1,6 @@
 package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
+import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.BizConstant;
 import java.util.Date;
@@ -20,9 +21,19 @@ public class DeviceDataIntime {
     private long deviceId;
 
     /**
-     * StatusEnum 状态:1正常,2报警,3离线
+     * StatusEnum 环境设备状态:1正常,2报警,3离线
      */
     private int status;
+
+    /**
+     * StatusEnum 开关量输入状态:1正常,2报警,3离线
+     */
+    private int inStatus;
+
+    /**
+     * StatusEnum 开关量输出状态:1正常,2报警,3离线
+     */
+    private int outStatus;
 
     /**
      * 温度:23.34,存储2334
@@ -111,6 +122,73 @@ public class DeviceDataIntime {
 
 
     // ==============  扩展方法  =================
+
+    /**
+     * 配置环境状态信息
+     */
+    public void configStatus() {
+        if (StatusEnum.find(status) != null) {
+            return;
+        }
+
+        status = StatusEnum.normal.getId();
+        if (deviceInfo.hasTemp() && (isTempUp() || isTempDown())) {
+            status = StatusEnum.alarm.getId();
+            return;
+        }
+
+        if (deviceInfo.hasHumi() && (isHumiUp() || isHumiDown())) {
+            status = StatusEnum.alarm.getId();
+            return;
+        }
+
+        if (deviceInfo.hasShine() && (isShineUp() || isShineDown())) {
+            status = StatusEnum.alarm.getId();
+            return;
+        }
+
+        if (deviceInfo.hasPower() && (isPowerUp() || isPowerDown())) {
+            status = StatusEnum.alarm.getId();
+            return;
+        }
+
+        if (deviceInfo.hasPressure() && (isPressureUp() || isPressureDown())) {
+            status = StatusEnum.alarm.getId();
+            return;
+        }
+    }
+
+    /**
+     * 配置开关量状态信息
+     */
+    public void configInStatus() {
+        if (StatusEnum.find(inStatus) != null) {
+            return;
+        }
+
+        inStatus = StatusEnum.normal.getId();
+        if (deviceInfo.hasSmoke() && smokeStatusEnum != null && smokeStatusEnum == StatusEnum.alarm) {
+            inStatus = StatusEnum.alarm.getId();
+            return;
+        }
+
+        if (deviceInfo.hasWater() && waterStatusEnum != null && waterStatusEnum == StatusEnum.alarm) {
+            inStatus = StatusEnum.alarm.getId();
+            return;
+        }
+
+        if (deviceInfo.hasElectric() && electricStatusEnum != null && electricStatusEnum == StatusEnum.alarm) {
+            inStatus = StatusEnum.alarm.getId();
+            return;
+        }
+
+        if (deviceInfo.hasBody() && bodyStatusEnum != null && bodyStatusEnum == StatusEnum.alarm) {
+            inStatus = StatusEnum.alarm.getId();
+            return;
+        }
+    }
+
+
 
     public boolean isTempUp() {
         return temp - deviceInfo.getTempDev() > deviceInfo.getTempUp();
