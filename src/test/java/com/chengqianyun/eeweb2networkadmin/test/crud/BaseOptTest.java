@@ -3,6 +3,10 @@ package com.chengqianyun.eeweb2networkadmin.test.crud;
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.AreaMapper;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistory;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistoryMapper;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntimeMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Setting;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.SettingMapper;
 import com.chengqianyun.eeweb2networkadmin.test.BaseTest;
@@ -24,6 +28,12 @@ public class BaseOptTest extends BaseTest {
   @Autowired
   private AreaMapper areaMapper;
 
+  @Autowired
+  private DeviceDataIntimeMapper deviceDataIntimeMapper;
+
+  @Autowired
+  private DeviceDataHistoryMapper deviceDataHistoryMapper;
+
   @Test
   public void test1() {
     Setting setting = settingMapper.selectByCode("recommend_subject");
@@ -34,6 +44,28 @@ public class BaseOptTest extends BaseTest {
   public void test2() {
     Area area = areaMapper.selectByPrimaryKey(1L);
     Assert.assertTrue(area == null);
+  }
+
+  @Test
+  public void test_deviceDataIntime() {
+//    DeviceDataIntime record = new DeviceDataIntime();
+//    record.setOut((short)1);
+//    deviceDataIntimeMapper.insert(record);
+
+    DeviceDataIntime fromDB = deviceDataIntimeMapper.selectByPrimaryKey(6L);
+    fromDB.setOut((short)1);
+    deviceDataIntimeMapper.updateByPrimaryKey(fromDB);
+  }
+
+  @Test
+  public void test_deviceDataHistory() {
+//    DeviceDataHistory deviceDataHistory = new DeviceDataHistory();
+//    deviceDataHistoryMapper.insert(deviceDataHistory);
+
+    DeviceDataHistory fromDB = deviceDataHistoryMapper.selectByPrimaryKey(4L);
+    fromDB.setOut((short)1);
+
+    deviceDataHistoryMapper.updateByPrimaryKey(fromDB);
   }
 
 }

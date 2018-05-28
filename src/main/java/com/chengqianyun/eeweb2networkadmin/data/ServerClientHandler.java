@@ -80,7 +80,9 @@ public class ServerClientHandler implements Runnable {
 
       String sn = snAddressTuple.getT1();
       int address = snAddressTuple.getT2();
+      log.info("sn={},address={}", sn, address);
       DeviceInfo deviceInfo = ServerConnectionManager.addSnConnection(sn, address, this);
+      log.info("addSnConnection_result={}", deviceInfo);
 
       //  3.持续发送和获取数据(一段时间发送和接收),如果连接断了,释放当前链路,重新尝试
       DeviceDataIntime tmpDeviceData = null;

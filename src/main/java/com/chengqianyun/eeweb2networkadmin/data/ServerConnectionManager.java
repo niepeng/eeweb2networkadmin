@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,7 @@ public final class ServerConnectionManager {
    */
   private static ServerSocket server;
 
-  public static Map<String, DeviceInfo> snDeviceSocketMap = new HashMap<String, DeviceInfo>();
+  public static Map<String, DeviceInfo> snDeviceSocketMap = new ConcurrentHashMap<String, DeviceInfo>();
 
   /**
    * 根据传入参数设置监听端口，如果没有参数调用以下方法并使用默认值
@@ -123,15 +124,19 @@ public final class ServerConnectionManager {
     return true;
   }
 
-  public static synchronized DeviceInfo addSnConnection(String sn, int address, ServerClientHandler serverClientHandler) {
+  public static DeviceInfo addSnConnection(String sn, int address, ServerClientHandler serverClientHandler) {
+    log.info("addSnConnection start,sn={},address={}", sn, address);
     DeviceInfoMapper deviceInfoMapper = SpringHelper.getBean("deviceInfoMapper", DeviceInfoMapper.class);
+    log.info("deviceInfoMapper={}", deviceInfoMapper);
     if (snDeviceSocketMap.containsKey(sn)) {
+      log.info("addSnConnection_snDeviceSocketMap already exist");
       close(snDeviceSocketMap.get(sn));
       snDeviceSocketMap.remove(sn);
     }
 
     int deviceType = DeviceConfigEnum.getById(sn.substring(0, 2)).getDeviceType();
     DeviceInfo fromDB = deviceInfoMapper.selectBySn(sn);
+    log.info("addSnConnection_fromDB={}", fromDB);
 
     if (fromDB == null) {
       fromDB = new DeviceInfo();
