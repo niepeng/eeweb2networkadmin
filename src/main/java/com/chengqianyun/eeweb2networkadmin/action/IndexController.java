@@ -54,12 +54,12 @@ public class IndexController extends BaseController {
       model.addAttribute(MESSAGE, "用户名格式错误");
       return "/index";
     }
-    // 验证签名
-    String localSign = MD5Util.md5Hex(new String(loginname+password));
-    if (!localSign.equals(sign)){
-      model.addAttribute(MESSAGE, "请求数据非法:"+sign+"{<br>}"+localSign);
-      return "/index";
-    }
+//    // 验证签名
+//    String localSign = MD5Util.md5Hex(new String(loginname+password));
+//    if (!localSign.equals(sign)){
+//      model.addAttribute(MESSAGE, "请求数据非法:"+sign+"{<br>}"+localSign);
+//      return "/index";
+//    }
 
     ConsoleLoginAccount consoleLoginAccount = consoleLoginAccountService.getLoginAccount(loginname);
     if (consoleLoginAccount == null) {

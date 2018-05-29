@@ -74,9 +74,9 @@ public class InstructionManager {
 
   /**
    * 解析 获取其他环境参数的值返回：
-   * 01 03 16 12 A7 72 3C 00 00 01 69 00 00 05 DC 27 E7 B4 45
+   * 01 03 16 12 A7 72 3C 00 00 01 69 00 00 05 DC 27 E7 00 00 B4 45
    *
-   * 设备返回：01 03 16 12 A7 72 3C 00 00 01 69 00 00 05 DC 27 E7 B4 45
+   * 设备返回：01 03 16 12 A7 72 3C 00 00 01 69 00 00 05 DC 27 E7 00 00 B4 45
    (获取的数据要过CRC16校验)
    数据分析：
    湿度 12 A7 转10进制为4775，实际值为47.75%
@@ -87,7 +87,7 @@ public class InstructionManager {
    */
   public static DeviceDataIntime parseGetEnv(char[] response, int address) {
     DeviceDataIntime intime = new DeviceDataIntime();
-    if(response == null || response.length != 19 || !CalcCRC.checkCrc16(response) || response[0] != address) {
+    if(response == null || response.length != 21 || !CalcCRC.checkCrc16(response) || response[0] != address) {
       intime.setStatus(StatusEnum.offline.getId());
       return intime;
     }
