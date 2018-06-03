@@ -33,14 +33,16 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
 
-  <select id="listDataOneAll" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from t_device_data_intime where id in
-    (select max(id) from t_device_data_intime group by device_id)
-    order by id asc
+  <select id="listDataOneIds" resultType="java.lang.Long">
+    select max(id) from t_device_data_intime group by device_id
   </select>
 
+  <select id="listData" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_device_data_intime where id in ( ${ids}) order by id asc
+
+  </select>
   <select id="listDataOneDevice" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

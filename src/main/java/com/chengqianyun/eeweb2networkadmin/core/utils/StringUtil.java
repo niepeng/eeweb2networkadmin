@@ -317,7 +317,7 @@ public class StringUtil extends StringUtils {
    * @return 组合后的字符串
    */
   public static String assemble(List<String> value, String splitChar) {
-    if (value == null || value.size() == 0) {
+    if (value == null || value.size() == 0 || splitChar.length() == 0) {
       return "";
     }
     StringBuilder temp = new StringBuilder();
@@ -325,9 +325,29 @@ public class StringUtil extends StringUtils {
       temp.append(s);
       temp.append(splitChar);
     }
-    temp.deleteCharAt(temp.length() - 1);
+    temp.deleteCharAt(temp.length() - splitChar.length());
     return temp.toString();
   }
+
+  /**
+   * 把List组合成字符串，使用 splitChar 分割。
+   *
+   * @param value 需要组合的List
+   * @return 组合后的字符串
+   */
+  public static String assembleLong(List<Long> value, String splitChar) {
+    if (value == null || value.size() == 0 || splitChar.length() == 0) {
+      return "";
+    }
+    StringBuilder temp = new StringBuilder();
+    for (Long s : value) {
+      temp.append(String.valueOf(s));
+      temp.append(splitChar);
+    }
+    temp.deleteCharAt(temp.length() - splitChar.length());
+    return temp.toString();
+  }
+
 
   public static String assemble(String[] array, String splitChar) {
     if (array == null || array.length == 0) {

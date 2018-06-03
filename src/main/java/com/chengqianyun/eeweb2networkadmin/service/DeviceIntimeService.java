@@ -40,7 +40,7 @@ public class DeviceIntimeService extends BaseService {
   }
 
   public List<DeviceDataIntime> deviceDataIntimeFor2(String status, String areaId, String name) {
-    List<DeviceDataIntime> dataList = dataIntimeMapper.listDataOneAll();
+    List<DeviceDataIntime> dataList = listDataOneRecentlyAll();
 
     for (DeviceDataIntime data : dataList) {
       data.setDeviceInfo(deviceInfoMapper.selectByPrimaryKey(data.getDeviceId()));
@@ -79,6 +79,15 @@ public class DeviceIntimeService extends BaseService {
       }
     }
     return dataList;
+  }
+
+  private List<DeviceDataIntime> listDataOneRecentlyAll() {
+    List<Long> ids = dataIntimeMapper.listDataOneIds();
+    if (ids == null || ids.size() == 0) {
+      return new ArrayList<DeviceDataIntime>();
+    }
+    String result = StringUtil.assembleLong(ids, ",");
+    return dataIntimeMapper.listData(result);
   }
 
   public List<DeviceDataIntime> intimeCurveList(long deviceId) {

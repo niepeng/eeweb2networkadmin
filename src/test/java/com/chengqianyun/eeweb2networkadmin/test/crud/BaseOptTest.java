@@ -9,7 +9,9 @@ import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntimeMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Setting;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.SettingMapper;
+import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import com.chengqianyun.eeweb2networkadmin.test.BaseTest;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,19 @@ public class BaseOptTest extends BaseTest {
 
   @Autowired
   private DeviceDataHistoryMapper deviceDataHistoryMapper;
+
+  @Autowired
+  private DeviceDataIntimeMapper dataIntimeMapper;
+
+  @Test
+  public void test_1() {
+    List<Long> ids = dataIntimeMapper.listDataOneIds();
+    String result = StringUtil.assembleLong(ids, ",");
+    System.out.println("result ===>" + result);
+
+    List<DeviceDataIntime> listData = dataIntimeMapper.listData(result);
+    System.out.println("listData ===>" + listData.size());
+  }
 
   @Test
   public void test1() {

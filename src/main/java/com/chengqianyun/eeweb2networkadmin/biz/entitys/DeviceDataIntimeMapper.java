@@ -18,10 +18,12 @@ public interface DeviceDataIntimeMapper {
     int updateByPrimaryKey(DeviceDataIntime record);
 
     /**
-     * 每一个设备最新一条数据
+     * 每一个设备最新一条数据id
      * @return
      */
-    List<DeviceDataIntime> listDataOneAll();
+    List<Long> listDataOneIds();
+
+    List<DeviceDataIntime> listData(@Param("ids") String ids);
 
     /**
      * 一个设备的最新的 recordNum 条记录
