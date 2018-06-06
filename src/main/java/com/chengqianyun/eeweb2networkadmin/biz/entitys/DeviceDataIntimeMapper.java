@@ -31,4 +31,9 @@ public interface DeviceDataIntimeMapper {
      */
     List<DeviceDataIntime> listDataOneDevice(@Param("deviceId") long deviceId, @Param("recordNum") int recordNum);
 
+  /**
+   * 这个设备(deviceId):删除id小于当前值的设备
+   */
+    int deleteByDeviceId(@Param("deviceId") long deviceId, @Param("id") long id);
+
 }

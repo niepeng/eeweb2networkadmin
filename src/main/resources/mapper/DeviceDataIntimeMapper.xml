@@ -258,4 +258,12 @@
       updated_by = #{updatedBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <delete id="deleteByDeviceId">
+    delete from t_device_data_intime
+    where
+        device_id = #{deviceId,jdbcType=BIGINT}
+    and
+        <![CDATA[ id < #{id,jdbcType=BIGINT} ]]>
+  </delete>
 </mapper>

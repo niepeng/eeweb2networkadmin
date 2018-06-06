@@ -40,6 +40,7 @@ public class OptDataHelper {
 
   /**
    * 处理采集的数据: 实时数据,报警数据,历史数据
+   * 另外:通过定时任务清理 实时数据
    *
    * @param dataIntime 环境设备信息和开关量输入设备数据
    * @param outInfo 开关量输出设备数据
@@ -61,8 +62,6 @@ public class OptDataHelper {
     }
 
     dataIntimeMapper.insert(dataIntime);
-
-    // TODO 考虑一段时间清理实时数据
 
     // 2.记录报警数据
     recordEnvAlarm(dataIntime);
