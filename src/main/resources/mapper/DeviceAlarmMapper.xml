@@ -56,6 +56,23 @@
     <include refid="pageSearch"/>
   </select>
 
+
+  <select id="hasData" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm" resultType="java.lang.Long">
+    SELECT id from  t_device_alarm
+    WHERE
+        device_id = #{deviceId,jdbcType=BIGINT}
+    AND
+        device_one_type = #{deviceOneType,jdbcType=INTEGER}
+    AND
+        alarm_type = #{alarmType,jdbcType=INTEGER}
+    AND
+        confirm = 0
+    AND
+        up_down = #{upDown,jdbcType=SMALLINT}
+    order by id desc
+    limit 1
+  </select>
+
   <select id="findPage" parameterType="java.util.Map" resultMap="BaseResultMap">
     SELECT a.* from t_device_alarm a
     <include refid="pageSearch"/>

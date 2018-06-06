@@ -18,6 +18,8 @@ public interface DeviceAlarmMapper {
 
     Integer findPageCount(Map<String,String> map);
 
+    Long hasData(DeviceAlarm deviceAlarm);
+
     List<DeviceAlarm> findPage(Map<String,String> map);
 
 }

@@ -60,6 +60,10 @@ public class OptDataHelper {
     recordEnvAlarm(dataIntime);
     recordInAlarm(dataIntime);
 
+    // TODO .. 3.记录历史数据
+
+
+
   }
 
 
@@ -149,7 +153,10 @@ public class OptDataHelper {
 
   }
 
-  private void recordAlarm(DeviceDataIntime dataIntime, boolean isOffline, AlarmTypeEnum alarmTypeEnum, DeviceTypeEnum deviceTypeEnum, int data, String scope, UpDownEnum tmpUpDownEnum) {
+  /**
+   * @return  true 插入,  false 修改
+   */
+  private boolean recordAlarm(DeviceDataIntime dataIntime, boolean isOffline, AlarmTypeEnum alarmTypeEnum, DeviceTypeEnum deviceTypeEnum, int data, String scope, UpDownEnum tmpUpDownEnum) {
     DeviceInfo deviceInfo = dataIntime.getDeviceInfo();
     DeviceAlarm deviceAlarm = new DeviceAlarm();
     deviceAlarm.setDeviceId(deviceInfo.getId());
@@ -162,6 +169,18 @@ public class OptDataHelper {
     if (!isOffline && tmpUpDownEnum != null) {
       deviceAlarm.setUpDown((short) tmpUpDownEnum.getId());
     }
+
+    // 如果已经存在没有确认过的,同样设备传感器,同样的报警类型,那么不需要插入,更新时间和数值
+    Long id = deviceAlarmMapper.hasData(deviceAlarm);
+    if(id != null && id > 0) {
+      DeviceAlarm fromDB = deviceAlarmMapper.selectByPrimaryKey(id);
+      fromDB.setData(data);
+      fromDB.setDataScope(scope);
+      fromDB.setRecentlyAlarmTime(new Date());
+      deviceAlarmMapper.updateByPrimaryKey(fromDB);
+      return false;
+    }
     deviceAlarmMapper.insert(deviceAlarm);
+    return true;
   }
 }
