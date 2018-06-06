@@ -3,6 +3,8 @@ package com.chengqianyun.eeweb2networkadmin.data;
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarmMapper;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistory;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistoryMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntimeMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
@@ -10,6 +12,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.enums.AlarmTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.UpDownEnum;
+import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.Tuple2;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
@@ -31,10 +34,12 @@ public class OptDataHelper {
   @Autowired
   private DeviceAlarmMapper deviceAlarmMapper;
 
+  @Autowired
+  private DeviceDataHistoryMapper deviceDataHistoryMapper;
+
 
   /**
-   * 处理采集的数据: 实时数据,报警数据
-   * 历史数据通过定时任务去处理
+   * 处理采集的数据: 实时数据,报警数据,历史数据
    *
    * @param dataIntime 环境设备信息和开关量输入设备数据
    * @param outInfo 开关量输出设备数据
@@ -42,6 +47,7 @@ public class OptDataHelper {
    */
   public void optData(DeviceDataIntime dataIntime, Tuple2<StatusEnum, Boolean> outInfo, DeviceInfo deviceInfo) {
 
+    Date now = new Date();
     // 1.记录实时数据
     dataIntime.setDeviceInfo(deviceInfo);
     dataIntime.setDeviceId(deviceInfo.getId());
@@ -56,14 +62,42 @@ public class OptDataHelper {
 
     dataIntimeMapper.insert(dataIntime);
 
+    // TODO 考虑一段时间清理实时数据
+
     // 2.记录报警数据
     recordEnvAlarm(dataIntime);
     recordInAlarm(dataIntime);
 
-    // TODO .. 3.记录历史数据
 
+    /**
+     * 3.历史数据,如果当前分钟存在不处理
+     * 如果不存在,插入
+     */
+    recordHistoryData(dataIntime, now);
 
+  }
 
+  private void recordHistoryData(DeviceDataIntime dataIntime, Date now) {
+    String dateStr = DateUtil.getDate(now, DateUtil.dateFullPatternNoSecond) + ":00";
+    Long historyId = deviceDataHistoryMapper.findData(dataIntime.getDeviceId(), dateStr);
+    if (historyId != null && historyId > 0) {
+      return;
+    }
+    DeviceDataHistory historyRecord = new DeviceDataHistory();
+    historyRecord.setDeviceId(dataIntime.getDeviceId());
+    historyRecord.setStatus(dataIntime.getStatus());
+    historyRecord.setTemp(dataIntime.getTemp());
+    historyRecord.setHumi(dataIntime.getHumi());
+    historyRecord.setPower(dataIntime.getPower());
+    historyRecord.setShine(dataIntime.getShine());
+    historyRecord.setPressure(dataIntime.getPressure());
+    historyRecord.setSmoke(dataIntime.getSmoke());
+    historyRecord.setWater(dataIntime.getWater());
+    historyRecord.setElectric(dataIntime.getElectric());
+    historyRecord.setBody(dataIntime.getBody());
+    historyRecord.setOut(dataIntime.getOut());
+    historyRecord.setCreatedAt(DateUtil.getDate(dateStr, DateUtil.dateFullPattern));
+    deviceDataHistoryMapper.insert(historyRecord);
   }
 
 

@@ -2,6 +2,7 @@ package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
 import java.util.List;
 import java.util.Map;
+import org.apache.ibatis.annotations.Param;
 
 public interface DeviceDataHistoryMapper {
     int deleteByPrimaryKey(Long id);
@@ -11,6 +12,8 @@ public interface DeviceDataHistoryMapper {
     int insertSelective(DeviceDataHistory record);
 
     DeviceDataHistory selectByPrimaryKey(Long id);
+
+    Long findData(@Param("deviceId") long deviceId, @Param("dateStr") String dateStr);
 
     int updateByPrimaryKeySelective(DeviceDataHistory record);
 

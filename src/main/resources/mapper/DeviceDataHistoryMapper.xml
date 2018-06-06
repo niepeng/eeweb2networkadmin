@@ -41,6 +41,15 @@
   </sql>
 
 
+  <select id="findData" resultType="java.lang.Long">
+    SELECT id from  t_device_data_history
+   WHERE
+         device_id = #{deviceId,jdbcType=BIGINT}
+    AND
+        created_at = #{dateStr}
+   order by id desc limit 1
+  </select>
+
   <select id="findPageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
     SELECT count(*) from  t_device_data_history
     <include refid="pageSearch"/>
@@ -81,7 +90,7 @@
       #{temp,jdbcType=INTEGER}, #{humi,jdbcType=INTEGER}, #{power,jdbcType=INTEGER}, 
       #{shine,jdbcType=INTEGER}, #{pressure,jdbcType=INTEGER}, #{smoke,jdbcType=SMALLINT}, 
       #{water,jdbcType=SMALLINT}, #{electric,jdbcType=SMALLINT}, #{body,jdbcType=SMALLINT}, #{out,jdbcType=SMALLINT},
-      now(), now(), #{createdBy,jdbcType=VARCHAR},
+      #{createdAt,jdbcType=TIMESTAMP}, now(), #{createdBy,jdbcType=VARCHAR},
       #{updatedBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistory" >
