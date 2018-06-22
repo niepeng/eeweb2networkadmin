@@ -32,8 +32,8 @@
       <div class="dataTables_wrapper">
         <div class="row">
           <div class="col-sm-11">
-            <form class="form-inline" role="form">
-
+            <form class="form-inline" id="currentForm" role="form">
+              <input type="hidden" id="exportFlag" name="exportFlag" value="" />
 
               #foreach($tmpArea in $areaList)
                 <div class="form-group">
@@ -51,7 +51,10 @@
               <input type="text" class="input-date" name="endTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm'})" value="$!{endTime}">
 
               <div class="form-group">
-                <button class="btn btn-xs btn-primary" type="submit">查询</button> <tts style="margin-left:20px;color: red;">有效查询时间范围是 1天(1440分钟)</tts>
+                <button class="btn btn-xs btn-primary" type="submit">查询</button> <tts style="margin-left:10px;color: red;">有效查询时间范围是 1天(1440分钟)</tts>
+              </div>
+              <div class="form-group">
+                <button class="btn btn-xs btn-primary" type="button" onclick="exportData();">导出</button>
               </div>
             </form>
           </div>
@@ -134,3 +137,17 @@
     </div>
   </div><!-- /.page-content -->
 </div><!-- /.main-content -->
+
+<script>
+
+
+  function exportData() {
+    if(confirm("是否需要导出数据?")) {
+      $("#exportFlag").val("true");
+      $("#currentForm").attr('action',"${www}/history/historyListExcel");
+      $("#currentForm").submit();
+      $("#exportFlag").val("");
+      return;
+    }
+  }
+</script>

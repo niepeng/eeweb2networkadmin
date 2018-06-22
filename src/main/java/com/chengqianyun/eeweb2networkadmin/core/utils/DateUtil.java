@@ -19,6 +19,7 @@ public class DateUtil {
   public static String timePattern = "HH:mm:ss";
   public static String dateFullPattern =  datePattern + " " + timePattern;
   public static String dateFullPatternNoSecond =  datePattern + " " + "HH:mm";
+  public static String PATTERN_YYYYMMDDANDHHMMSS =  datePattern + "HHmmss";
 
 
 

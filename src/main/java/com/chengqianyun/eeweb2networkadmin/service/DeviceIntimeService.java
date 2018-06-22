@@ -45,7 +45,7 @@ public class DeviceIntimeService extends BaseService {
     for (DeviceDataIntime data : dataList) {
       data.setDeviceInfo(deviceInfoMapper.selectByPrimaryKey(data.getDeviceId()));
       data.setAreaId(data.getDeviceInfo().getAreaId());
-      if (data.getDeviceInfo().getAreaId() > 0) {
+      if (data.getDeviceInfo() != null && data.getDeviceInfo().getAreaId() > 0) {
         data.getDeviceInfo().setArea(areaMapper.selectByPrimaryKey(data.getAreaId()));
       }
     }
