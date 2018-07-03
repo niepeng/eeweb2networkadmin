@@ -105,7 +105,7 @@ public class DeviceAlarm {
 
     public String showAlarmMsg() {
         DeviceTypeEnum typeEnum = DeviceTypeEnum.getOneById(deviceOneType);
-        if (typeEnum.isDataDevice()) {
+        if (typeEnum.isDataDevice() && UpDownEnum.find(upDown) != null) {
             // 温度偏高，当前温度30℃，请及时处理！
             return typeEnum.getName() + (UpDownEnum.find(upDown).getMeaning()) + ", 当前" + typeEnum.getName() + UnitUtil.showValueAndUnit(data, typeEnum) + "，请及时处理！";
         }

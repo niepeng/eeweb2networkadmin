@@ -105,6 +105,7 @@ public class OptDataHelper {
    * @param dataIntime
    */
   private void recordEnvAlarm(DeviceDataIntime dataIntime) {
+    // TODO .. 如果这里没有报警,那么需要把最新的一条数据如果是报警的,把它处理掉,包括下面的某一类没有报警,那么需要确认之前的报警
     if (dataIntime.getStatus() == StatusEnum.normal.getId() || dataIntime.getStatus() == 0) {
       return;
     }

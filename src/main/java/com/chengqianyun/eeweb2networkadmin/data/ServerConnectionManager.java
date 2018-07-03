@@ -165,6 +165,28 @@ public final class ServerConnectionManager {
     return fromDB;
   }
 
+  public static void updateDeviceInfo(String sn) {
+    DeviceInfoMapper deviceInfoMapper = SpringHelper.getBean("deviceInfoMapper", DeviceInfoMapper.class);
+    DeviceInfo deviceInfo = deviceInfoMapper.selectBySn(sn);
+    if (deviceInfo != null && snDeviceSocketMap.containsKey(sn)) {
+      DeviceInfo oldDeviceInfo = snDeviceSocketMap.get(sn);
+      deviceInfo.setServerClientHandler(oldDeviceInfo.getServerClientHandler());
+      oldDeviceInfo.setServerClientHandler(null);
+      snDeviceSocketMap.put(sn, deviceInfo);
+    }
+  }
+
+  public static void removeDeviceInfo(String sn) {
+    if (!snDeviceSocketMap.containsKey(sn)) {
+      return;
+    }
+    DeviceInfo oldDeviceInfo = snDeviceSocketMap.get(sn);
+    if (oldDeviceInfo != null && oldDeviceInfo.getServerClientHandler() != null) {
+      oldDeviceInfo.getServerClientHandler().close();
+    }
+    snDeviceSocketMap.remove(sn);
+  }
+
   private static void close(DeviceInfo deviceInfo) {
     if (deviceInfo == null) {
       return;

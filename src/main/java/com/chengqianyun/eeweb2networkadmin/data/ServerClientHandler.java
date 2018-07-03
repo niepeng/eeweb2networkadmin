@@ -88,6 +88,7 @@ public class ServerClientHandler implements Runnable {
       DeviceDataIntime tmpDeviceData = null;
       Tuple2<StatusEnum, Boolean> tuple = null;
       while (true) {
+        deviceInfo = ServerConnectionManager.snDeviceSocketMap.get(deviceInfo.getSn());
         if (DeviceTypeEnum.hasEnv(deviceInfo.getType())) {
           char[] data = writeInstruction(address, InstructionManager.genGetEnv(address));
           tmpDeviceData = InstructionManager.parseGetEnv(data, address);
@@ -215,6 +216,10 @@ public class ServerClientHandler implements Runnable {
       }
     }
     return result;
+  }
+
+  public void close() {
+    IoUtil.close(socket);
   }
 
 }

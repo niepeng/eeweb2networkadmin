@@ -10,6 +10,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.UnitUtil;
+import com.chengqianyun.eeweb2networkadmin.data.ServerConnectionManager;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -284,7 +285,7 @@ public class DeviceService extends BaseService {
     }
 
     deviceInfoMapper.updateByPrimaryKeySelective(deviceInfo);
-
+    ServerConnectionManager.updateDeviceInfo(deviceInfo.getSn());
   }
 
   public void deleteDevice(long id) {
@@ -299,6 +300,7 @@ public class DeviceService extends BaseService {
       throw new RuntimeException("该设备存在于开关量条件中,请先删除开关量中的条件");
     }
     deviceInfoMapper.deleteByPrimaryKey(id);
+    ServerConnectionManager.removeDeviceInfo(deviceInfo.getSn());
   }
 
   public List<OutCondition> getOutConditionList(long deviceId) {
