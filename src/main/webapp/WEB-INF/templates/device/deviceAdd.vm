@@ -80,16 +80,17 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-xs-12 col-md-8">
-          <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">设备地址：</label>
-            <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="address" name="address" value="">
-            </div>
-          </div>
-        </div>
-      </div>
+
+##      <div class="row">
+##        <div class="col-xs-12 col-md-8">
+##          <div class="form-group">
+##            <label class="col-md-4 col-sm-2 control-label">设备地址：</label>
+##            <div class="col-md-8 col-sm-8">
+##              <input type="text" class="col-sm-12" id="address" name="address" value="">
+##            </div>
+##          </div>
+##        </div>
+##      </div>
 
       <div class="row">
         <div class="col-xs-12 col-md-8">

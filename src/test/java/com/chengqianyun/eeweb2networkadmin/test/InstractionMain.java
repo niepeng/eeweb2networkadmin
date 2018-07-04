@@ -2,6 +2,7 @@ package com.chengqianyun.eeweb2networkadmin.test;
 
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime;
+import com.chengqianyun.eeweb2networkadmin.core.utils.MD5Util;
 import com.chengqianyun.eeweb2networkadmin.core.utils.Tuple2;
 import com.chengqianyun.eeweb2networkadmin.data.InstructionManager;
 
@@ -21,6 +22,10 @@ public class InstractionMain {
     Tuple2<String, Integer> tuple = InstructionManager.parseGetSnAddress(result);
     System.out.println(tuple.getT1());
     System.out.println(tuple.getT2());
+
+
+    String sign = MD5Util.md5Hex("niepeng" + "cqkj@123456");
+    System.out.println(sign);
   }
 
   public static void main2(String[] args) {

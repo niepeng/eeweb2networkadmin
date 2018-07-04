@@ -116,7 +116,7 @@
             #set($dataIntimeSize = $dataHistoryList.size())
             #if($showTemp)
               #if($dataIntimeSize > 0)
-                <div id="mainTemp" style="top:30px;width: 100px;height:200px;"></div>
+                <div id="mainTemp" style="top:30px;width: 100px;height:600px;"></div>
               #else
                 <div id="mainTemp" style="top:30px;width: 100px;height:50px;text-align: center;margin-top:50px;">暂无温度数据</div>
               #end
@@ -125,7 +125,7 @@
             #set($showHumi = $applicationUtil.hasDeviceType($deviceInfo.type, 2))
             #if($showHumi)
               #if($dataIntimeSize > 0)
-                <div id="mainHumi" style="top:50px;width: 100px;height:200px;"></div>
+                <div id="mainHumi" style="top:50px;width: 100px;height:600px;"></div>
               #else
                 <div id="mainHumi" style="top:30px;width: 100px;height:50px;text-align: center;margin-top:50px;">暂无湿度数据</div>
               #end
@@ -134,7 +134,7 @@
             #set($showPower = $applicationUtil.hasDeviceType($deviceInfo.type, 4))
             #if($showPower)
               #if($dataIntimeSize > 0)
-                <div id="mainPower" style="top:50px;width: 100px;height:200px;"></div>
+                <div id="mainPower" style="top:50px;width: 100px;height:600px;"></div>
               #else
                 <div id="mainPower" style="top:30px;width: 100px;height:50px;text-align: center;margin-top:50px;">暂无电量数据</div>
               #end
@@ -143,7 +143,7 @@
             #set($showShine = $applicationUtil.hasDeviceType($deviceInfo.type, 8))
             #if($showShine)
               #if($dataIntimeSize > 0)
-                <div id="mainShine" style="top:50px;width: 100px;height:200px;"></div>
+                <div id="mainShine" style="top:50px;width: 100px;height:600px;"></div>
               #else
                 <div id="mainShine" style="top:30px;width: 100px;height:50px;text-align: center;margin-top:50px;">暂无光照数据</div>
               #end
@@ -152,7 +152,7 @@
             #set($showPressure = $applicationUtil.hasDeviceType($deviceInfo.type, 16))
             #if($showPressure)
               #if($dataIntimeSize > 0)
-                <div id="mainPressure" style="top:50px;width: 100px;height:200px;"></div>
+                <div id="mainPressure" style="top:50px;width: 100px;height:600px;"></div>
               #else
                 <div id="mainPressure" style="top:30px;width: 100px;height:50px;text-align: center;margin-top:50px;">暂无压力数据</div>
               #end

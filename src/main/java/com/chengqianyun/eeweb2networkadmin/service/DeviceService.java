@@ -170,7 +170,7 @@ public class DeviceService extends BaseService {
     deviceInfo.setSn(deviceFormBean.getSn());
     deviceInfo.setName(deviceFormBean.getName());
     deviceInfo.setTag(deviceFormBean.getTag());
-    deviceInfo.setAddress(deviceFormBean.getAddress());
+//    deviceInfo.setAddress(deviceFormBean.getAddress());
     deviceInfo.setType(deviceFormBean.calcDeviceType());
 
     if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.temp)) {
@@ -222,7 +222,9 @@ public class DeviceService extends BaseService {
     deviceInfo.setName(deviceFormBean.getName());
     deviceInfo.setAreaId(deviceFormBean.getAreaId());
     deviceInfo.setTag(deviceFormBean.getTag());
-    deviceInfo.setAddress(deviceFormBean.getAddress());
+    if(deviceFormBean.getAddress() > 0) {
+      deviceInfo.setAddress(deviceFormBean.getAddress());
+    }
     deviceInfo.setType(deviceFormBean.calcDeviceType());
 
     if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.temp)) {
