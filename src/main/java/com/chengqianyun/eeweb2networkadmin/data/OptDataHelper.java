@@ -102,11 +102,14 @@ public class OptDataHelper {
 
   /**
    * 记录环境传感器:报警信息
+   * 如果这里没有报警,那么需要把最新的一条数据如果是报警的,把它处理掉,包括下面的某一类没有报警,那么需要确认之前的报警
    * @param dataIntime
    */
   private void recordEnvAlarm(DeviceDataIntime dataIntime) {
-    // TODO .. 如果这里没有报警,那么需要把最新的一条数据如果是报警的,把它处理掉,包括下面的某一类没有报警,那么需要确认之前的报警
     if (dataIntime.getStatus() == StatusEnum.normal.getId() || dataIntime.getStatus() == 0) {
+      if(dataIntime.getStatus() == StatusEnum.normal.getId()) {
+        resetAlarmAll(dataIntime);
+      }
       return;
     }
 
@@ -121,6 +124,10 @@ public class OptDataHelper {
       tmpUpDownEnum = dataIntime.isTempDown() ? UpDownEnum.down : tmpUpDownEnum;
       recordAlarm(dataIntime, isOffline, alarmTypeEnum, DeviceTypeEnum.temp, dataIntime.getTemp(), deviceInfo.getTempScope(), tmpUpDownEnum);
     }
+    if(deviceInfo.hasTemp() && !dataIntime.isTempUp() && ! dataIntime.isTempDown()) {
+      resetAlarm(dataIntime, DeviceTypeEnum.temp);
+    }
+
 
     if (deviceInfo.hasHumi() && (isOffline || (dataIntime.isHumiUp() || dataIntime.isHumiDown()))) {
       tmpUpDownEnum = null;
@@ -128,6 +135,11 @@ public class OptDataHelper {
       tmpUpDownEnum = dataIntime.isHumiDown() ? UpDownEnum.down : tmpUpDownEnum;
       recordAlarm(dataIntime, isOffline, alarmTypeEnum, DeviceTypeEnum.humi, dataIntime.getHumi(), deviceInfo.getHumiScope(), tmpUpDownEnum);
     }
+    if(deviceInfo.hasHumi() && !dataIntime.isHumiUp() && ! dataIntime.isHumiDown()) {
+      resetAlarm(dataIntime, DeviceTypeEnum.humi);
+    }
+
+
 
     if (deviceInfo.hasShine() && (isOffline || (dataIntime.isShineUp() || dataIntime.isShineDown()))) {
       tmpUpDownEnum = null;
@@ -135,6 +147,11 @@ public class OptDataHelper {
       tmpUpDownEnum = dataIntime.isShineDown() ? UpDownEnum.down : tmpUpDownEnum;
       recordAlarm(dataIntime, isOffline, alarmTypeEnum, DeviceTypeEnum.shine, dataIntime.getShine(), deviceInfo.getShineScope(), tmpUpDownEnum);
     }
+    if(deviceInfo.hasShine() && !dataIntime.isShineUp() && ! dataIntime.isShineDown()) {
+      resetAlarm(dataIntime, DeviceTypeEnum.shine);
+    }
+
+
 
     if (deviceInfo.hasPower() && (isOffline || (dataIntime.isPowerUp() || dataIntime.isPowerDown()))) {
       tmpUpDownEnum = null;
@@ -142,6 +159,11 @@ public class OptDataHelper {
       tmpUpDownEnum = dataIntime.isPowerDown() ? UpDownEnum.down : tmpUpDownEnum;
       recordAlarm(dataIntime, isOffline, alarmTypeEnum, DeviceTypeEnum.power, dataIntime.getPower(), deviceInfo.getPowerScope(), tmpUpDownEnum);
     }
+    if(deviceInfo.hasPower() && !dataIntime.isPowerUp() && ! dataIntime.isPowerDown()) {
+      resetAlarm(dataIntime, DeviceTypeEnum.power);
+    }
+
+
 
     if (deviceInfo.hasPressure() && (isOffline || (dataIntime.isPressureUp() || dataIntime.isPressureDown()))) {
       tmpUpDownEnum = null;
@@ -149,8 +171,27 @@ public class OptDataHelper {
       tmpUpDownEnum = dataIntime.isPressureDown() ? UpDownEnum.down : tmpUpDownEnum;
       recordAlarm(dataIntime, isOffline, alarmTypeEnum, DeviceTypeEnum.pressure, dataIntime.getPressure(), deviceInfo.getPressureScope(), tmpUpDownEnum);
     }
+    if(deviceInfo.hasPressure() && !dataIntime.isPressureUp() && ! dataIntime.isPressureDown()) {
+      resetAlarm(dataIntime, DeviceTypeEnum.pressure);
+    }
 
   }
+
+  private void resetAlarmAll(DeviceDataIntime dataIntime) {
+    DeviceAlarm deviceAlarm = new DeviceAlarm();
+    DeviceInfo deviceInfo = dataIntime.getDeviceInfo();
+    deviceAlarm.setDeviceId(deviceInfo.getId());
+    deviceAlarmMapper.resetDeviceAlarmAll(deviceAlarm);
+  }
+
+  private void resetAlarm(DeviceDataIntime dataIntime, DeviceTypeEnum deviceTypeEnum) {
+    DeviceAlarm deviceAlarm = new DeviceAlarm();
+    DeviceInfo deviceInfo = dataIntime.getDeviceInfo();
+    deviceAlarm.setDeviceId(deviceInfo.getId());
+    deviceAlarm.setDeviceOneType(deviceTypeEnum.getId());
+    deviceAlarmMapper.resetDeviceAlarm(deviceAlarm);
+  }
+
 
 
   /**

@@ -16,6 +16,10 @@ public interface DeviceAlarmMapper {
 
     int updateByPrimaryKey(DeviceAlarm record);
 
+    int resetDeviceAlarm(DeviceAlarm deviceAlarm);
+    int resetDeviceAlarmAll(DeviceAlarm deviceAlarm);
+
+
     Integer findPageCount(Map<String,String> map);
 
     Long hasData(DeviceAlarm deviceAlarm);

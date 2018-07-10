@@ -73,6 +73,7 @@
     limit 1
   </select>
 
+
   <select id="findPage" parameterType="java.util.Map" resultMap="BaseResultMap">
     SELECT a.* from t_device_alarm a
     <include refid="pageSearch"/>
@@ -269,4 +270,35 @@
       updated_by = #{updatedBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <update id="resetDeviceAlarm" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm">
+    update t_device_alarm
+    set
+        alarm_end_time = now(),
+        updated_at = now()
+    where
+        device_id = #{deviceId,jdbcType=BIGINT}
+    AND
+        device_one_type = #{deviceOneType,jdbcType=INTEGER}
+    AND
+        confirm = 0
+    AND
+        alarm_end_time is null
+  </update>
+
+
+  <update id="resetDeviceAlarmAll" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm">
+    update t_device_alarm
+    set
+        alarm_end_time = now(),
+        updated_at = now()
+    where
+        device_id = #{deviceId,jdbcType=BIGINT}
+    AND
+        confirm = 0
+    AND
+        alarm_end_time is null
+  </update>
+
+
 </mapper>

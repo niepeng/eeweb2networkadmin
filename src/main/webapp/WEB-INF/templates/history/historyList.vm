@@ -35,15 +35,31 @@
             <form class="form-inline" id="currentForm" role="form">
               <input type="hidden" id="exportFlag" name="exportFlag" value="" />
 
+              <div class="form-group" style="margin-bottom: 10px;">
+                #foreach($tmpArea in $areaList)
+                  <label style="margin-right:40px;"> <input type="radio" onchange="changeArea(this)" value="$tmpArea.id" name="areaInfo" #if($!deviceInfo.areaId == $!tmpArea.id) checked #end /> $!{tmpArea.name} </label>
+                #end
+              </div>
+
+
               #foreach($tmpArea in $areaList)
-                <div class="form-group">
-                  <label>$!{tmpArea.name} ：</label>
+                #set($showAreaDeviceList = $!deviceInfo.areaId == $!tmpArea.id)
+                <div class="form-group" name="areaDeviceList" id="areaDeviceList_$tmpArea.id"
+                  #if($showAreaDeviceList)
+                     style="display: block;"
+                  #else
+                     style="display: none;"
+                  #end
+                >
                   #foreach($tmpDeviceInfo in $tmpArea.deviceInfoList)
                     <input type="radio" name="deviceId" value="$!tmpDeviceInfo.id" #if($!deviceInfo.id == $!tmpDeviceInfo.id) checked #end /> $!{tmpDeviceInfo.name}-($!{tmpDeviceInfo.tag}) &nbsp;&nbsp;
                   #end
                 </div>
-                <br/><br/>
               #end
+
+              <div style="margin-top: 20px;">
+
+              </div>
 
               <label>开始时间：</label>
               <input type="text" class="input-date" name="startTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm'})" value="$!{startTime}">
@@ -150,4 +166,19 @@
       return;
     }
   }
+
+  function changeArea(obj) {
+    if(!obj.checked) {
+      return;
+    }
+    var hiddenDivs = document.getElementsByName("areaDeviceList");
+    for(var i=0;i<hiddenDivs.length;i++){
+      hiddenDivs[i].style.display="none";
+    }
+    var showDiv = document.getElementById("areaDeviceList_" + obj.value);
+    showDiv.style.display="block";
+  }
+
 </script>
+
+

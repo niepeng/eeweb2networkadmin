@@ -118,7 +118,7 @@ public class InstructionManager {
    * @return
    */
   public static char[] genGetIn(int address) {
-    char[] rs = {(char) address, (char) 0x02, (char) 0, (char)20, (char) 0, (char) 0x04, 0, 0};
+    char[] rs = {(char) address, (char) 0x02, (char) 0, (char)0x20, (char) 0, (char) 0x04, 0, 0};
     rs = CalcCRC.getCrc16(rs);
     return rs;
   }
