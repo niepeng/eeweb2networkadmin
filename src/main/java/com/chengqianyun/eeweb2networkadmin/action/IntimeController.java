@@ -139,6 +139,7 @@ public class IntimeController extends BaseController {
       model.addAttribute("deviceInfo", deviceInfo);
       model.addAttribute("areaList", areaList);
       model.addAttribute("dataIntimeList", dataIntimeList);
+      addColor(model);
       return "/intime/intimeCurveList";
     } catch (Exception ex) {
       model.addAttribute(SUCCESS, false);

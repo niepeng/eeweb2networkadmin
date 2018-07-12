@@ -223,23 +223,49 @@
     tooltip: {
       trigger: 'axis'
     },
-    legend: {
-      data:['温度']
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
-    },
+//
+//    legend: {
+//      data:['温度']
+//    },
+//    grid: {
+//      left: '3%',
+//      right: '4%',
+//      bottom: '3%',
+//      containLabel: true
+//    },
     toolbox: {
+      left: 'center',
       feature: {
+        dataZoom: {
+          yAxisIndex: 'none'
+        },
+        restore: {},
         saveAsImage: {}
       }
     },
+  visualMap: {
+      top: 10,
+      right: 10,
+      pieces: [{
+        gt: 0,
+        lte: $!unitUtil.changeTemp($deviceInfo.tempDown),
+        color: '$downLineColor'
+      }, {
+        gt: $!unitUtil.changeTemp($deviceInfo.tempDown),
+        lte: $!unitUtil.changeTemp($deviceInfo.tempUp),
+        color: '$lineColor'
+      }, {
+        gt: $!unitUtil.changeTemp($deviceInfo.tempUp),
+        color: '$upLineColor'
+      }],
+      outOfRange: {
+        color: '$upLineColor'
+      }
+    },
+
     xAxis: {
-      type: 'category',
-      boundaryGap: false,
+//      type: 'category',
+//      boundaryGap: false,
       data: [
 //        '周一','周二','周三','周四','周五','周六','周日'
           #set($tmpDataIntimeNum = 0)
@@ -254,7 +280,11 @@
       ]
     },
     yAxis: {
-      type: 'value'
+      type: 'value',
+//      type: 'category',
+      splitLine: {
+        show: true
+      }
     },
     series: [
       {
@@ -271,7 +301,15 @@
             '$unitUtil.changeTemp($tmpDataIntime.temp)'
             #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
           #end
-        ]
+        ],
+        markLine: {
+          silent: true,
+          data: [{
+            yAxis: $!unitUtil.changeTemp($deviceInfo.tempDown)
+          }, {
+            yAxis: $!unitUtil.changeTemp($deviceInfo.tempUp)
+          }]
+        }
       }
     ]
   };
@@ -294,23 +332,52 @@
     tooltip: {
       trigger: 'axis'
     },
-    legend: {
-      data:['湿度']
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
-    },
+//    legend: {
+//      data:['湿度']
+//    },
+//    grid: {
+//      left: '3%',
+//      right: '4%',
+//      bottom: '3%',
+//      containLabel: true
+//    },
+//    toolbox: {
+//      feature: {
+//        saveAsImage: {}
+//      }
+//    },
     toolbox: {
+      left: 'center',
       feature: {
+        dataZoom: {
+          yAxisIndex: 'none'
+        },
+        restore: {},
         saveAsImage: {}
       }
     },
+    visualMap: {
+      top: 10,
+      right: 10,
+      pieces: [{
+        gt: 0,
+        lte: $!unitUtil.changeHumi($deviceInfo.humiDown),
+        color: '$downLineColor'
+      }, {
+        gt: $!unitUtil.changeHumi($deviceInfo.humiDown),
+        lte: $!unitUtil.changeHumi($deviceInfo.humiUp),
+        color: '$lineColor'
+      }, {
+        gt: $!unitUtil.changeHumi($deviceInfo.humiUp),
+        color: '$upLineColor'
+      }],
+      outOfRange: {
+        color: '$upLineColor'
+      }
+    },
     xAxis: {
-      type: 'category',
-      boundaryGap: false,
+//      type: 'category',
+//      boundaryGap: false,
       data: [
 //        '周一','周二','周三','周四','周五','周六','周日'
         #set($tmpDataIntimeNum = 0)
@@ -325,7 +392,10 @@
       ]
     },
     yAxis: {
-      type: 'value'
+      type: 'value',
+      splitLine: {
+        show: true
+      }
     },
     series: [
       {
@@ -342,7 +412,15 @@
             '$unitUtil.changeHumi($tmpDataIntime.humi)'
             #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
           #end
-        ]
+        ],
+        markLine: {
+          silent: true,
+          data: [{
+            yAxis: $!unitUtil.changeHumi($deviceInfo.humiDown)
+          }, {
+            yAxis: $!unitUtil.changeHumi($deviceInfo.humiUp)
+          }]
+        }
       }
     ]
   };
@@ -364,17 +442,22 @@
     tooltip: {
       trigger: 'axis'
     },
-    legend: {
-      data:['电量']
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
-    },
+//    legend: {
+//      data:['电量']
+//    },
+//    grid: {
+//      left: '3%',
+//      right: '4%',
+//      bottom: '3%',
+//      containLabel: true
+//    },
     toolbox: {
+      left: 'center',
       feature: {
+        dataZoom: {
+          yAxisIndex: 'none'
+        },
+        restore: {},
         saveAsImage: {}
       }
     },
@@ -397,6 +480,7 @@
     yAxis: {
       type: 'value'
     },
+    color:['$lineColor'],
     series: [
       {
         name:'电量(V)',
@@ -435,18 +519,42 @@
     tooltip: {
       trigger: 'axis'
     },
-    legend: {
-      data:['光照']
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
-    },
+//    legend: {
+//      data:['光照']
+//    },
+//    grid: {
+//      left: '3%',
+//      right: '4%',
+//      bottom: '3%',
+//      containLabel: true
+//    },
     toolbox: {
+      left: 'center',
       feature: {
+        dataZoom: {
+          yAxisIndex: 'none'
+        },
+        restore: {},
         saveAsImage: {}
+      }
+    },
+    visualMap: {
+      top: 10,
+      right: 10,
+      pieces: [{
+        gt: 0,
+        lte: $deviceInfo.shineDown,
+        color: '$downLineColor'
+      }, {
+        gt: $deviceInfo.shineDown,
+        lte: $deviceInfo.shineUp,
+        color: '$lineColor'
+      }, {
+        gt: $deviceInfo.shineUp,
+        color: '$upLineColor'
+      }],
+      outOfRange: {
+        color: '$upLineColor'
       }
     },
     xAxis: {
@@ -466,7 +574,11 @@
       ]
     },
     yAxis: {
-      type: 'value'
+      type: 'value',
+//      type: 'category',
+      splitLine: {
+        show: true
+      }
     },
     series: [
       {
@@ -483,7 +595,15 @@
             '$tmpDataIntime.shine'
             #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
           #end
-        ]
+        ],
+        markLine: {
+          silent: true,
+          data: [{
+            yAxis: $deviceInfo.shineDown
+          }, {
+            yAxis: $deviceInfo.shineUp
+          }]
+        }
       }
     ]
   };
@@ -507,18 +627,42 @@
     tooltip: {
       trigger: 'axis'
     },
-    legend: {
-      data:['压力']
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
-    },
+//    legend: {
+//      data:['压力']
+//    },
+//    grid: {
+//      left: '3%',
+//      right: '4%',
+//      bottom: '3%',
+//      containLabel: true
+//    },
     toolbox: {
+      left: 'center',
       feature: {
+        dataZoom: {
+          yAxisIndex: 'none'
+        },
+        restore: {},
         saveAsImage: {}
+      }
+    },
+    visualMap: {
+      top: 10,
+      right: 10,
+      pieces: [{
+        gt: 0,
+        lte: $!unitUtil.changePressure($deviceInfo.pressureDown),
+        color: '$downLineColor'
+      }, {
+        gt: $!unitUtil.changePressure($deviceInfo.pressureDown),
+        lte: $!unitUtil.changePressure($deviceInfo.pressureUp),
+        color: '$lineColor'
+      }, {
+        gt: $!unitUtil.changePressure($deviceInfo.pressureUp),
+        color: '$upLineColor'
+      }],
+      outOfRange: {
+        color: '$upLineColor'
       }
     },
     xAxis: {
@@ -535,10 +679,14 @@
           '$dateTime'
           #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
         #end
-      ]
+      ],
+
     },
     yAxis: {
-      type: 'value'
+      type: 'value',
+      splitLine: {
+        show: true
+      }
     },
     series: [
       {
@@ -555,7 +703,15 @@
             '$unitUtil.changePressure($tmpDataIntime.pressure)'
             #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
           #end
-        ]
+        ],
+        markLine: {
+          silent: true,
+          data: [{
+            yAxis: $!unitUtil.changePressure($deviceInfo.pressureDown)
+          }, {
+            yAxis: $!unitUtil.changePressure($deviceInfo.pressureUp)
+          }]
+        }
       }
     ]
   };

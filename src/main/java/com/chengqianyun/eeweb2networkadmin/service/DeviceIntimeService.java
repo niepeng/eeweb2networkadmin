@@ -8,6 +8,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +93,7 @@ public class DeviceIntimeService extends BaseService {
 
   public List<DeviceDataIntime> intimeCurveList(long deviceId) {
     List<DeviceDataIntime> list = dataIntimeMapper.listDataOneDevice(deviceId, 100);
+    Collections.reverse(list);
     return list;
   }
 

@@ -86,6 +86,17 @@ public abstract class BaseController {
 
 	}
 
+
+	protected void addColor(Model model) {
+//		model.addAttribute("downLineColor", "#ffde33"); // 黄色
+		model.addAttribute("downLineColor", "#039bff");  // 蓝色
+		model.addAttribute("lineColor", "#096");					// 绿色
+		model.addAttribute("upLineColor", "#cc0033");			// 红色
+	}
+
+
+
+
 	protected void addOptMenu(Model model, MenuEnum menuEnum) {
 		model.addAttribute("openMenu",menuEnum.getName());
 	}
