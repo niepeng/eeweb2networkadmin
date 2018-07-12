@@ -11,6 +11,7 @@ import lombok.Getter;
 @Getter
 public enum SettingEnum {
 
+  alarm_sms("alarm_sms", "短信报警:true启用,false:禁用", "false"),
   alarm_song("alarm_song", "声音报警:true启用,false:禁用", "false"),
   alarm_song_config("alarm_song_config", "声音报警歌曲", "cqAlarm1.mp3");
 

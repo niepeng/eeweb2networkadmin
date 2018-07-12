@@ -16,15 +16,16 @@ public class SettingService extends BaseService {
 
   public SettingAlarmBean alarm() {
     SettingAlarmBean result = new SettingAlarmBean();
+    result.setAlarm_sms(Boolean.valueOf(getData(SettingEnum.alarm_sms)));
     result.setAlarm_song(Boolean.valueOf(getData(SettingEnum.alarm_song)));
     result.setAlarm_song_config(getData(SettingEnum.alarm_song_config));
-
 
     return result;
   }
 
 
   public void save(SettingAlarmBean bean) {
+    saveData(SettingEnum.alarm_sms, String.valueOf(Boolean.valueOf(bean.isAlarm_sms())));
     saveData(SettingEnum.alarm_song, String.valueOf(Boolean.valueOf(bean.isAlarm_song())));
     saveData(SettingEnum.alarm_song_config, bean.getAlarm_song_config());
   }

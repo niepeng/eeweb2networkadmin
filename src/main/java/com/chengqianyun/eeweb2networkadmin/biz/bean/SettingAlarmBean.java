@@ -15,6 +15,8 @@ import lombok.ToString;
 @ToString
 public class SettingAlarmBean {
 
+  private boolean alarm_sms;
+
   private boolean alarm_song;
 
   private String alarm_song_config;
