@@ -145,6 +145,7 @@ public class HistoryController extends BaseController {
 
       List<DeviceDataHistory> dataHistoryList = historyService.historyDataList(deviceInfo.getId(), startTime, endTime);
       model.addAttribute("dataHistoryList", dataHistoryList);
+      addColor(model);
 
       return "/history/historyCurveList";
     } catch (Exception ex) {
