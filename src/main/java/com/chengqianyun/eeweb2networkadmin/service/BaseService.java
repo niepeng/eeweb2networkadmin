@@ -8,6 +8,9 @@ import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistoryMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntimeMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfoMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutConditionMapper;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.Setting;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.SettingMapper;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.SettingEnum;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +40,36 @@ public class BaseService {
 
   @Autowired
   protected DeviceDataHistoryMapper deviceDataHistoryMapper;
+
+  @Autowired
+  protected SettingMapper settingMapper;
+
+
+  public String getData(SettingEnum settingEnum) {
+    Setting setting = settingMapper.selectByCode(settingEnum.getCode());
+    if(setting == null) {
+      return  settingEnum.getDefaultValue();
+    }
+    return setting.getParamValue();
+  }
+
+
+  public void saveData(SettingEnum settingEnum, String value) {
+    Setting setting = settingMapper.selectByCode(settingEnum.getCode());
+    if (setting == null) {
+      setting = new Setting();
+      setting.setParamCode(settingEnum.getCode());
+      setting.setParamValue(value);
+      settingMapper.insert(setting);
+      return;
+    }
+
+    if (setting.getParamValue().equalsIgnoreCase(value)) {
+      return;
+    }
+    setting.setParamValue(value);
+    settingMapper.updateByPrimaryKey(setting);
+  }
+
 
 }

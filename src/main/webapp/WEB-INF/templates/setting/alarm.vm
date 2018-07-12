@@ -1,0 +1,157 @@
+
+<script src="${www}/js/my97DatePicker/WdatePicker.js"></script>
+
+<div class="main-content">
+  <div class="breadcrumbs" id="breadcrumbs">
+    <script src="${www}/js/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript">
+      try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+
+      jQuery(function($) {
+        $('.input-mask-date').mask('9999-99-99');
+      });
+
+    </script>
+
+    <ul class="breadcrumb">
+      <li>
+        <i class="icon-home home-icon"></i>
+        <a href="${www}/main">主页</a>
+      </li>
+
+      <li>
+        <a href="${www}/setting/alarm">报警设置</a>
+      </li>
+      <li class="active">设置</li>
+    </ul><!-- .breadcrumb -->
+
+    <div class="nav-search" id="nav-search">
+    ##      <form class="form-search">
+##						<span class="input-icon">
+##							<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+##							<i class="icon-search nav-search-icon"></i>
+##						</span>
+##      </form>
+    </div><!-- #nav-search -->
+  </div>
+
+  <div class="page-content">
+    <div class="page-header">
+      <h1>设置</h1>
+    </div>
+
+    #if(${msg})
+      <div>
+        #if(${success})
+          <li class="text-success">$!{msg}</li>
+        #else
+          <li class="text-danger">$!{msg}</li>
+        #end
+      </div>
+    #end
+
+    <form id="inputForm" action="${www}/setting/doAlarm" method="post" class="form-horizontal" enctype="multipart/form-data">
+
+
+      <div class="row">
+        <div class="col-xs-12 col-md-8">
+          <div class="form-group">
+            <label class="col-md-4 col-sm-2 control-label">启用声卡报警</label>
+            <div class="col-md-8 col-sm-8">
+              <input type="radio"  name="alarm_song" value="true"  #if($!settingAlarmBean.alarm_song) checked #end> 启用 &nbsp;
+              <input type="radio"  name="alarm_song" value="false" #if(!$!settingAlarmBean.alarm_song) checked #end> 静用
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-12 col-md-8">
+          <div class="form-group">
+            <label class="col-md-4 col-sm-2 control-label">声卡报警音乐</label>
+            <div class="col-md-8 col-sm-8">
+              <select  name="alarm_song_config" onchange="changeSelect(this)">
+                <option value="cqAlarm1.mp3" #if("$!settingAlarmBean.alarm_song_config" == "cqAlarm1.mp3") selected #end>cqAlarm1.mp3</option>
+                <option value="cqAlarm2.mp3" #if("$!settingAlarmBean.alarm_song_config" == "cqAlarm2.mp3") selected #end>cqAlarm2.mp3</option>
+                <option value="cqAlarm3.mp3" #if("$!settingAlarmBean.alarm_song_config" == "cqAlarm3.mp3") selected #end>cqAlarm3.mp3</option>
+                <option value="cqAlarm4.mp3" #if("$!settingAlarmBean.alarm_song_config" == "cqAlarm4.mp3") selected #end>cqAlarm4.mp3</option>
+                <option value="cqAlarm5.mp3" #if("$!settingAlarmBean.alarm_song_config" == "cqAlarm5.mp3") selected #end>cqAlarm5.mp3</option>
+                <option value="cqAlarm6.mp3" #if("$!settingAlarmBean.alarm_song_config" == "cqAlarm6.mp3") selected #end>cqAlarm6.mp3</option>
+              </select>
+
+              <audio id="sourceSongAuto" controls="controls" style="height: 20px;">
+                <source id="sourceSong" src="${www}/music/$!settingAlarmBean.alarm_song_config" type="audio/mpeg" />
+                当前浏览器不支持播放报警声音
+              </audio>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+##      <div class="row">
+##        <div class="col-xs-12 col-md-8">
+##          <div class="form-group">
+##            <label class="col-md-4 col-sm-2 control-label">关联短信手机号：</label>
+##            <div class="col-md-8 col-sm-8">
+##              <input type="text" class="col-sm-12" id="smsPhones" name="smsPhones"
+##                     value="$!{area.smsPhones}">如果有多个手机号用逗号分隔填写如: 13012345678,13198765432
+##            </div>
+##          </div>
+##        </div>
+##      </div>
+##
+##
+##      <div class="row">
+##        <div class="col-xs-12 col-md-8">
+##          <div class="form-group">
+##            <label class="col-md-4 col-sm-2 control-label">备注：</label>
+##            <div class="col-md-8 col-sm-8">
+##              <input type="text" class="col-sm-12" id="note" name="note"
+##                     value="$!{area.note}">
+##            </div>
+##          </div>
+##        </div>
+##      </div>
+
+
+
+      <div class="clearfix form-actions">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="col-sm-offset-4 col-md-9">
+              <button id="sbt" class="btn btn-info" type="submit">
+                <i id="iok" class="icon-ok bigger-110">保存</i>
+              </button>
+              <button class="btn" type="button" style="margin-left: 100px;" onclick="javascript:history.go(-1);">
+                <i class="icon-arrow-left bigger-110"></i>返回
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div><!-- /.page-content -->
+</div><!-- /.main-content -->
+
+<script src="${www}/js/youcaicommon.js"></script>
+<script type="text/javascript">
+
+  $("#sbt").click(function(e){
+    $("#iok").text("处理中");
+    $("#sbt").attr("disabled", true);
+    $("#inputForm").submit();
+
+  });
+
+  function changeSelect(obj) {
+    var prefix = "${www}/music/";
+    var srcValue = prefix + obj.value;
+    document.getElementById("sourceSong").src = srcValue;
+    document.getElementById("sourceSongAuto").load();
+  }
+
+</script>
+

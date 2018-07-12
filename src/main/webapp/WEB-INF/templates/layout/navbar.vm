@@ -130,7 +130,7 @@
                       <b class="arrow icon-angle-down"></b>
                     </a>
                     <ul class="submenu" #if($showMenu) style="display: block;" #end >
-                      <li><a href="${www}/aaa.html">系统设置</a></li>
+                      <li><a href="${www}/setting/alarm">报警设置</a></li>
                     </ul>
                   </li>
 

@@ -183,6 +183,10 @@
 </div><!-- /.main-content -->
 
 
+#set($lineColor = "#ca8622")
+#set($upLineColor = "#448800")
+#set($downLineColor = "#448800")
+
 #if("$!deviceInfo" != "")
 <script type="text/javascript">
 
@@ -218,13 +222,17 @@
   // 指定图表的配置项和数据
   option1 = {
     title: {
-      text: '温度曲线图'
+      text: '$!{deviceInfo.name}-($!{deviceInfo.tag}) 的温度曲线图',
+      textStyle: {
+        align: 'center'
+      }
     },
+
     tooltip: {
       trigger: 'axis'
     },
     legend: {
-      data:['温度']
+      data:['温度高线(℃)','实际温度(℃)','温度低线(℃)']
     },
     grid: {
       left: '3%',
@@ -256,9 +264,12 @@
     yAxis: {
       type: 'value'
     },
+    color:
+        ['$!upLineColor','$!lineColor','$!downLineColor']
+    ,
     series: [
       {
-        name:'温度(℃)',
+        name:'温度高线(℃)',
         type:'line',
         stack: '值',
         data:[
@@ -268,7 +279,38 @@
             #if($tmpDataIntimeNum > 0)
               ,
             #end
-            '$unitUtil.changeTemp($tmpDataIntime.temp)'
+            $unitUtil.changeTemp($deviceInfo.tempUp)
+            #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
+          #end
+        ]
+      },
+      {
+        name:'实际温度(℃)',
+        type:'line',
+        stack: '值',
+        data:[
+//          120.1, 132.1, 101, 134.1, 90.23, 230.23, 210.23
+          #set($tmpDataIntimeNum = 0)
+          #foreach($tmpDataIntime in $dataHistoryList)
+            #if($tmpDataIntimeNum > 0)
+              ,
+            #end
+            $unitUtil.changeTemp($tmpDataIntime.temp)
+            #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
+          #end
+        ]
+      },
+      {
+        name:'温度低线(℃)',
+        type:'line',
+        stack: '值',
+        data:[
+          #set($tmpDataIntimeNum = 0)
+          #foreach($tmpDataIntime in $dataHistoryList)
+            #if($tmpDataIntimeNum > 0)
+              ,
+            #end
+            $unitUtil.changeTemp($deviceInfo.tempDown)
             #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
           #end
         ]
@@ -289,13 +331,13 @@
   // 指定图表的配置项和数据
   option2 = {
     title: {
-      text: '湿度曲线图'
+      text: '$!{deviceInfo.name}-($!{deviceInfo.tag}) 的湿度曲线图'
     },
     tooltip: {
       trigger: 'axis'
     },
     legend: {
-      data:['湿度']
+      data:['湿度高线(%RH)','实际湿度(%RH)','湿度低线(%RH)']
     },
     grid: {
       left: '3%',
@@ -312,7 +354,6 @@
       type: 'category',
       boundaryGap: false,
       data: [
-//        '周一','周二','周三','周四','周五','周六','周日'
         #set($tmpDataIntimeNum = 0)
         #foreach($tmpDataIntime in $dataHistoryList)
           #if($tmpDataIntimeNum > 0)
@@ -327,19 +368,51 @@
     yAxis: {
       type: 'value'
     },
+    color:
+        ['$!upLineColor','$!lineColor','$!downLineColor']
+    ,
     series: [
       {
-        name:'湿度(%RH)',
+        name:'湿度高线(%RH)',
         type:'line',
         stack: '值',
         data:[
-//          120.1, 132.1, 101, 134.1, 90.23, 230.23, 210.23
+          #set($tmpDataIntimeNum = 0)
+          #foreach($tmpDataIntime in $dataHistoryList)
+            #if($tmpDataIntimeNum > 0)
+              ,
+            #end
+            '$unitUtil.changeHumi($deviceInfo.humiUp)'
+            #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
+          #end
+        ]
+      },
+      {
+        name:'实际湿度(%RH)',
+        type:'line',
+        stack: '值',
+        data:[
           #set($tmpDataIntimeNum = 0)
           #foreach($tmpDataIntime in $dataHistoryList)
             #if($tmpDataIntimeNum > 0)
               ,
             #end
             '$unitUtil.changeHumi($tmpDataIntime.humi)'
+            #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
+          #end
+        ]
+      },
+      {
+        name:'湿度低线(%RH)',
+        type:'line',
+        stack: '值',
+        data:[
+          #set($tmpDataIntimeNum = 0)
+          #foreach($tmpDataIntime in $dataHistoryList)
+            #if($tmpDataIntimeNum > 0)
+              ,
+            #end
+            '$unitUtil.changeHumi($deviceInfo.humiDown)'
             #set($tmpDataIntimeNum = $tmpDataIntimeNum + 1)
           #end
         ]
@@ -397,6 +470,9 @@
     yAxis: {
       type: 'value'
     },
+    color:
+        ['$!lineColor']
+    ,
     series: [
       {
         name:'电量(V)',
@@ -468,6 +544,9 @@
     yAxis: {
       type: 'value'
     },
+    color:
+        ['$!lineColor']
+    ,
     series: [
       {
         name:'光照(Lx)',
@@ -540,6 +619,9 @@
     yAxis: {
       type: 'value'
     },
+    color:
+        ['$!lineColor']
+    ,
     series: [
       {
         name:'压力(kPa)',

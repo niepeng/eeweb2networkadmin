@@ -3,13 +3,16 @@ package com.chengqianyun.eeweb2networkadmin.service;
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.Setting;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.AlarmConfirmEnum;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.SettingEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,6 +23,17 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class AlarmService extends BaseService {
+
+
+  public boolean hasAlarmData() {
+    String value = getData(SettingEnum.alarm_song);
+    if (!Boolean.valueOf(value)) {
+      return false;
+    }
+    Long id = deviceAlarmMapper.hasAlarmData();
+    return id != null && id > 0;
+  }
+
 
   public PageResult<DeviceAlarm> getAlarmList(PaginationQuery query) {
     PageResult<DeviceAlarm> result = null;

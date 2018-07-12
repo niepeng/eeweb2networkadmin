@@ -2,6 +2,7 @@ package com.chengqianyun.eeweb2networkadmin.action;
 
 
 import com.chengqianyun.eeweb2networkadmin.biz.bean.DataIntimeBean;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.ElementDataBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.LastIntimeBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime;
@@ -9,6 +10,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
+import com.chengqianyun.eeweb2networkadmin.service.AlarmService;
 import com.chengqianyun.eeweb2networkadmin.service.DeviceIntimeService;
 import com.chengqianyun.eeweb2networkadmin.service.DeviceService;
 import java.util.List;
@@ -33,6 +35,9 @@ public class IntimeController extends BaseController {
 
   @Autowired
   private DeviceService deviceService;
+
+  @Autowired
+  private AlarmService alarmService;
 
   @Autowired
   private DeviceIntimeService deviceIntimeService;
@@ -72,6 +77,7 @@ public class IntimeController extends BaseController {
       dataIntimeBean.setAreaIds(areaIds);
 
       deviceIntimeService.deviceDataIntime(dataIntimeBean);
+      model.addAttribute("alarmSong", alarmService.hasAlarmData());
       model.addAttribute("areaList", areaList);
       model.addAttribute("dataIntimeBean", dataIntimeBean);
       return "/intime/dataList";
@@ -99,7 +105,7 @@ public class IntimeController extends BaseController {
       addOptMenu(model, MenuEnum.intime);
       List<Area> areaList = deviceService.getAreaAll();
       List<DeviceDataIntime> dataIntimeList = deviceIntimeService.deviceDataIntimeFor2(status, areaId, name);
-
+      model.addAttribute("alarmSong", alarmService.hasAlarmData());
       model.addAttribute("dataIntimeList", dataIntimeList);
       model.addAttribute("areaList", areaList);
       model.addAttribute("status", status);
@@ -129,6 +135,7 @@ public class IntimeController extends BaseController {
       List<Area> areaList = deviceService.getAreaAndDeviceInfo();
       DeviceInfo deviceInfo = findOneDeviceId(areaList, deviceId);
       List<DeviceDataIntime> dataIntimeList = deviceIntimeService.intimeCurveList(deviceInfo.getId().longValue());
+      model.addAttribute("alarmSong", alarmService.hasAlarmData());
       model.addAttribute("deviceInfo", deviceInfo);
       model.addAttribute("areaList", areaList);
       model.addAttribute("dataIntimeList", dataIntimeList);

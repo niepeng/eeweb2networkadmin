@@ -62,6 +62,18 @@
         <div class="row">
           <div class="col-sm-11">
             <form class="form-inline" role="form">
+
+              #if($!alarmSong)
+                <div class="form-group">
+                  <audio controls="controls" autoplay="autoplay" style="height: 50px;">
+                    <source src="${www}/music/cqAlarm1.mp3" type="audio/mpeg" />
+                    当前浏览器不支持播放报警声音
+                  </audio>
+                </div>
+
+                <div style="clear: both; "></div>
+              #end
+
               <div class="form-group">
                 <label>设备区域：</label>
                 #foreach($tmpArea in $areaList)

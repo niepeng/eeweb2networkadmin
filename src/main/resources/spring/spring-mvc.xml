@@ -40,6 +40,7 @@
 	<mvc:resources mapping="/home/static/upload/**" location="/home/static/upload/" />
 	<mvc:resources mapping="/ueditor/**" location="/WEB-INF/static/ueditor/" />
 	<mvc:resources mapping="/css/**" location="/WEB-INF/static/css/" />
+	<mvc:resources mapping="/music/**" location="/WEB-INF/static/music/" />
 	<mvc:resources mapping="/js/**" location="/WEB-INF/static/js/" />
 	<mvc:resources mapping="/fonts/**" location="/WEB-INF/static/font/" />
 	<mvc:resources mapping="/avatars/**" location="/WEB-INF/static/avatars/" />
