@@ -57,6 +57,8 @@ public class AlarmController extends BaseController {
       @RequestParam(value = "endTime", required = false) String endTime,
       Model model) {
     try {
+      startTime = StringUtil.isEmpty(startTime)? (String)model.asMap().get("startTime"): startTime;
+      endTime = StringUtil.isEmpty(endTime)? (String)model.asMap().get("endTime"): endTime;
       if(StringUtil.isEmpty(startTime) && StringUtil.isEmpty(endTime)) {
         Date now = new Date();
         startTime = DateUtil.getDate(DateUtil.formatCurrentMin(now), DateUtil.dateFullPattern);
@@ -104,12 +106,18 @@ public class AlarmController extends BaseController {
   @RequestMapping(value = "/markRead", method = RequestMethod.GET)
   public String markRead(
       @RequestParam(value = "id", required = false, defaultValue = "0") long alarmId,
+      @RequestParam(value = "startTime", required = false, defaultValue = "") String startTime,
+      @RequestParam(value = "endTime", required = false, defaultValue = "") String endTime,
       Model model, RedirectAttributes redirectAttributes) {
 
     try {
       alarmService.markRead(alarmId, null);
+
+      redirectAttributes.addFlashAttribute("startTime", startTime);
+      redirectAttributes.addFlashAttribute("endTime", endTime);
       redirectAttributes.addFlashAttribute(SUCCESS, true);
       redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_OPERATE_SUCESS);
+
       return "redirect:/alarm/alarmList";
     } catch (Exception ex) {
       redirectAttributes.addFlashAttribute(SUCCESS, false);

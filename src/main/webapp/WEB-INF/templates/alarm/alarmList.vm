@@ -64,8 +64,8 @@
                   #end
                 </select>
                 <label>首次报警时间：</label>
-                <input type="text" class="input-date" name="startTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="$!{startTime}"> ~
-                <input type="text" class="input-date" name="endTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="$!{endTime}">
+                <input type="text" class="input-date" id="startTime" name="startTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="$!{startTime}"> ~
+                <input type="text" class="input-date" id="endTime" name="endTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="$!{endTime}">
               </div>
               <div class="form-group">
                 <button class="btn btn-xs btn-primary" type="submit">查询</button>
@@ -192,7 +192,9 @@
 
   function markRead(id) {
     if(confirm('确定标记已读?')) {
-      window.location.href = "${www}/alarm/markRead?id=" + id;
+       var startTime = document.getElementById("startTime").value;
+       var endTime = document.getElementById("endTime").value;
+      window.location.href = "${www}/alarm/markRead?id=" + id + "&startTime=" + startTime + "&endTime=" + endTime;
     }
   }
 
