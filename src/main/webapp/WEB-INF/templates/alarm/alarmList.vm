@@ -89,6 +89,15 @@
           </tr>
           </thead>
           <tbody>
+
+          #if(!$result.rows)
+          <tr>
+            <td colspan="7" align="center">
+              暂无报警数据
+            </td>
+          </tr>
+          #end
+
             #foreach($row in $result.rows)
             <tr>
               <td>$!{row.deviceInfo.name}</td>
