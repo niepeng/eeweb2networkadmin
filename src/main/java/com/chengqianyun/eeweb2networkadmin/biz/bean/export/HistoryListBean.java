@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.ToString;
 
 /**
+ * 核心数据bean
+ *
  * @author 聂鹏
  * @version 1.0
  * @date 18/6/10
@@ -12,9 +14,19 @@ import lombok.ToString;
 @ToString
 public class HistoryListBean {
 
-  private String deviceName;
+  private String num;
+
+  private String time;
 
   private String temp;
 
   private String humi;
+
+  private String power;
+
+  private String shine;
+
+  private String pressure;
+
+
 }
