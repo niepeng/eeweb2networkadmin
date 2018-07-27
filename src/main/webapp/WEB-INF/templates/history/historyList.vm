@@ -34,6 +34,7 @@
           <div class="col-sm-11">
             <form class="form-inline" id="currentForm" role="form">
               <input type="hidden" id="exportFlag" name="exportFlag" value="" />
+              <input type="hidden" id="exportType" name="exportType" value="" />
 
               <div class="form-group" style="margin-bottom: 10px;">
                 #foreach($tmpArea in $areaList)
@@ -67,10 +68,13 @@
               <input type="text" class="input-date" name="endTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm'})" value="$!{endTime}">
 
               <div class="form-group">
-                <button class="btn btn-xs btn-primary" type="submit">查询</button> <tts style="margin-left:10px;color: red;">有效查询时间范围是 1天(1440分钟)</tts>
+                <button class="btn btn-xs btn-primary" onclick="selectData()" type="button">查询</button> <tts style="margin-left:10px;color: red;">有效查询时间范围是 1天(1440分钟)</tts>
               </div>
               <div class="form-group">
-                <button class="btn btn-xs btn-primary" type="button" onclick="exportData();">导出</button>
+                <button class="btn btn-xs btn-primary" type="button" onclick="exportData('excel');">导出excel</button>
+              </div>
+              <div class="form-group">
+                <button class="btn btn-xs btn-primary" type="button" onclick="exportData('pdf');">导出pdf</button>
               </div>
             </form>
           </div>
@@ -157,14 +161,24 @@
 <script>
 
 
-  function exportData() {
-    if(confirm("是否需要导出数据?")) {
+  function exportData(type) {
+    if(confirm("是否需要导出"+type+"格式数据?")) {
       $("#exportFlag").val("true");
-      $("#currentForm").attr('action',"${www}/history/historyListExcel");
+      $("#currentForm").attr('action',"${www}/history/historyListExport");
+      $("#exportType").val(type);
       $("#currentForm").submit();
       $("#exportFlag").val("");
+      $("#exportType").val("");
+
       return;
     }
+  }
+
+  function selectData() {
+    $("#currentForm").attr('action',"${www}/history/historyList");
+    $("#exportFlag").val("");
+    $("#exportType").val("");
+    $("#currentForm").submit();
   }
 
   function changeArea(obj) {

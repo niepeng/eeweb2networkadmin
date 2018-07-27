@@ -15,6 +15,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.core.utils.BizConstant;
 import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.ExportExcel;
+import com.chengqianyun.eeweb2networkadmin.core.utils.ExportPdf;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.Tuple2;
 import com.chengqianyun.eeweb2networkadmin.core.utils.UnitUtil;
@@ -164,11 +165,15 @@ public class HistoryController extends BaseController {
 
   // historyListExcel
 
-  @RequestMapping(value = "/historyListExcel", method = RequestMethod.GET)
+  @RequestMapping(value = "/historyListExport", method = RequestMethod.GET)
   public String historyListExcel(
       @RequestParam(value = "deviceId", required = false, defaultValue = "0") long deviceId,
       @RequestParam(value = "startTime", required = false) String startTime,
       @RequestParam(value = "endTime", required = false) String endTime,
+      /**
+       * excel or pdf
+       */
+      @RequestParam(value = "exportType", required = false) String exportType,
       @RequestParam(required = false, defaultValue = "") String exportFlag,
       HttpServletResponse response,
       Model model) {
@@ -176,6 +181,11 @@ public class HistoryController extends BaseController {
       if (!"true".equals(exportFlag)) {
         throw new Exception("参数错误,请刷新重试");
       }
+
+      if(!"excel".equals(exportType) && !"pdf".equals(exportType)) {
+        throw new Exception("参数错误,请刷新重试");
+      }
+
 
       List<Area> areaList = deviceService.getAreaAndDeviceInfo();
       DeviceInfo deviceInfo = findOneDeviceId(areaList, deviceId);
@@ -208,9 +218,9 @@ public class HistoryController extends BaseController {
 
       PageResult<DeviceDataHistory> params = historyService.historyDataList(query, deviceInfo);
       List<HistoryListBean> dataList = Convert.convertHistoryList(params.getRows(), deviceInfo);
-      ExportExcel<HistoryListBean> exportExcel = new ExportExcel<HistoryListBean>();
 
-      String fileName = "data_" + DateUtil.getDate(new Date(), DateUtil.PATTERN_YYYYMMDDANDHHMMSS) + ".xls";
+
+      String fileName = "data_" + DateUtil.getDate(new Date(), DateUtil.PATTERN_YYYYMMDDANDHHMMSS) + ("excel".equals(exportType) ?  ".xls" : ".pdf");
       String title = "监控平台历史数据查询结果";
       HeaderContentBean headerContentBean = new HeaderContentBean();
       headerContentBean.setDeviceInfo(deviceInfo);
@@ -231,24 +241,25 @@ public class HistoryController extends BaseController {
       headerContentBean.calcHeadDataList();
 
 
-
-//      exportExcel.exportExcel2(title, fileName, new String[]{"设备名称", "温度", "湿度"}, dataList, response, "yyy-MM-dd");
-
-//      public void exportExcel2(String title, String fileName, String[] headers, Collection<T> dataset,  HttpServletResponse response, String pattern) {
-//
-//      }
-
       try {
         OutputStream os = response.getOutputStream();
         response.reset();
         response.setHeader("Content-disposition", "attachment; filename=" + new String(fileName.getBytes("GB2312"), "ISO8859-1"));
-        response.setContentType("application/msexcel");// 定义输出类型
-
-//        String title, List<String[]> headerDataList ,String[] headers, String[] dataCols, Collection<T> dataset, OutputStream out, String pattern) {
-
-//        exportExcel.exportExcel2(title, headerContentBean,  new String[]{"NO", "记录时间", "温度(℃)", "湿度(%RH)"},  new String[]{"num", "time", "temp", "humi"}, dataList, os);
+        response.setContentType( "pdf".equals(exportType) ? "application/pdf" :  "application/msexcel");// 定义输出类型
         Tuple2<String[], String[]> dataheaderTuple = genDataHeader(deviceInfo);
-        exportExcel.exportExcel2(title, headerContentBean,  dataheaderTuple.getT1(),  dataheaderTuple.getT2(), dataList, os);
+
+        if("excel".equals(exportType)) {
+          ExportExcel<HistoryListBean> exportExcel = new ExportExcel<HistoryListBean>();
+          exportExcel.exportExcel2(title, headerContentBean,  dataheaderTuple.getT1(),  dataheaderTuple.getT2(), dataList, os);
+          return null;
+        }
+
+        if("pdf".equals(exportType)) {
+          ExportPdf<HistoryListBean> exportPdf = new ExportPdf<HistoryListBean>();
+          exportPdf.exportPdf(title, headerContentBean,  dataheaderTuple.getT1(),  dataheaderTuple.getT2(), dataList, os);
+          return null;
+        }
+
       } catch (Exception e) {
         log.info("export excel,{}",e);
       }
@@ -271,6 +282,8 @@ public class HistoryController extends BaseController {
       return "/history/historyList";
     }
   }
+
+
 
   /**
    * 返回结果类似如下:

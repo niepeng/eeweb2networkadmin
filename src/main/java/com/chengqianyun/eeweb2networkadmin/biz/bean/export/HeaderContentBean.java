@@ -70,8 +70,8 @@ public class HeaderContentBean {
       return;
     }
 
-    String deviceTypeName = "";
     int deviceTypeNum = 0;
+    String deviceTypeName = "";
     List<String> minMaxValue = new ArrayList<String>();
     if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.temp)) {
       minMaxValue.add("温度最大值:" + tempMax + DeviceTypeEnum.temp.getUnit());
@@ -98,7 +98,7 @@ public class HeaderContentBean {
       deviceTypeNum++;
     }
 
-    String[] line1 = {"设备信息", "设备名:" + deviceInfo.getName(), "SN:" + deviceInfo.getSn(), "区域:" + area != null ? area.getName() : "未定义", "设备类型:" + deviceTypeName};
+    String[] line1 = {"设备信息", "设备名:" + deviceInfo.getName(), "SN:" + deviceInfo.getSn(), "区域:" + (area != null ? area.getName() : "未定义"), "设备类型:" + deviceTypeName};
     String[] line2 = new String[5];
     String[] line3 = null;
     String[] line4 = {"时间段", "开始时间:" + startTime, "结束时间:" + endTime, "时间间隔:" + distanceTimes, "记录条数:" + recordNum};
@@ -126,7 +126,7 @@ public class HeaderContentBean {
         line2[1] = minMaxValue.get(0);
         line2[2] = minMaxValue.get(1);
       }
-      if (deviceTypeNum > 2) {
+      if (deviceTypeNum >= 2) {
         line2[3] = minMaxValue.get(2);
         line2[4] = minMaxValue.get(3);
       }
@@ -134,6 +134,9 @@ public class HeaderContentBean {
 
 
     titleCol = Math.max(5,deviceTypeNum + 2);
+    if(DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.power)) {
+      titleCol ++;
+    }
 
     headDataList = new ArrayList<String[]>();
     headDataList.add(line1);

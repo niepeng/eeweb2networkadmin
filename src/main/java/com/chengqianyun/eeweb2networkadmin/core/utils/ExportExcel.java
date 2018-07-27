@@ -41,9 +41,6 @@ import org.apache.poi.hssf.util.Region;
 @Slf4j
 public class ExportExcel<T> {
 
-  static Pattern p = Pattern.compile("^//d+(//.//d+)?$");
-  static String default_date_format = "yyy-MM-dd";
-
   /**
    * 这是一个通用的方法，利用了JAVA的反射机制，可以将放置在JAVA集合中并且符号一定条件的数据以EXCEL 的形式输出到指定IO设备上
    *
