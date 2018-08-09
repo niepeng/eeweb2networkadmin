@@ -71,7 +71,7 @@ public class HistoryController extends BaseController {
       if (StringUtil.isEmpty(startTime) || StringUtil.isEmpty(endTime)) {
         Date now = new Date();
         endTime = DateUtil.getDate(now, DateUtil.dateFullPatternNoSecond);
-        startTime = DateUtil.getDate(DateUtil.addDate(now, -1), DateUtil.dateFullPatternNoSecond);
+        startTime = DateUtil.getDate(DateUtil.addDate(now, -7), DateUtil.dateFullPatternNoSecond);
       }
 
       PaginationQuery query = new PaginationQuery();
@@ -94,7 +94,7 @@ public class HistoryController extends BaseController {
       if(startTimeDate.getTime() > endTimeDate.getTime()) {
         throw new Exception("开始时间不能大于结束时间");
       }
-      if(startTimeDate.getTime() + BizConstant.Times.day < endTimeDate.getTime()) {
+      if(startTimeDate.getTime() + BizConstant.Times.day * 7 < endTimeDate.getTime()) {
         throw new Exception("开始时间和结束时间的 间隔不能超过1天");
       }
 

@@ -64,7 +64,7 @@ public class ExportExcel<T> {
     // 生成一个表格
     HSSFSheet sheet = workbook.createSheet("设备数据");
     // 设置表格默认列宽度为15个字节
-    sheet.setDefaultColumnWidth((short) 15);
+    sheet.setDefaultColumnWidth((short) 30);
     // 生成一个样式
     HSSFCellStyle style = workbook.createCellStyle();
     style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
@@ -173,11 +173,11 @@ public class ExportExcel<T> {
       }
     }
 
-    sheet.autoSizeColumn((short)0); //调整第一列宽度
-    sheet.autoSizeColumn((short)1); //调整第二列宽度
-    sheet.autoSizeColumn((short)2);
-    sheet.autoSizeColumn((short)3);
-    sheet.autoSizeColumn((short)4);
+//    sheet.autoSizeColumn((short)0); //调整第一列宽度
+//    sheet.autoSizeColumn((short)1); //调整第二列宽度
+//    sheet.autoSizeColumn((short)2);
+//    sheet.autoSizeColumn((short)3);
+//    sheet.autoSizeColumn((short)4);
 
     try {
       workbook.write(out);

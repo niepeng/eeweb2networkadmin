@@ -37,7 +37,7 @@ public class AutoJob {
 
     /**
      * 1.实时数据清理
-     * 获取设备列表,获取每个设备数据的最新一条,删除小于该记录id的数据(即:一个设备只需要保存最新的一条)
+     * 获取设备列表,获取每个设备数据的最新100条,删除小于该记录id的数据(即:一个设备只需要保存最新的一条)
      */
     Map<String, String> map = new HashMap<String, String>();
     map.put("startRecord", "0");
@@ -55,11 +55,15 @@ public class AutoJob {
 
     List<DeviceDataIntime> tmpList;
     for (DeviceInfo deviceInfo : list) {
-      tmpList = deviceDataIntimeMapper.listDataOneDevice(deviceInfo.getId(), 1);
+      tmpList = deviceDataIntimeMapper.listDataOneDevice(deviceInfo.getId(), 100);
       if (tmpList == null || tmpList.size() == 0) {
         continue;
       }
-      deviceDataIntimeMapper.deleteByDeviceId(deviceInfo.getId(), tmpList.get(0).getId());
+
+      if(tmpList.size() >= 100) {
+        deviceDataIntimeMapper.deleteByDeviceId(deviceInfo.getId(), tmpList.get(99).getId());
+      }
+
     }
   }
 
