@@ -64,7 +64,7 @@ public class BaseService {
       return;
     }
 
-    if (setting.getParamValue().equalsIgnoreCase(value)) {
+    if (setting.getParamValue() != null && setting.getParamValue().equalsIgnoreCase(value)) {
       return;
     }
     setting.setParamValue(value);

@@ -27,7 +27,7 @@
 <div class="center">
     <h1>
         <span class="red"></span>
-        <span class="white">后台管理</span>
+        <span class="white">$!{platformName}</span>
     </h1>
     <h4 class="blue">&copy; </h4>
 

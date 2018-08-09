@@ -36,7 +36,7 @@ public final class ServerConnectionManager {
   /**
    * 获取数据周期:单位秒
    */
-  public static final int GET_DATA_CYCLE = 10;
+  public static int GET_DATA_CYCLE = 10;
 
   /**
    * 单例的ServerSocket

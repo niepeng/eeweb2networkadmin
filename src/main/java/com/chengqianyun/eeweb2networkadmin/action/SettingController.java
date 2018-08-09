@@ -3,6 +3,7 @@ package com.chengqianyun.eeweb2networkadmin.action;
 
 import com.chengqianyun.eeweb2networkadmin.biz.HdConstant;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.SettingAlarmBean;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.SettingNormalBean;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
 import com.chengqianyun.eeweb2networkadmin.service.AlarmService;
 import com.chengqianyun.eeweb2networkadmin.service.SettingService;
@@ -27,6 +28,43 @@ public class SettingController extends BaseController {
 
   @Autowired
   private SettingService settingService;
+
+
+  /**
+   * 基本设置
+   */
+  @RequestMapping(value = "/normal", method = RequestMethod.GET)
+  public String normal(
+      Model model) {
+
+    try {
+      addOptMenu(model, MenuEnum.setting);
+      model.addAttribute("settingNormalBean", settingService.normal());
+      return "/setting/normal";
+    } catch (Exception ex) {
+      model.addAttribute(SUCCESS, false);
+      model.addAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "/setting/normal";
+    }
+  }
+
+  @RequestMapping(value = "/doNormal", method = RequestMethod.POST)
+  public String doNormal(SettingNormalBean settingNormalBean, Model model, RedirectAttributes redirectAttributes) {
+    try {
+      settingService.save(settingNormalBean);
+      redirectAttributes.addFlashAttribute(SUCCESS, true);
+      redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_SAVE_SUCESS);
+      return "redirect:/setting/normal";
+    } catch (Exception ex) {
+      redirectAttributes.addFlashAttribute(SUCCESS, false);
+      redirectAttributes.addFlashAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "redirect:/setting/normal";
+    }
+  }
+
+
 
   /**
    * 报警设置

@@ -6,7 +6,7 @@
     <div class="navbar-container" id="navbar-container">
         <div class="navbar-header pull-left">
             <a href="$!{www}/main" class="navbar-brand">
-                <small>后台管理系统</small>
+                <small>$!{platformName}</small>
             </a><!-- /.brand -->
         </div><!-- /.navbar-header -->
 
