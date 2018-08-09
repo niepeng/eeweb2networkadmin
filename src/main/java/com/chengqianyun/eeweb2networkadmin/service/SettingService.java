@@ -5,6 +5,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.bean.SettingNormalBean;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.SettingEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.PageUtilFactory;
 import com.chengqianyun.eeweb2networkadmin.data.ServerConnectionManager;
+import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,17 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class SettingService extends BaseService {
+
+  @PostConstruct
+  public void init() {
+
+    PageUtilFactory.platformName = getData(SettingEnum.platform_name);
+    String times = getData(SettingEnum.data_cycle_time);
+    try {
+      ServerConnectionManager.GET_DATA_CYCLE = Integer.parseInt(times);
+    } catch (Exception e) {
+    }
+  }
 
   public SettingAlarmBean alarm() {
     SettingAlarmBean result = new SettingAlarmBean();
