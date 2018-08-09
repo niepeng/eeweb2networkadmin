@@ -71,7 +71,7 @@ public class HistoryController extends BaseController {
       if (StringUtil.isEmpty(startTime) || StringUtil.isEmpty(endTime)) {
         Date now = new Date();
         endTime = DateUtil.getDate(now, DateUtil.dateFullPatternNoSecond);
-        startTime = DateUtil.getDate(DateUtil.addDate(now, -7), DateUtil.dateFullPatternNoSecond);
+        startTime = DateUtil.getDate(DateUtil.addDate(now, -1), DateUtil.dateFullPatternNoSecond);
       }
 
       PaginationQuery query = new PaginationQuery();

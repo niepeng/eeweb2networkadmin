@@ -68,7 +68,7 @@
               <input type="text" class="input-date" name="endTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm'})" value="$!{endTime}">
 
               <div class="form-group">
-                <button class="btn btn-xs btn-primary" onclick="selectData()" type="button">查询</button> <tts style="margin-left:10px;color: red;">有效查询时间范围是 1天(1440分钟)</tts>
+                <button class="btn btn-xs btn-primary" onclick="selectData()" type="button">查询</button> <tts style="margin-left:10px;color: red;">有效查询时间范围是 7天</tts>
               </div>
               <div class="form-group">
                 <button class="btn btn-xs btn-primary" type="button" onclick="exportData('excel');">导出excel</button>
