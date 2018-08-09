@@ -17,6 +17,10 @@ public class SettingAlarmBean {
 
   private boolean alarm_sms;
 
+  private String sms_cnmi_type;
+
+  private String sms_center;
+
   private boolean alarm_song;
 
   private String alarm_song_config;

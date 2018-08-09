@@ -58,7 +58,7 @@
             <label class="col-md-4 col-sm-2 control-label">启用短信报警</label>
             <div class="col-md-8 col-sm-8">
               <input type="radio"  name="alarm_sms" value="true"  #if($!settingAlarmBean.alarm_sms) checked #end> 启用 &nbsp;
-              <input type="radio"  name="alarm_sms" value="false" #if(!$!settingAlarmBean.alarm_sms) checked #end> 静用
+              <input type="radio"  name="alarm_sms" value="false" #if(!$!settingAlarmBean.alarm_sms) checked #end> 禁用
             </div>
           </div>
         </div>
@@ -67,10 +67,36 @@
       <div class="row">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
+            <label class="col-md-4 col-sm-2 control-label">CNMI类型</label>
+            <div class="col-md-8 col-sm-8">
+              <select  name="sms_cnmi_type">
+                <option value="AT+CNMI=2,2" #if("$!settingAlarmBean.sms_cnmi_type" == "AT+CNMI=2,2") selected #end>AT+CNMI=2,2</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-xs-12 col-md-8">
+          <div class="form-group">
+            <label class="col-md-4 col-sm-2 control-label">短信中心号码</label>
+            <div class="col-md-8 col-sm-8">
+              <input type="text"  name="sms_center" style="width: 300px;" value="$!settingAlarmBean.sms_center"> &nbsp;
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-xs-12 col-md-8">
+          <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">启用声卡报警</label>
             <div class="col-md-8 col-sm-8">
               <input type="radio"  name="alarm_song" value="true"  #if($!settingAlarmBean.alarm_song) checked #end> 启用 &nbsp;
-              <input type="radio"  name="alarm_song" value="false" #if(!$!settingAlarmBean.alarm_song) checked #end> 静用
+              <input type="radio"  name="alarm_song" value="false" #if(!$!settingAlarmBean.alarm_song) checked #end> 禁用
             </div>
           </div>
         </div>

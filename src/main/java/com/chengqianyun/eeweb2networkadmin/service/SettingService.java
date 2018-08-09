@@ -32,6 +32,9 @@ public class SettingService extends BaseService {
   public SettingAlarmBean alarm() {
     SettingAlarmBean result = new SettingAlarmBean();
     result.setAlarm_sms(Boolean.valueOf(getData(SettingEnum.alarm_sms)));
+    result.setSms_cnmi_type(getData(SettingEnum.sms_cnmi_type));
+    result.setSms_center(getData(SettingEnum.sms_center));
+
     result.setAlarm_song(Boolean.valueOf(getData(SettingEnum.alarm_song)));
     result.setAlarm_song_config(getData(SettingEnum.alarm_song_config));
 
@@ -40,6 +43,10 @@ public class SettingService extends BaseService {
 
   public void save(SettingAlarmBean bean) {
     saveData(SettingEnum.alarm_sms, String.valueOf(Boolean.valueOf(bean.isAlarm_sms())));
+    saveData(SettingEnum.sms_cnmi_type, bean.getSms_cnmi_type());
+    saveData(SettingEnum.sms_center, bean.getSms_center());
+
+
     saveData(SettingEnum.alarm_song, String.valueOf(Boolean.valueOf(bean.isAlarm_song())));
     saveData(SettingEnum.alarm_song_config, bean.getAlarm_song_config());
   }
