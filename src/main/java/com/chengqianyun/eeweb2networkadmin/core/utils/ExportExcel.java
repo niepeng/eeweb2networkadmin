@@ -152,6 +152,7 @@ public class ExportExcel<T> {
     String tmpMin = null;
     String tmpMax = null;
 
+    int num = 1;
     while (it.hasNext()) {
       row = sheet.createRow(rowIndex++);
       T t = (T) it.next();
@@ -160,14 +161,22 @@ public class ExportExcel<T> {
         // 需要找到标记最低和最高的样式颜色
         HSSFCell cellTemp = row.createCell(j);
         cellTemp.setCellStyle(style2);
-        tmpValue = ReflectUtil.getStringValue(t, dataCols[j]);
-        tmpMin = ReflectUtil.getStringValue(headerContentBean, dataCols[j] + "Min");
-        tmpMax = ReflectUtil.getStringValue(headerContentBean, dataCols[j] + "Max");
-        if(tmpValue.equals(tmpMin)) {
-          cellTemp.setCellStyle(lowStyle);
+        if(j == 0) {
+          cellTemp.setCellValue(String.valueOf(num++));
+          continue;
         }
-        if(tmpValue.equals(tmpMax)) {
-          cellTemp.setCellStyle(highStyle);
+        tmpValue = ReflectUtil.getStringValue(t, dataCols[j]);
+
+        if(dataCols[j].indexOf("MinStr") > 0) {
+          tmpMin = ReflectUtil.getStringValue(headerContentBean, dataCols[j].substring(0,dataCols[j].indexOf("MinStr")) + "Min");
+          if(tmpValue.equals(tmpMin)) {
+            cellTemp.setCellStyle(lowStyle);
+          }
+        } else if (dataCols[j].indexOf("MaxStr") > 0) {
+          tmpMax = ReflectUtil.getStringValue(headerContentBean, dataCols[j].substring(0,dataCols[j].indexOf("MaxStr")) + "Max");
+          if(tmpValue.equals(tmpMax)) {
+            cellTemp.setCellStyle(highStyle);
+          }
         }
         cellTemp.setCellValue(tmpValue);
       }

@@ -67,8 +67,23 @@
               <label>结束时间：</label>
               <input type="text" class="input-date" name="endTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm'})" value="$!{endTime}">
 
+              <br/><br/>
+              <label>间隔：</label>
+              <select name="distanceTime" id="distanceTime" onchange="changeDistanceTime()">
+                <option value="1" #if("$!distanceTime" == "1") selected #end>1分钟</option>
+                <option value="2" #if("$!distanceTime" == "2") selected #end>2分钟</option>
+                <option value="5" #if("$!distanceTime" == "5") selected #end>5分钟</option>
+                <option value="10" #if("$!distanceTime" == "10") selected #end>10分钟</option>
+                <option value="30" #if("$!distanceTime" == "30") selected #end>30分钟</option>
+                <option value="60" #if("$!distanceTime" == "60") selected #end>1个小时</option>
+                <option value="360" #if("$!distanceTime" == "360") selected #end>6个小时</option>
+              </select>
+              <label>统计类型：</label>
+              <input type="checkbox" name="dataTypes" value="avg" #if($stringUtil.indexOf($!dataTypes,'avg') >= 0) checked #end>平均值 &nbsp;
+              <input type="checkbox" name="dataTypes" value="max" #if($stringUtil.indexOf($!dataTypes,'max') >= 0) checked #end>最大值 &nbsp;
+              <input type="checkbox" name="dataTypes" value="min" #if($stringUtil.indexOf($!dataTypes,'min') >= 0) checked #end>最小值 &nbsp;
               <div class="form-group">
-                <button class="btn btn-xs btn-primary" onclick="selectData()" type="button">查询</button> <tts style="margin-left:10px;color: red;">有效查询时间范围是 7天</tts>
+                <button class="btn btn-xs btn-primary" onclick="selectData()" type="button">查询</button> <tts id="distanceTimeText" style="margin-left:10px;color: red;"></tts>
               </div>
               <div class="form-group">
                 <button class="btn btn-xs btn-primary" type="button" onclick="exportData('excel');">导出excel</button>
@@ -98,9 +113,16 @@
           </thead>
           <tbody>
             #if(!$!result)
-              <tr>
-                <td colspan="5" align="center">暂无数据</td>
-              </tr>
+              #if("$!msg" != "")
+                  <tr>
+                    <td colspan="5" align="center">$msg</td>
+                  </tr>
+                #else
+                <tr>
+                  <td colspan="5" align="center">暂无数据</td>
+                </tr>
+              #end
+
             #end
 
 
@@ -150,9 +172,6 @@
 
 
 
-
-
-
       </div>
     </div>
   </div><!-- /.page-content -->
@@ -160,8 +179,22 @@
 
 <script>
 
+  function validateDataTypes() {
+    var id = document.getElementsByName('dataTypes');
+    var value = new Array();
+    for(var i = 0; i < id.length; i++){
+      if(id[i].checked) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   function exportData(type) {
+    if(!validateDataTypes()) {
+      alert("请先选择统计类型");
+      return;
+    }
     if(confirm("是否需要导出"+type+"格式数据?")) {
       $("#exportFlag").val("true");
       $("#currentForm").attr('action',"${www}/history/historyListExport");
@@ -175,6 +208,11 @@
   }
 
   function selectData() {
+    if(!validateDataTypes()) {
+      alert("请先选择统计类型");
+      return;
+    }
+
     $("#currentForm").attr('action',"${www}/history/historyList");
     $("#exportFlag").val("");
     $("#exportType").val("");
@@ -193,6 +231,14 @@
     showDiv.style.display="block";
   }
 
+  function changeDistanceTime() {
+//    alert($('#distanceTime option:selected').text());
+    var selectNewValue = $('#distanceTime option:selected').val();
+    var txt = selectNewValue * 7 ;
+    $("#distanceTimeText").html("有效查询时间范围是" + txt + "天");
+  }
+
+  changeDistanceTime();
 </script>
 
 

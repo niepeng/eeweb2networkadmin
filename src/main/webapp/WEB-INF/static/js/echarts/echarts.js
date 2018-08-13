@@ -34620,8 +34620,7 @@ gridProto.getCartesians = function () {
 /**
  * @implements
  * see {module:echarts/CoodinateSystem}
- */
-gridProto.convertToPixel = function (ecModel, finder, value) {
+ */gridProto.convertToPixel = function (ecModel, finder, value) {
     var target = this._findConvertTarget(ecModel, finder);
 
     return target.cartesian

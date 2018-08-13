@@ -99,8 +99,26 @@
               <label>结束时间：</label>
               <input type="text" class="input-date" name="endTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm'})" value="$!{endTime}">
 
+              <br/><br/>
+              <label>间隔：</label>
+              <select name="distanceTime" id="distanceTime" onchange="changeDistanceTime()">
+                <option value="1" #if("$!distanceTime" == "1") selected #end>1分钟</option>
+                <option value="2" #if("$!distanceTime" == "2") selected #end>2分钟</option>
+                <option value="5" #if("$!distanceTime" == "5") selected #end>5分钟</option>
+                <option value="10" #if("$!distanceTime" == "10") selected #end>10分钟</option>
+                <option value="30" #if("$!distanceTime" == "30") selected #end>30分钟</option>
+                <option value="60" #if("$!distanceTime" == "60") selected #end>1个小时</option>
+                <option value="360" #if("$!distanceTime" == "360") selected #end>6个小时</option>
+              </select>
+              <label>统计类型：</label>
+              <input type="radio" name="dataType" value="avg" #if($stringUtil.indexOf($!dataType,'avg') >= 0) checked #end>平均值 &nbsp;
+              <input type="radio" name="dataType" value="max" #if($stringUtil.indexOf($!dataType,'max') >= 0) checked #end>最大值 &nbsp;
+              <input type="radio" name="dataType" value="min" #if($stringUtil.indexOf($!dataType,'min') >= 0) checked #end>最小值 &nbsp;
+
+
+
               <div class="form-group">
-                <button class="btn btn-xs btn-primary" type="submit">查询</button> <tts style="margin-left:20px;color: red;">有效查询时间范围是 1天(1440分钟)</tts>
+                <button class="btn btn-xs btn-primary" type="submit">查询</button> <tts id="distanceTimeText" style="margin-left:20px;color: red;">有效查询时间范围是 1天(1440分钟)</tts>
               </div>
 
             </form>
@@ -741,6 +759,17 @@
     var showDiv = document.getElementById("areaDeviceList_" + obj.value);
     showDiv.style.display="block";
   }
+
+
+  function changeDistanceTime() {
+//    alert($('#distanceTime option:selected').text());
+    var selectNewValue = $('#distanceTime option:selected').val();
+    var txt = selectNewValue * 7 ;
+    $("#distanceTimeText").html("有效查询时间范围是" + txt + "天");
+  }
+
+  changeDistanceTime();
+
 
 </script>
 

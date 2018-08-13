@@ -21,10 +21,10 @@ public interface BizConstant {
 
 
   interface Times {
-    static final int second = 1000;
-    static final int minute = second * 60;
-    static final int hour = minute * 60;
-    static final int day = hour * 24;
+    static final long second = 1000;
+    static final long minute = second * 60;
+    static final long hour = minute * 60;
+    static final long day = hour * 24;
   }
 
 }
