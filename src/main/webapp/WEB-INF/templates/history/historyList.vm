@@ -25,7 +25,10 @@
           #if(${success})
             <li class="text-success">$!{msg}</li>
           #else
-            <li class="text-danger">$!{msg}</li>
+##            <li class="text-danger">$!{msg}</li>
+            <script>
+              alert("$!{msg}");
+            </script>
           #end
         </div>
       #end

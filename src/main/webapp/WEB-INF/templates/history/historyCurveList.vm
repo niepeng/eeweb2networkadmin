@@ -58,7 +58,10 @@
           #if(${success})
             <li class="text-success">$!{msg}</li>
           #else
-            <li class="text-danger">$!{msg}</li>
+##            <li class="text-danger">$!{msg}</li>
+            <script>
+              alert("$!{msg}");
+            </script>
           #end
         </div>
       #end
@@ -200,6 +203,16 @@
   </div><!-- /.page-content -->
 </div><!-- /.main-content -->
 
+#if($stringUtil.indexOf($!dataType,'avg') >= 0)
+  #set($subTextValue= "平均值")
+ #elseif($stringUtil.indexOf($!dataType,'max') >= 0)
+   #set($subTextValue= "最大值")
+ #elseif($stringUtil.indexOf($!dataType,'min') >= 0)
+  #set($subTextValue= "最小值")
+ #end
+
+
+
 
 #if("$!deviceInfo" != "")
 <script type="text/javascript">
@@ -236,7 +249,8 @@
   // 指定图表的配置项和数据
   option1 = {
     title: {
-      text: '温度曲线图'
+      text: '温度曲线图',
+      subtext : '统计类型:$!{subTextValue} '
     },
     tooltip: {
       trigger: 'axis'
@@ -349,7 +363,8 @@
   // 指定图表的配置项和数据
   option2 = {
     title: {
-      text: '湿度曲线图'
+      text: '湿度曲线图',
+      subtext : '统计类型:$!{subTextValue} '
     },
     tooltip: {
       trigger: 'axis'
@@ -459,7 +474,8 @@
   // 指定图表的配置项和数据
   option3 = {
     title: {
-      text: '电量曲线图'
+      text: '电量曲线图',
+      subtext : '统计类型:$!{subTextValue} '
     },
     tooltip: {
       trigger: 'axis'
@@ -536,7 +552,8 @@
   // 指定图表的配置项和数据
   option4 = {
     title: {
-      text: '光照曲图'
+      text: '光照曲图',
+      subtext : '统计类型:$!{subTextValue} '
     },
     tooltip: {
       trigger: 'axis'
@@ -644,7 +661,8 @@
   // 指定图表的配置项和数据
   option5 = {
     title: {
-      text: '压力曲线图'
+      text: '压力曲线图',
+      subtext : '统计类型:$!{subTextValue} '
     },
     tooltip: {
       trigger: 'axis'

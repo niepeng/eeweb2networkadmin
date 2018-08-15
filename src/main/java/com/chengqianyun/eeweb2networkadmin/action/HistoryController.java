@@ -100,7 +100,8 @@ public class HistoryController extends BaseController {
 
       int distanceTimeInt = Integer.parseInt(distanceTime);
       if (endTimeDate.getTime() - startTimeDate.getTime() >  BizConstant.Times.day * 7 * distanceTimeInt) {
-        throw new Exception("开始时间和结束时间的 间隔不能超过" + (7 * distanceTimeInt) + "天");
+//        throw new Exception("开始时间和结束时间的 间隔不能超过" + (7 * distanceTimeInt) + "天");
+        throw new Exception("所选时间段超出查询范围");
       }
 
 
@@ -158,7 +159,8 @@ public class HistoryController extends BaseController {
       }
 
       if (endTimeDate.getTime() - startTimeDate.getTime() >  BizConstant.Times.day * 7 * distanceTimeInt) {
-        throw new Exception("开始时间和结束时间的 间隔不能超过" + (7 * distanceTimeInt) + "天");
+//        throw new Exception("开始时间和结束时间的 间隔不能超过" + (7 * distanceTimeInt) + "天");
+        throw new Exception("所选时间段超出查询范围");
       }
 
 //      List<DeviceDataHistory> dataHistoryList = historyService.historyDataList(deviceInfo.getId(), startTime, endTime);
