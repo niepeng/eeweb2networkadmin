@@ -61,7 +61,7 @@ public class AlarmController extends BaseController {
       endTime = StringUtil.isEmpty(endTime)? (String)model.asMap().get("endTime"): endTime;
       if(StringUtil.isEmpty(startTime) && StringUtil.isEmpty(endTime)) {
         Date now = new Date();
-        startTime = DateUtil.getDate(DateUtil.formatCurrentMin(now), DateUtil.dateFullPattern);
+        startTime = DateUtil.getDate(DateUtil.addDate(now,-7),DateUtil.dateFullPattern);
         endTime = DateUtil.getDate(now, DateUtil.dateFullPattern);
       }
 

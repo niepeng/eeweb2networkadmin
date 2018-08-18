@@ -63,7 +63,7 @@
                     <option #if("$tmpAlarmConfirm.id" == "$!alarmConfirm") selected #end value="$tmpAlarmConfirm.id">$!tmpAlarmConfirm.meaning</option>
                   #end
                 </select>
-                <label>首次报警时间：</label>
+                <label>报警时间：</label>
                 <input type="text" class="input-date" id="startTime" name="startTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="$!{startTime}"> ~
                 <input type="text" class="input-date" id="endTime" name="endTime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="$!{endTime}">
               </div>

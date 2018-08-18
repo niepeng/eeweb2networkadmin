@@ -1,5 +1,6 @@
 package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
+import com.chengqianyun.eeweb2networkadmin.biz.enums.AlarmTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.UpDownEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.UnitUtil;
@@ -104,12 +105,23 @@ public class DeviceAlarm {
     // ==============  扩展方法  =================
 
     public String showAlarmMsg() {
-        DeviceTypeEnum typeEnum = DeviceTypeEnum.getOneById(deviceOneType);
-        if (typeEnum.isDataDevice() && UpDownEnum.find(upDown) != null) {
-            // 温度偏高，当前温度30℃，请及时处理！
-            return typeEnum.getName() + (UpDownEnum.find(upDown).getMeaning()) + ", 当前" + typeEnum.getName() + UnitUtil.showValueAndUnit(data, typeEnum) + "，请及时处理！";
+        if(AlarmTypeEnum.offline.getId() == alarmType) {
+            return "设备离线，请及时处理!";
         }
-        return "";
+
+        DeviceTypeEnum typeEnum = DeviceTypeEnum.getOneById(deviceOneType);
+
+        if(typeEnum.isDataDevice()) {
+            if (UpDownEnum.find(upDown) == null) {
+                return "设备离线，请及时处理!";
+            }
+            // 温度偏高，当前温度30℃，请及时处理！
+            // 温度偏低，当前温度10℃，请及时处理！
+            return typeEnum.getName() + (UpDownEnum.find(upDown).getMeaning()) + ", 当前" + typeEnum.getName() + UnitUtil.showValueAndUnit(data, typeEnum) + "，请及时处理！";
+
+        }
+
+        return typeEnum.getName() + "报警，请及时处理!";
     }
 
     public boolean isAlarmEnd() {

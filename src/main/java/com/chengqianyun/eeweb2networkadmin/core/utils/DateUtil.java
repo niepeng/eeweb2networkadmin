@@ -366,6 +366,17 @@ public class DateUtil {
     return cal.getTime();
   }
 
+  public static Date addHour(Date date, int hours) {
+    if (date == null) {
+      return null;
+    }
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(date);
+    cal.add(Calendar.HOUR, hours);
+    return cal.getTime();
+  }
+
+
   public static Date addMinitue(Date date, int minitue) {
     java.util.Calendar c = java.util.Calendar.getInstance();
     c.setTimeInMillis(getMillis(date) + minitue * 60 * 1000);

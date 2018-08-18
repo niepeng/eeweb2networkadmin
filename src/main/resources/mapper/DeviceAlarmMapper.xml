@@ -43,10 +43,16 @@
         AND a.confirm  = #{alarmConfirm,jdbcType=SMALLINT}
       </if>
       <if test="startTime != null and startTime !=''" >
-        AND a.created_at  <![CDATA[ >= ]]>  #{startTime,jdbcType=TIMESTAMP}
+        AND ( a.created_at  <![CDATA[ >= ]]>  #{startTime,jdbcType=TIMESTAMP}
+          OR
+              a.recently_alarm_time <![CDATA[ >= ]]>  #{startTime,jdbcType=TIMESTAMP}
+        )
       </if>
       <if test="endTime != null and endTime !=''" >
-        AND a.created_at  <![CDATA[ < ]]>  #{endTime,jdbcType=TIMESTAMP}
+        AND ( a.created_at  <![CDATA[ < ]]>  #{endTime,jdbcType=TIMESTAMP}
+        OR
+            a.recently_alarm_time  <![CDATA[ < ]]>  #{endTime,jdbcType=TIMESTAMP}
+        )
       </if>
     </where>
   </sql>
