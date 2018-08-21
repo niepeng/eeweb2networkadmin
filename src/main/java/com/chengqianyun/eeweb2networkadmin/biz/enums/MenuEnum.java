@@ -15,6 +15,7 @@ public enum MenuEnum {
   alarm("alarm", 1, "报警记录"),
   history("history", 1, "历史管理"),
   device("device", 1, "设备管理"),
+  wirelessSetting("wirelessSetting", 1, "无线设置"),
   setting("setting", 1, "系统设置");
 
   private final String name;

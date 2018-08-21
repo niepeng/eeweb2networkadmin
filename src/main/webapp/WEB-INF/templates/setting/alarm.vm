@@ -64,18 +64,18 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-xs-12 col-md-8">
-          <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">CNMI类型</label>
-            <div class="col-md-8 col-sm-8">
-              <select  name="sms_cnmi_type">
-                <option value="AT+CNMI=2,2" #if("$!settingAlarmBean.sms_cnmi_type" == "AT+CNMI=2,2") selected #end>AT+CNMI=2,2</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
+##      <div class="row">
+##        <div class="col-xs-12 col-md-8">
+##          <div class="form-group">
+##            <label class="col-md-4 col-sm-2 control-label">CNMI类型</label>
+##            <div class="col-md-8 col-sm-8">
+##              <select  name="sms_cnmi_type">
+##                <option value="AT+CNMI=2,2" #if("$!settingAlarmBean.sms_cnmi_type" == "AT+CNMI=2,2") selected #end>AT+CNMI=2,2</option>
+##              </select>
+##            </div>
+##          </div>
+##        </div>
+##      </div>
 
 
       <div class="row">

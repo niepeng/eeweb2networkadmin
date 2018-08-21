@@ -1,0 +1,2 @@
+
+mvn install:install-file -Dfile=/Users/lsb/data/code/git/eeweb2networkadmin/libs/RXTXcomm-1.0.jar   -DgroupId=gnu.io  -DartifactId=comm-gnu  -Dversion=1.0  -Dpackaging=jar

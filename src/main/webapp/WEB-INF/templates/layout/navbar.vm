@@ -122,6 +122,22 @@
                     </ul>
                   </li>
 
+
+                  #set($showMenu = "$!openMenu" == "wirelessSetting")
+                  <li #if($showMenu) class="open" #end>
+                    <a href="#" class="dropdown-toggle">
+                      <i class="icon-tasks"></i>
+                      <span class="menu-text">无线设置</span>
+                      <b class="arrow icon-angle-down"></b>
+                    </a>
+                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
+                      <li><a href="${www}/wirelessSetting/normal">通讯测试</a></li>
+                      <li><a href="${www}/wirelessSetting/list">通讯列表</a></li>
+                      <li><a href="${www}/wirelessSetting/history">通讯历史</a></li>
+                    </ul>
+                  </li>
+
+
                   #set($showMenu = "$!openMenu" == "setting")
                   <li #if($showMenu) class="open" #end>
                     <a href="#" class="dropdown-toggle">
