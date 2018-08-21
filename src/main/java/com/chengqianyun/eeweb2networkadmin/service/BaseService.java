@@ -3,11 +3,13 @@ package com.chengqianyun.eeweb2networkadmin.service;
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.AreaMapper;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.ContactsMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarmMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistoryMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntimeMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfoMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutConditionMapper;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.SendContactsMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Setting;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.SettingMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.SettingEnum;
@@ -44,6 +46,11 @@ public class BaseService {
   @Autowired
   protected SettingMapper settingMapper;
 
+  @Autowired
+  protected ContactsMapper contactsMapper;
+
+  @Autowired
+  protected SendContactsMapper sendContactsMapper;
 
   public String getData(SettingEnum settingEnum) {
     Setting setting = settingMapper.selectByCode(settingEnum.getCode());

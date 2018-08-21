@@ -231,3 +231,34 @@ CREATE TABLE `t_device_data_history` (
   `updated_by` varchar(45) DEFAULT NULL COMMENT '修改人',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='设备历史数据表';
+
+
+
+CREATE TABLE `t_contacts` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(255) DEFAULT NULL COMMENT '姓名',
+  `phone` varchar(64) DEFAULT NULL COMMENT '手机号',
+  `note` varchar(1024) DEFAULT NULL COMMENT '备注',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
+  `created_by` varchar(45) DEFAULT NULL COMMENT '创建人',
+  `updated_by` varchar(45) DEFAULT NULL COMMENT '修改人',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='联系人';
+
+
+CREATE TABLE `t_send_contacts` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(255) DEFAULT NULL COMMENT '姓名',
+  `phone` varchar(64) DEFAULT NULL COMMENT '手机号',
+  `type` varchar(16) DEFAULT NULL COMMENT 'type: phone==电话, sms == 短信',
+  `sms_content` varchar(1024) DEFAULT NULL COMMENT '短信内容',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
+  `created_by` varchar(45) DEFAULT NULL COMMENT '创建人',
+  `updated_by` varchar(45) DEFAULT NULL COMMENT '修改人',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='发送的通讯列表';
+
+
+

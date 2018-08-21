@@ -32,6 +32,7 @@ public class SettingService extends BaseService {
   public SettingAlarmBean alarm() {
     SettingAlarmBean result = new SettingAlarmBean();
     result.setAlarm_sms(Boolean.valueOf(getData(SettingEnum.alarm_sms)));
+    result.setAlarm_phone(Boolean.valueOf(getData(SettingEnum.alarm_phone)));
     result.setSms_cnmi_type(getData(SettingEnum.sms_cnmi_type));
     result.setSms_center(getData(SettingEnum.sms_center));
 
@@ -43,6 +44,7 @@ public class SettingService extends BaseService {
 
   public void save(SettingAlarmBean bean) {
     saveData(SettingEnum.alarm_sms, String.valueOf(Boolean.valueOf(bean.isAlarm_sms())));
+    saveData(SettingEnum.alarm_phone, String.valueOf(Boolean.valueOf(bean.isAlarm_phone())));
     saveData(SettingEnum.sms_cnmi_type, bean.getSms_cnmi_type());
     saveData(SettingEnum.sms_center, bean.getSms_center());
 

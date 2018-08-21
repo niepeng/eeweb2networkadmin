@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chengqianyun.eeweb2networkadmin.biz.entitys.ContactsMapper" >
+  <resultMap id="BaseResultMap" type="com.chengqianyun.eeweb2networkadmin.biz.entitys.Contacts" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, name, phone, note, created_at, updated_at, created_by, updated_by
+  </sql>
+
+
+
+  <sql id="pageSearch">
+    <where>
+      <if test="name != null and name !=''" >
+       and  name like "%"#{name}"%"
+      </if>
+    </where>
+  </sql>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_contacts
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.Contacts" >
+    insert into t_contacts (name, phone,
+      note, created_at, updated_at, 
+      created_by, updated_by)
+    values (#{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+      #{note,jdbcType=VARCHAR}, now(),now(),
+      #{createdBy,jdbcType=VARCHAR}, #{updatedBy,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.Contacts" >
+    update t_contacts
+    set name = #{name,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR},
+      updated_at = now(),
+      updated_by = #{updatedBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from t_contacts
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from t_contacts
+  </select>
+  <select id="selectByPhone" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from t_contacts
+    where phone = #{phone}
+  </select>
+
+
+
+  <select id="findPageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    SELECT count(*) from  t_contacts a
+    <include refid="pageSearch"/>
+  </select>
+
+  <select id="findPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    from t_contacts
+    <include refid="pageSearch"/>
+    ORDER BY id desc
+    <![CDATA[ limit ${startRecord},${endRecord} ]]>
+  </select>
+
+
+</mapper>

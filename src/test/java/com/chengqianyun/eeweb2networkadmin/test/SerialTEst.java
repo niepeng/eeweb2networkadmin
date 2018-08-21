@@ -1,7 +1,6 @@
 package com.chengqianyun.eeweb2networkadmin.test;
 
 import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
 import gnu.io.SerialPort;
 import java.io.IOException;
 import java.io.InputStream;

@@ -6,16 +6,11 @@
 	<!-- classPathEntry:数据库的JDBC驱动 -->
 	<classPathEntry location="${db_driver_path}" />
 
-	<context id="mysql" targetRuntime="MyBatis3">
+	<context id="mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
 		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin" />
-		<!--<plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">-->
-			<!--<property name="searchString" value="Example$" />-->
-			<!--<property name="replaceString" value="Criteria" />-->
-		<!--</plugin>-->
-		<!--<plugin type="xyz.mrwood.mybatis.generator.plugin.plugins.LombokPlugin"/>-->
-
-		<commentGenerator type="com.huadian.mybatis.generator.MyCommentGenerator"></commentGenerator>
-
+		<plugin type="com.huadian.mybaits.generator.MyLombokPlugin"/>
+		<commentGenerator type="com.huadian.mybaits.generator.MyCommentGenerator">
+		</commentGenerator>
 
 		<!--数据库连接信息。 -->
 		<jdbcConnection driverClass="${db_driver}" connectionURL="${db_url}" userId="${db_username}" password="${db_password}" />
@@ -34,7 +29,7 @@
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 
-		<table schema="" tableName="t_device_alarm" domainObjectName="DeviceAlarm"  enableCountByExample="false"
+		<table schema="" tableName="t_send_contacts" domainObjectName="SendContacts"  enableCountByExample="false"
 		enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
 		</table>
 

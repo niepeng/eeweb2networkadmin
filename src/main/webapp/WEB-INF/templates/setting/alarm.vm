@@ -64,6 +64,18 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="col-xs-12 col-md-8">
+          <div class="form-group">
+            <label class="col-md-4 col-sm-2 control-label">启用电话报警</label>
+            <div class="col-md-8 col-sm-8">
+              <input type="radio"  name="alarm_phone" value="true"  #if($!settingAlarmBean.alarm_phone) checked #end> 启用 &nbsp;
+              <input type="radio"  name="alarm_phone" value="false" #if(!$!settingAlarmBean.alarm_phone) checked #end> 禁用
+            </div>
+          </div>
+        </div>
+      </div>
+
 ##      <div class="row">
 ##        <div class="col-xs-12 col-md-8">
 ##          <div class="form-group">
