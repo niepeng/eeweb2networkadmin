@@ -22,7 +22,7 @@
       <li>
         <a href="${www}/device/areaList">区域管理</a>
       </li>
-      <li class="active">修改</li>
+      <li class="active">配置关联联系人</li>
     </ul><!-- .breadcrumb -->
 
     <div class="nav-search" id="nav-search">
@@ -50,7 +50,7 @@
       </div>
     #end
 
-    <form id="inputForm" action="${www}/device/doAreaUpdate" method="post" class="form-horizontal" enctype="multipart/form-data">
+    <form id="inputForm" action="${www}/device/doAreaUpdateContacts" method="post" class="form-horizontal" enctype="multipart/form-data">
 
       <input type="hidden" name="id" value="$!area.id" />
 
@@ -59,25 +59,35 @@
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">名称：</label>
             <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="name" name="name"
-                     value="$!{area.name}">
+              $!{area.name}
             </div>
           </div>
         </div>
       </div>
-
 
       <div class="row">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">备注：</label>
+            <label class="col-md-4 col-sm-2 control-label">关联短信手机号：</label>
             <div class="col-md-8 col-sm-8">
-              <input type="text" class="col-sm-12" id="note" name="note"
-                     value="$!{area.note}">
+              #foreach($tmpContacts in $contactsList)
+                #set($currentChecked = false)
+                #foreach($tmp1 in $area.contactsList)
+                  #if($tmp1.id == $tmpContacts.id)
+                    #set($currentChecked = true)
+                  #end
+                #end
+                <input type="checkbox" name="contactsIds" #if($currentChecked) checked #end value="${tmpContacts.id}" >${tmpContacts.name}(${tmpContacts.phone})  &nbsp;&nbsp;
+              #end
+              #if($contactsList.size() == 0)
+                暂无联系人数据,请在"无线设置"-> "通讯列表中" 添加联系人
+              #end
             </div>
           </div>
         </div>
       </div>
+
+
 
       <div class="clearfix form-actions">
         <div class="row">

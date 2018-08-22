@@ -20,6 +20,9 @@ import org.springframework.stereotype.Service;
 public class ContactService extends BaseService {
 
 
+  public List<Contacts> getAll() {
+    return contactsMapper.selectAll();
+  }
 
   public PageResult<Contacts> getContactList(PaginationQuery query) {
     PageResult<Contacts> result = null;

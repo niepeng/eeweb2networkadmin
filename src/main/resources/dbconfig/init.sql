@@ -43,6 +43,10 @@ CREATE TABLE `t_area` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='区域表';
 
+ALTER TABLE `t_area`
+CHANGE COLUMN `sms_phones` `contacts_ids` VARCHAR(1024) NULL DEFAULT NULL COMMENT 't_send_contacts表的id,用来关联联系人,逗号分隔(报警的使用)' ;
+
+
 
 CREATE TABLE `t_sms_phone` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',

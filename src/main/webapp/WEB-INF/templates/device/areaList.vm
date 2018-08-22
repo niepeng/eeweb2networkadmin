@@ -60,7 +60,7 @@
           <thead>
           <tr>
             <th>区域名</th>
-            <th>关联手机号</th>
+            <th>关联联系人</th>
             <th>备注</th>
             <th>操作</th>
           </tr>
@@ -69,10 +69,15 @@
             #foreach($row in $result.rows)
             <tr>
               <td> $!{row.name}</td>
-              <td> $!{row.smsPhones}</td>
+              <td>
+                #foreach($tmp1 in $row.contactsList)
+                  ${tmp1.name}(${tmp1.phone}) &nbsp;&nbsp;&nbsp;
+                #end
+              </td>
               <td> $!{row.note}</td>
               <td>
                 <a href="${www}/device/areaUpdate?id=${row.id}">修改</a> ｜
+                <a href="${www}/device/areaUpdateContacts?id=${row.id}">管理关联联系人</a> ｜
                 <a href="${www}/device/deleteArea?id=${row.id}" onclick="javascript:return confirm('确认要删除 $!{row.name}?');">删除</a>
               </td>
             </tr>

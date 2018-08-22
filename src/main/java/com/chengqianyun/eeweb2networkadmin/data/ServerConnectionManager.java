@@ -6,6 +6,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceConfigEnum;
 import com.chengqianyun.eeweb2networkadmin.core.SpringHelper;
 import com.chengqianyun.eeweb2networkadmin.core.utils.IoUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.SpringContextHolder;
+import com.chengqianyun.eeweb2networkadmin.service.SendPhoneService;
 import com.chengqianyun.eeweb2networkadmin.service.SerialService;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -62,6 +63,14 @@ public final class ServerConnectionManager {
         }
       }
     });
+
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        SpringContextHolder.getBean(SendPhoneService.class).send();
+      }
+    }).start();
+
 
     try {
       SpringContextHolder.getBean(SerialService.class).init(false);

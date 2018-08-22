@@ -3,6 +3,7 @@ package com.chengqianyun.eeweb2networkadmin.service;
 
 import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceFormBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.Contacts;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutCondition;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
@@ -63,6 +64,12 @@ public class DeviceService extends BaseService {
         query.addQueryData("startRecord", Integer.toString(startRecord));
         query.addQueryData("endRecord", Integer.toString(query.getRowsPerPage()));
         List<Area> list = areaMapper.findPage(query.getQueryData());
+        if(list != null) {
+          List<Contacts> contactsList = contactsMapper.selectAll();
+          for(Area area : list) {
+            optAreaContacts(area, contactsList);
+          }
+        }
         result = new PageResult<Area>(list, count, query);
       }
     } catch (Exception e) {
@@ -70,6 +77,25 @@ public class DeviceService extends BaseService {
     }
     return result;
   }
+
+  public void optAreaContacts(Area area, List<Contacts> contactsList) {
+    if (contactsList == null || contactsList.size() == 0 || area == null || StringUtil.isEmpty(area.getContactsIds())) {
+      return;
+    }
+    List<Contacts> list = new ArrayList<Contacts>();
+    String[] ids = area.getContactsIds().split(",");
+    for (String idStr : ids) {
+      long id = StringUtil.str2long(idStr);
+      for (Contacts c : contactsList) {
+        if (c.getId().longValue() == id) {
+          list.add(c);
+          break;
+        }
+      }
+    }
+    area.setContactsList(list);
+  }
+
 
   public void addArea(Area area) {
     if (StringUtil.isEmpty(area.getName())) {
@@ -79,11 +105,6 @@ public class DeviceService extends BaseService {
     if (from != null) {
       throw new RuntimeException("当前区域名称已经存在");
     }
-    if (area.getSmsPhones() == null) {
-      areaMapper.insert(area);
-      return;
-    }
-    area.optSmsPhones();
     areaMapper.insert(area);
   }
 
@@ -107,8 +128,12 @@ public class DeviceService extends BaseService {
 
     fromDB.setName(area.getName());
     fromDB.setNote(area.getNote());
-    area.optSmsPhones();
-    fromDB.setSmsPhones(area.getSmsPhones());
+    areaMapper.updateByPrimaryKey(fromDB);
+  }
+
+  public void updateAreaContacts(Area area) {
+    Area fromDB = getArea(area.getId());
+    fromDB.setContactsIds(area.getContactsIds());
     areaMapper.updateByPrimaryKey(fromDB);
   }
 

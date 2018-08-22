@@ -5,14 +5,14 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="note" property="note" jdbcType="VARCHAR" />
-    <result column="sms_phones" property="smsPhones" jdbcType="VARCHAR" />
+    <result column="contacts_ids" property="contactsIds" jdbcType="VARCHAR" />
     <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
     <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
     <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
     <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, note, sms_phones, created_at, updated_at, created_by, updated_by
+    id, name, note, contacts_ids, created_at, updated_at, created_by, updated_by
   </sql>
 
   <sql id="pageSearch">
@@ -63,10 +63,10 @@
   </delete>
   <insert id="insert" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.Area" >
     insert into t_area ( name, note,
-      sms_phones, created_at, updated_at, 
+      contacts_ids, created_at, updated_at,
       created_by, updated_by)
     values (#{name,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR},
-      #{smsPhones,jdbcType=VARCHAR}, now(), now(),
+      #{contactsIds,jdbcType=VARCHAR}, now(), now(),
       #{createdBy,jdbcType=VARCHAR}, #{updatedBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.Area" >
@@ -81,8 +81,8 @@
       <if test="note != null" >
         note,
       </if>
-      <if test="smsPhones != null" >
-        sms_phones,
+      <if test="contactsIds != null" >
+        contacts_ids,
       </if>
         created_at,
         updated_at,
@@ -103,8 +103,8 @@
       <if test="note != null" >
         #{note,jdbcType=VARCHAR},
       </if>
-      <if test="smsPhones != null" >
-        #{smsPhones,jdbcType=VARCHAR},
+      <if test="contactsIds != null" >
+        #{contactsIds,jdbcType=VARCHAR},
       </if>
       now(),
       now(),
@@ -125,8 +125,8 @@
       <if test="note != null" >
         note = #{note,jdbcType=VARCHAR},
       </if>
-      <if test="smsPhones != null" >
-        sms_phones = #{smsPhones,jdbcType=VARCHAR},
+      <if test="contactsIds != null" >
+        contacts_ids = #{contactsIds,jdbcType=VARCHAR},
       </if>
         updated_at = now(),
       <if test="updatedBy != null" >
@@ -139,7 +139,7 @@
     update t_area
     set name = #{name,jdbcType=VARCHAR},
       note = #{note,jdbcType=VARCHAR},
-      sms_phones = #{smsPhones,jdbcType=VARCHAR},
+      contacts_ids = #{contactsIds,jdbcType=VARCHAR},
       updated_at = now(),
       updated_by = #{updatedBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

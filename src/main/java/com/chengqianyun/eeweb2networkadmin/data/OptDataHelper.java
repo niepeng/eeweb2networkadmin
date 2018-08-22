@@ -13,7 +13,9 @@ import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.UpDownEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
+import com.chengqianyun.eeweb2networkadmin.core.utils.SpringContextHolder;
 import com.chengqianyun.eeweb2networkadmin.core.utils.Tuple2;
+import com.chengqianyun.eeweb2networkadmin.service.SendPhoneService;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -256,6 +258,7 @@ public class OptDataHelper {
       return false;
     }
     deviceAlarmMapper.insert(deviceAlarm);
+    SpringContextHolder.getBean(SendPhoneService.class).sendAlarmInfo(deviceAlarm);
     return true;
   }
 }

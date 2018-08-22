@@ -3,11 +3,13 @@ package com.chengqianyun.eeweb2networkadmin.action;
 import com.chengqianyun.eeweb2networkadmin.biz.HdConstant;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceFormBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.Contacts;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutCondition;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
+import com.chengqianyun.eeweb2networkadmin.service.ContactService;
 import com.chengqianyun.eeweb2networkadmin.service.DeviceService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class DeviceController extends BaseController {
 
   @Autowired
   private DeviceService deviceService;
+
+  @Autowired
+  private ContactService contactService;
 
   @RequestMapping(value = "/areaList", method = RequestMethod.GET)
   public String areaList(
@@ -118,6 +123,44 @@ public class DeviceController extends BaseController {
     }
     return "redirect:/device/areaList";
   }
+
+
+
+  @RequestMapping(value = "/areaUpdateContacts", method = RequestMethod.GET)
+  public String areaUpdateContacts(Long id, Model model, RedirectAttributes redirectAttributes) {
+    try {
+      addOptMenu(model, MenuEnum.device);
+      List<Contacts> list = contactService.getAll();
+      Area area = deviceService.getArea(id);
+      deviceService.optAreaContacts(area, list);
+
+      model.addAttribute("contactsList", list);
+      model.addAttribute("area", area);
+      return "/device/areaUpdateContacts";
+    } catch (Exception ex) {
+      redirectAttributes.addFlashAttribute(SUCCESS, false);
+      redirectAttributes.addFlashAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "redirect:/device/areaList";
+    }
+  }
+
+
+  @RequestMapping(value = "/doAreaUpdateContacts", method = RequestMethod.POST)
+  public String doAreaUpdateContacts(@ModelAttribute Area area, Model model, RedirectAttributes redirectAttributes) {
+    try {
+      deviceService.updateAreaContacts(area);
+      redirectAttributes.addFlashAttribute(SUCCESS, true);
+      redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_OPERATE_SUCESS);
+    } catch (Exception ex) {
+      redirectAttributes.addFlashAttribute(SUCCESS, false);
+      redirectAttributes.addFlashAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+    }
+    return "redirect:/device/areaList";
+  }
+
+
 
 
   @RequestMapping(value = "/deleteArea", method = RequestMethod.GET)
