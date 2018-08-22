@@ -6,7 +6,6 @@ import gnu.io.SerialPort;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -25,6 +24,7 @@ public class SerialTest {
   static int baudrate = 9600;
   static long waitMillTime = 500;
   static int PACKET_LENGTH = 500;
+  static String centerNo = "13010360500";   // 短信中心号码
 
   public static void main(String[] args) throws Exception {
 //    List<String> list = getAllComPorts();
@@ -34,7 +34,10 @@ public class SerialTest {
 //      callPhone(tmp, "15372095699");
 //      System.out.println("\n\n");
 //    }
+
     callPhone("COM3", "15372095699");
+//    boolean flag = sendMessage("13010360500", "13958190387", "博万通信", null, null);
+//    System.out.println("短信发送结果:" + flag);
   }
 
   public static void callPhone(String commName, String phone) throws Exception {
@@ -96,7 +99,7 @@ public class SerialTest {
       Thread.sleep(2 * 1000);
       System.out.println("\n 准备发送短信:");
 //      flag = sendMessage(URLDecoder.decode("13800571500", "utf-8"), URLDecoder.decode("15372095699", "utf-8"), URLDecoder.decode("我是短信内容,发送试一下", "utf-8"), out, in);
-      flag = sendMessage("13800571500", "15372095699", "helloworld.1234", out, in);
+      flag = sendMessage(centerNo, phone, "博万通信", out, in);
       System.out.println("短信发送结果:" + flag);
 
       Thread.sleep(2 * 1000);
@@ -244,29 +247,25 @@ public class SerialTest {
         sendmsg4At = ShortMessageUnit.code4sendMessage(centerNo, phoneNo, msg);// 发送短信AT指令需要的字符串
         len = sendmsg4At.length();
         beginIndex = Integer.parseInt(sendmsg4At.substring(0, 2),16) * 2 + 2;		// 短信中心所占的长度
-//				System.out.println("index:"+index+"\nsubLen:"+(index+subLen)+"\nmsg:"+msg);
-//				System.out.println("AT+CMGS=" + ((len - beginIndex)/2));
-//				System.out.println(sendmsg4At);
-//				System.out.println(msg);
-
-
-
           String content1 = "AT+CMGS=" + ((len - beginIndex)/2) + "\r";
           String content2 = sendmsg4At + "\r";
           String content3 = (char)26 + "\r";
-//        write("AT+CMGS=" + ((len - beginIndex)/2) + "\r", out);
-//        write(sendmsg4At + "\r", out);											// ② 发送AT指令(发送短信内容)
-//        write((char)26 + "\r", out);												// ③ 发送AT指令(发送结束符号""(即(char)26))
+          write(content1, out);
+          write(content2, out);   // ② 发送AT指令(发送短信内容)
+          write(content3, out);   // ③ 发送AT指令(发送结束符号""(即(char)26))
 
-        System.out.println("content1==>" + content1);
-        System.out.println("content2==>" + content2);
-        System.out.println("content3==>" + content3);
-        write(content1, out);
-        write(content2, out);
-        write(content3, out);
+          System.out.println("content1==>" + content1);
+          System.out.println("content2==>" + content2);
+          System.out.println("content3==>" + content3);
+
+
+
+//        write(content1, out);
+//        write(content2, out);
+//        write(content3, out);
 
         Thread.sleep(SMS_SEND_INTERVAL);											// ④发完短信等待SMS_SEND_INTERVAL毫秒
-        // sendATCommand("AT\r");
+//         sendATCommand("AT\r");
         //rsbool = receiveATResponse(RESPONSE_OK,RESPONSE_ERROR,1)!=null;				// 读取模块响应结果 -- 可以看到结果 -- 测试用
         rsbool = read(in); // 读取模块响应结果 -- 正式用
       }

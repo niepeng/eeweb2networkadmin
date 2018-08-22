@@ -9,8 +9,8 @@ import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import com.chengqianyun.eeweb2networkadmin.service.ContactService;
+import com.chengqianyun.eeweb2networkadmin.service.SerialService;
 import java.util.Date;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,6 +35,9 @@ public class WirelessSettingController extends BaseController {
   @Autowired
   private ContactService contactService;
 
+  @Autowired
+  private SerialService serialService;
+
   /**
    * 通讯测试
    */
@@ -42,18 +45,42 @@ public class WirelessSettingController extends BaseController {
   public String normal( Model model) {
     try {
       addOptMenu(model, MenuEnum.wirelessSetting);
-//      model.addAttribute("settingNormalBean", settingService.normal());
-
-      /**
-       * GprsTestAction.send 发送短信
-       *
-       */
+      model.addAttribute("running", serialService.isRunning());
       return "/wirelessSetting/normal";
     } catch (Exception ex) {
       model.addAttribute(SUCCESS, false);
       model.addAttribute(MESSAGE, ex.getMessage());
       log.error(ex);
       return "/wirelessSetting/normal";
+    }
+  }
+
+  /**
+   * 操作:打开关闭
+   */
+  @RequestMapping(value = "/serialOpt", method = RequestMethod.GET)
+  public String serialOpt( Model model,
+      @RequestParam(value = "newFlag", required = false, defaultValue = "") String newFlag, RedirectAttributes redirectAttributes) {
+    try {
+      if (newFlag.equalsIgnoreCase("true")) {
+        serialService.init(true);
+        if (serialService.isRunning()) {
+          redirectAttributes.addFlashAttribute(SUCCESS, true);
+          redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_OPERATE_SUCESS);
+        }
+        redirectAttributes.addFlashAttribute(SUCCESS, false);
+        redirectAttributes.addFlashAttribute(MESSAGE, "运行失败,请确保comm口插入硬件设备");
+        return "redirect:/wirelessSetting/normal";
+      }
+      serialService.close();
+      redirectAttributes.addFlashAttribute(SUCCESS, true);
+      redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_OPERATE_SUCESS);
+      return "redirect:/wirelessSetting/normal";
+    } catch (Error ex) {
+      redirectAttributes.addFlashAttribute(SUCCESS, false);
+      redirectAttributes.addFlashAttribute(MESSAGE, "运行失败,请确保comm口插入硬件设备");
+      log.error(ex);
+      return "redirect:/wirelessSetting/normal";
     }
   }
 

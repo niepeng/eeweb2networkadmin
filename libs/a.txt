@@ -1,2 +1,11 @@
 
 mvn install:install-file -Dfile=/Users/lsb/data/code/git/eeweb2networkadmin/libs/RXTXcomm-1.0.jar   -DgroupId=gnu.io  -DartifactId=comm-gnu  -Dversion=1.0  -Dpackaging=jar
+
+
+// 其他:发送短信环境,并且在系统中配置短信中心号码.
+rxtxSerial.dll 放在%java_home%\bin下
+RXTXcomm-1.0.jar   放在%java_home%\lib下, 才可以使用短信功能(串口实现)
+
+
+
+

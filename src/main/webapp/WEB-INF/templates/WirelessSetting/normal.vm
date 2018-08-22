@@ -45,20 +45,22 @@
       </div>
     #end
 
-    <form id="inputForm" action="${www}/setting/doNormal" method="post" class="form-horizontal" enctype="multipart/form-data">
+    <form id="inputForm" action="" method="post" class="form-horizontal" enctype="multipart/form-data">
 
       <div class="row">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">连接短信模块:</label>
             <div class="col-md-8 col-sm-8">
-              <button class="btn btn-info" type="button" onclick="runSms(true)">
-                <i id="iok" class="bigger-110">还没有运行...</i>
-              </button>
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <button class="btn btn-info" type="button" onclick="runSms(false)">
-                <i id="iok" class="icon-ok bigger-110">正在运行...</i>
-              </button>
+              #if($!running)
+                <button class="btn btn-info" type="button" onclick="runSms(false)">
+                  <i id="iok" class="icon-ok bigger-110">正在运行...点击可停止</i>
+                </button>
+              #else
+                <button class="btn btn-info" type="button" onclick="runSms(true)">
+                  <i id="iok" class="bigger-110">还没有运行...点击可运行</i>
+                </button>
+              #end
             </div>
           </div>
         </div>
@@ -87,8 +89,16 @@
 <script src="${www}/js/youcaicommon.js"></script>
 <script type="text/javascript">
 
-  function runSms(flag) {
-    alert("111->optNewValue=" + flag);
+  function runSms(newValue) {
+    var msg = "确定要关闭吗?";
+    if(newValue) {
+      msg = "确定要运行吗?";
+    }
+    if(confirm(msg)) {
+      var url = "${www}/wirelessSetting/serialOpt?newFlag=" + newValue;
+      window.location.href= url;
+      return;
+    }
     return;
   }
 
