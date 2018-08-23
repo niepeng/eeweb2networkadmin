@@ -79,6 +79,11 @@ public class SendPhoneService extends BaseService {
   }
 
   private void optAlarmInfo(DeviceAlarm deviceAlarm) {
+    if(!isRunning) {
+      alarmInfoQueue.clear();
+      return;
+    }
+
     // 这里实现拨打电话和发送短信功能
     boolean phoneFlag = Boolean.valueOf(getData(SettingEnum.alarm_phone));
     boolean smsFlag = Boolean.valueOf(getData(SettingEnum.alarm_sms));
