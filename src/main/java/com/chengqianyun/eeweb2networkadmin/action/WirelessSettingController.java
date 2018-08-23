@@ -78,7 +78,7 @@ public class WirelessSettingController extends BaseController {
       return "redirect:/wirelessSetting/normal";
     } catch (Error ex) {
       redirectAttributes.addFlashAttribute(SUCCESS, false);
-      redirectAttributes.addFlashAttribute(MESSAGE, "运行失败,请确保comm口插入硬件设备");
+      redirectAttributes.addFlashAttribute(MESSAGE, "运行失败,请确保comm口插入硬件设备,error");
       log.error(ex);
       return "redirect:/wirelessSetting/normal";
     }

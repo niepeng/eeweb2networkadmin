@@ -72,6 +72,32 @@
     limit 1
   </select>
 
+  <select id="hasAlarmDataByDeviceId" parameterType="java.lang.Long" resultType="java.lang.Long">
+    SELECT id from  t_device_alarm
+    WHERE
+       device_id = #{deviceId,jdbcType=BIGINT}
+    AND
+      confirm = 0
+    AND
+      alarm_end_time is null
+    order by id desc
+    limit 1
+  </select>
+
+  <select id="hasAlarmDataByDeviceIdAndOneType" resultType="java.lang.Long">
+    SELECT id from  t_device_alarm
+    WHERE
+       device_id = #{deviceId,jdbcType=BIGINT}
+    AND
+       device_one_type = #{deviceOneType,jdbcType=INTEGER}
+    AND
+      confirm = 0
+    AND
+      alarm_end_time is null
+    order by id desc
+    limit 1
+  </select>
+
   <select id="hasData" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm" resultType="java.lang.Long">
     SELECT id from  t_device_alarm
     WHERE
@@ -102,6 +128,20 @@
     from t_device_alarm
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+
+  <select id="selectAlarmByDeviceId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_device_alarm
+    where device_id = #{deviceId,jdbcType=BIGINT}
+    AND
+    confirm = 0
+  </select>
+
+
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from t_device_alarm
     where id = #{id,jdbcType=BIGINT}

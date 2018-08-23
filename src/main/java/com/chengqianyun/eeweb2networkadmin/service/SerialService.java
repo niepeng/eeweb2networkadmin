@@ -104,7 +104,7 @@ public class SerialService extends BaseService {
    * @param phone
    * @return
    */
-  public boolean callPhone(String phone) throws IOException, InterruptedException {
+  public synchronized boolean callPhone(String phone) throws IOException, InterruptedException {
     boolean phoneFlag = Boolean.valueOf(getData(SettingEnum.alarm_phone));
     if(!phoneFlag) {
       return false;
@@ -123,7 +123,7 @@ public class SerialService extends BaseService {
    * @param content
    * @return
    */
-  public boolean sendSms(String phone, String content) {
+  public synchronized boolean sendSms(String phone, String content) {
     boolean smsFlag = Boolean.valueOf(getData(SettingEnum.alarm_sms));
     if(!smsFlag) {
       return false;

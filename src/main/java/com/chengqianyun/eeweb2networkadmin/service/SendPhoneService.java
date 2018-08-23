@@ -1,6 +1,7 @@
 package com.chengqianyun.eeweb2networkadmin.service;
 
 import com.chengqianyun.eeweb2networkadmin.biz.SystemConstants.Times;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceRecoverBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Contacts;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm;
@@ -22,7 +23,6 @@ import org.springframework.stereotype.Service;
 /**
  * @author 聂鹏
  * @version 1.0
- * @email lsb@51huadian.cn
  * @date 18/8/22
  */
 @Service
@@ -32,11 +32,22 @@ public class SendPhoneService extends BaseService {
   @Autowired
   private SerialService serialService;
 
+  /**
+   * 设备报警记录,需要发送信息等
+   */
   private static BlockingQueue<DeviceAlarm> alarmInfoQueue = new LinkedBlockingQueue<DeviceAlarm>(1000);
 
+  /**
+   * 设备恢复记录,需要发送
+   */
+  private static BlockingQueue<DeviceRecoverBean> recoverInfoQueue = new LinkedBlockingQueue<DeviceRecoverBean>(50);
+
   private static boolean isRunning;
+  private static boolean isRecoverRunning;
+
   private final static long TIMES = 1 * Times.hour;
   static String smsContent = "设备(%s)%s,报警时间:%s";
+  static String smsRecoverContent = "设备(%s)%s恢复报警,恢复时间:%s";
 
 
   public void sendAlarmInfo(DeviceAlarm deviceAlarm) {
@@ -60,8 +71,12 @@ public class SendPhoneService extends BaseService {
       alarmInfoQueue.offer(deviceAlarm);
   }
 
+  public void sendAlarmRecoverInfo(DeviceRecoverBean bean) {
+    recoverInfoQueue.offer(bean);
+  }
+
   @Scheduled(fixedDelay = TIMES)
-  public void send() {
+  public void sendAlarm() {
     if (isRunning) {
       return;
     }
@@ -78,11 +93,37 @@ public class SendPhoneService extends BaseService {
     isRunning = false;
   }
 
-  private void optAlarmInfo(DeviceAlarm deviceAlarm) {
-    if(!isRunning) {
-      alarmInfoQueue.clear();
+  @Scheduled(fixedDelay = TIMES)
+  public void sendRecoverAlarm() {
+    if (isRecoverRunning) {
       return;
     }
+    isRecoverRunning = true;
+    DeviceRecoverBean deviceRecoverBean;
+    try {
+      while (true) {
+        deviceRecoverBean = recoverInfoQueue.take();
+        optAlarmRecover(deviceRecoverBean);
+      }
+    } catch (Exception e) {
+    }
+
+    isRecoverRunning = false;
+  }
+
+  private void optAlarmRecover(DeviceRecoverBean deviceRecoverBean) {
+    DeviceInfo deviceInfo = deviceRecoverBean.getDeviceInfo();
+    List<Contacts> contactsList = getContactsByAreaId(deviceInfo.getAreaId());
+
+    String deviceName = deviceInfo == null ? "" : (StringUtil.isEmpty(deviceInfo.getName()) ? "" : deviceInfo.getName());
+    String content = String.format(smsContent, StringUtil.isEmpty(deviceName) ? "未定义" : deviceName,
+         deviceRecoverBean.isAll() ? "" : deviceRecoverBean.getDeviceTypeEnum().getName()
+        , DateUtil.getDate(deviceRecoverBean.getTime(), DateUtil.dateFullPatternNoSecond));
+    sendSms(contactsList, content);
+  }
+
+
+  private void optAlarmInfo(DeviceAlarm deviceAlarm) {
 
     // 这里实现拨打电话和发送短信功能
     boolean phoneFlag = Boolean.valueOf(getData(SettingEnum.alarm_phone));
@@ -91,16 +132,11 @@ public class SendPhoneService extends BaseService {
       return;
     }
 
-    // 获取所有需要发送的号码
-    Area area = areaMapper.selectByPrimaryKey(deviceAlarm.getAreaId());
-    if (area == null || StringUtil.isEmpty(area.getContactsIds())) {
+    List<Contacts> contactsList = getContactsByAreaId(deviceAlarm.getAreaId());
+    if(contactsList == null || contactsList.size() == 0) {
       return;
     }
 
-    List<Contacts> contactsList = findContactsList(area.getContactsIds());
-    if (contactsList.size() == 0) {
-      return;
-    }
 
     DeviceInfo deviceInfo = deviceInfoMapper.selectByPrimaryKey(deviceAlarm.getDeviceId());
     String deviceName = deviceInfo == null ? "" : (StringUtil.isEmpty(deviceInfo.getName()) ? "" : deviceInfo.getName());
@@ -119,17 +155,25 @@ public class SendPhoneService extends BaseService {
       }
     }
 
-    if (smsFlag) {
-      try {
-        for (Contacts contacts : contactsList) {
-          boolean flag = serialService.sendSms(contacts.getPhone(), content);
-          if (flag) {
-            insertSendRecord(contacts, "sms", content);
-          }
+    sendSms(contactsList, content);
+
+  }
+
+  public void sendSms(List<Contacts> contactsList, String content) {
+    boolean smsFlag = Boolean.valueOf(getData(SettingEnum.alarm_sms));
+    if(!smsFlag) {
+      return;
+    }
+
+    try {
+      for (Contacts contacts : contactsList) {
+        boolean flag = serialService.sendSms(contacts.getPhone(), content);
+        if (flag) {
+          insertSendRecord(contacts, "sms", content);
         }
-      } catch (Exception e) {
-        log.error("sendSms_error", e);
       }
+    } catch (Exception e) {
+      log.error("sendSms_error", e);
     }
 
   }
@@ -142,28 +186,5 @@ public class SendPhoneService extends BaseService {
     s.setSmsContent(smsContent);
     sendContactsMapper.insert(s);
   }
-
-
-  private List<Contacts> findContactsList(String contactsIds) {
-    List<Contacts> result = new ArrayList<Contacts>();
-    List<Contacts> allContacts = contactsMapper.selectAll();
-    String[] contactsIdArray = contactsIds.split(",");
-
-    long idLong;
-    for (String id : contactsIdArray) {
-      idLong = StringUtil.str2long(id);
-      if (idLong <= 0) {
-        continue;
-      }
-      for (Contacts contacts : allContacts) {
-        if (idLong == contacts.getId().longValue()) {
-          result.add(contacts);
-          break;
-        }
-      }
-    }
-    return result;
-  }
-
 
 }

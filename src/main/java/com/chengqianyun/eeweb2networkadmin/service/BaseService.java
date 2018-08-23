@@ -3,6 +3,7 @@ package com.chengqianyun.eeweb2networkadmin.service;
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.AreaMapper;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.Contacts;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.ContactsMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarmMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistoryMapper;
@@ -13,6 +14,8 @@ import com.chengqianyun.eeweb2networkadmin.biz.entitys.SendContactsMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Setting;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.SettingMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.SettingEnum;
+import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +81,40 @@ public class BaseService {
     settingMapper.updateByPrimaryKey(setting);
   }
 
+  /**
+   * 获取所有需要发送的号码
+   *
+   * @param areaId
+   * @return
+   */
+  public List<Contacts> getContactsByAreaId(long areaId) {
+    Area area = areaMapper.selectByPrimaryKey(areaId);
+    if (area == null || StringUtil.isEmpty(area.getContactsIds())) {
+      return null;
+    }
+    return findContactsList(area.getContactsIds());
+  }
+
+
+  private List<Contacts> findContactsList(String contactsIds) {
+    List<Contacts> result = new ArrayList<Contacts>();
+    List<Contacts> allContacts = contactsMapper.selectAll();
+    String[] contactsIdArray = contactsIds.split(",");
+
+    long idLong;
+    for (String id : contactsIdArray) {
+      idLong = StringUtil.str2long(id);
+      if (idLong <= 0) {
+        continue;
+      }
+      for (Contacts contacts : allContacts) {
+        if (idLong == contacts.getId().longValue()) {
+          result.add(contacts);
+          break;
+        }
+      }
+    }
+    return result;
+  }
 
 }

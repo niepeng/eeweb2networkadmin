@@ -67,7 +67,14 @@ public final class ServerConnectionManager {
     new Thread(new Runnable() {
       @Override
       public void run() {
-        SpringContextHolder.getBean(SendPhoneService.class).send();
+        SpringContextHolder.getBean(SendPhoneService.class).sendAlarm();
+      }
+    }).start();
+
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        SpringContextHolder.getBean(SendPhoneService.class).sendRecoverAlarm();
       }
     }).start();
 

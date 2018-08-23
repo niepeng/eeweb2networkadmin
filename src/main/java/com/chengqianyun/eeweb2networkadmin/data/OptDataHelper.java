@@ -1,6 +1,7 @@
 package com.chengqianyun.eeweb2networkadmin.data;
 
 
+import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceRecoverBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarmMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistory;
@@ -38,6 +39,9 @@ public class OptDataHelper {
 
   @Autowired
   private DeviceDataHistoryMapper deviceDataHistoryMapper;
+
+  @Autowired
+  private SendPhoneService sendPhoneService;
 
 
   /**
@@ -180,6 +184,15 @@ public class OptDataHelper {
   }
 
   private void resetAlarmAll(DeviceDataIntime dataIntime) {
+    Long id = deviceAlarmMapper.hasAlarmDataByDeviceId(dataIntime.getDeviceInfo().getId());
+    if(id != null && id > 0) {
+      // 记录恢复报警信息
+      DeviceRecoverBean bean = new DeviceRecoverBean();
+      bean.setDeviceInfo(dataIntime.getDeviceInfo());
+      bean.setAll(true);
+      bean.setTime(new Date());
+      sendPhoneService.sendAlarmRecoverInfo(bean);
+    }
     DeviceAlarm deviceAlarm = new DeviceAlarm();
     DeviceInfo deviceInfo = dataIntime.getDeviceInfo();
     deviceAlarm.setDeviceId(deviceInfo.getId());
@@ -187,6 +200,17 @@ public class OptDataHelper {
   }
 
   private void resetAlarm(DeviceDataIntime dataIntime, DeviceTypeEnum deviceTypeEnum) {
+    Long id = deviceAlarmMapper.hasAlarmDataByDeviceIdAndOneType(dataIntime.getDeviceInfo().getId(), deviceTypeEnum.getId());
+    if (id != null && id > 0) {
+      // 记录恢复报警信息
+      DeviceRecoverBean bean = new DeviceRecoverBean();
+      bean.setDeviceInfo(dataIntime.getDeviceInfo());
+      bean.setAll(false);
+      bean.setTime(new Date());
+      bean.setDeviceTypeEnum(deviceTypeEnum);
+      sendPhoneService.sendAlarmRecoverInfo(bean);
+    }
+
     DeviceAlarm deviceAlarm = new DeviceAlarm();
     DeviceInfo deviceInfo = dataIntime.getDeviceInfo();
     deviceAlarm.setDeviceId(deviceInfo.getId());

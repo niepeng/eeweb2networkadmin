@@ -2,6 +2,7 @@ package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
 import java.util.List;
 import java.util.Map;
+import org.apache.ibatis.annotations.Param;
 
 public interface DeviceAlarmMapper {
     int deleteByPrimaryKey(Long id);
@@ -26,5 +27,9 @@ public interface DeviceAlarmMapper {
     Long hasAlarmData();
 
     List<DeviceAlarm> findPage(Map<String,String> map);
+
+    List<DeviceAlarm> selectAlarmByDeviceId(long deviceId);
+    Long hasAlarmDataByDeviceId(long deviceId);
+    Long hasAlarmDataByDeviceIdAndOneType(@Param("deviceId") long deviceId, @Param("deviceOneType") int deviceOneType);
 
 }
