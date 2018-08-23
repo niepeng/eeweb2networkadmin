@@ -129,7 +129,7 @@ public class AlarmController extends BaseController {
 
 
   /**
-   * 标记已读取,并记录备注
+   * 并记录备注
    */
   @RequestMapping(value = "/writeNote", method = RequestMethod.POST)
   public String doDeviceAdd(AlarmNoteBean alarmNoteBean, Model model, RedirectAttributes redirectAttributes) {

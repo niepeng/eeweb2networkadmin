@@ -36,7 +36,7 @@ public class SendPhoneService extends BaseService {
 
   private static boolean isRunning;
   private final static long TIMES = 1 * Times.hour;
-  static String smsContent = "设备(%s)%s,时间:%s";
+  static String smsContent = "设备(%s)%s,报警时间:%s";
 
 
   public void sendAlarmInfo(DeviceAlarm deviceAlarm) {
@@ -124,7 +124,7 @@ public class SendPhoneService extends BaseService {
         for (Contacts contacts : contactsList) {
           boolean flag = serialService.sendSms(contacts.getPhone(), content);
           if (flag) {
-            insertSendRecord(contacts, "sms", null);
+            insertSendRecord(contacts, "sms", content);
           }
         }
       } catch (Exception e) {

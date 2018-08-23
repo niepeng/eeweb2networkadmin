@@ -65,12 +65,8 @@ public class AlarmService extends BaseService {
       return;
     }
 
-    if (!deviceAlarm.isAlarmEnd()) {
-      throw new RuntimeException("当前报警还未结束,不能标记已读");
-    }
-
     if (AlarmConfirmEnum.find(deviceAlarm.getConfirm()) == AlarmConfirmEnum.no_confirm) {
-      deviceAlarm.setConfirm((short) AlarmConfirmEnum.confirm.getId());
+      throw new RuntimeException("当前报警还未结束,不能编写备注");
     }
 
     if (deviceAlarm.getUserConfirmTime() == null) {

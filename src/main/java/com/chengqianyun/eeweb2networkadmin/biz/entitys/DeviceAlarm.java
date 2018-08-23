@@ -67,7 +67,7 @@ public class DeviceAlarm {
     private Date alarmEndTime;
 
     /**
-     * 人工确认时间
+     * 人工编写备注时间
      */
     private Date userConfirmTime;
 

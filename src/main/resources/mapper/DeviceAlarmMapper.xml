@@ -290,7 +290,8 @@
     update t_device_alarm
     set
         alarm_end_time = now(),
-        updated_at = now()
+        updated_at = now(),
+        confirm = 1
     where
         device_id = #{deviceId,jdbcType=BIGINT}
     AND
@@ -306,7 +307,8 @@
     update t_device_alarm
     set
         alarm_end_time = now(),
-        updated_at = now()
+        updated_at = now(),
+        confirm = 1
     where
         device_id = #{deviceId,jdbcType=BIGINT}
     AND

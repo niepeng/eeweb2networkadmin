@@ -66,17 +66,24 @@ public class SerialService extends BaseService {
       return;
     }
 
+    log.error("init-ReadyClose");
     close();
+    log.error("init-Closed");
+
 
     try {
+      log.error("init-getAllCom");
       List<String> list = getAllComPorts();
       if (list == null || list.size() == 0) {
         isRunning = false;
         return;
       }
+      log.error("init-getAllCommSize=" + list.size());
 
       for (String comm : list) {
+        log.error("init-try:" + comm);
         if (initExecute(comm)) {
+          log.error("currentMatchSmsComm->" + comm);
           inited = true;
           isRunning = true;
           return;
@@ -126,28 +133,40 @@ public class SerialService extends BaseService {
   }
 
   public synchronized void close() {
+    log.error("executeClosedStart");
     if (out != null) {
       try {
         out.close();
         out = null;
-      } catch (IOException e) {
+      } catch (Exception e) {
       }
     }
+    log.error("executeClosedOutEnd");
+
     if (in != null) {
       try {
         in.close();
         in = null;
-      } catch (IOException e) {
+      } catch (Exception e) {
       }
     }
+    log.error("executeClosedInEnd");
 
-    if (serialPort != null) {
-      serialPort.notifyOnDataAvailable(false);
-      serialPort.notifyOnBreakInterrupt(false);
-      serialPort.removeEventListener();
-      serialPort.close();
-      serialPort = null;
+    try {
+      if (serialPort != null) {
+        serialPort.notifyOnDataAvailable(false);
+        serialPort.notifyOnBreakInterrupt(false);
+        serialPort.removeEventListener();
+        serialPort.close();
+        serialPort = null;
+      }
+    }catch (Error e) {
+      log.error("serialCloseError" ,e);
     }
+
+    log.error("executeClosedEnd");
+
+    isRunning = false;
   }
 
 

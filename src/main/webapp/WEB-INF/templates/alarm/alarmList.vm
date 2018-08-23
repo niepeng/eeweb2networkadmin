@@ -84,7 +84,7 @@
             <th>报警</th>
             <th>结束报警</th>
             <th>备注信息</th>
-            <th>已读</th>
+##            <th>已读</th>
             <th>操作</th>
           </tr>
           </thead>
@@ -114,14 +114,14 @@
                     $!dateUtil.getDate($!{row.alarmEndTime}, 'yyyy-MM-dd HH:mm:ss')
                   #end
               </td>
-              <td>#if($!{row.confirm} == 0) 未读 #else 已读 #end <br/>$!{row.note}</td>
+              <td>$!{row.note}</td>
 
-              <td>
-                #set($showButton = $!{row.confirm} == 0 && "$!{row.alarmEndTime}" != "")
-                #if($showButton)
-                  <button class="btn btn-xs btn-primary" type="button" style="background-color:white !important;color:rgb(148,145,142) !important;border-color:rgb(148,145,142);border-width: 1px; " onclick="markRead($!{row.id});">设为已读</button>
-                #end
-              </td>
+              #set($showButton = $!{row.confirm} == 0 && "$!{row.alarmEndTime}" != "")
+##              <td>
+##                #if($showButton)
+##                  <button class="btn btn-xs btn-primary" type="button" style="background-color:white !important;color:rgb(148,145,142) !important;border-color:rgb(148,145,142);border-width: 1px; " onclick="markRead($!{row.id});">设为已读</button>
+##                #end
+##              </td>
 
               <td>
                 #if($showButton || $!{row.confirm} == 1)
@@ -178,7 +178,7 @@
         <div class="col-md-8">
           <div class="col-sm-offset-4 col-md-9">
             <button id="sbt" class="btn btn-info" type="button">
-              <i id="iok" class="icon-ok bigger-110">标记已读</i>
+              <i id="iok" class="icon-ok bigger-110">保存</i>
             </button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="btn" type="button" onclick="javascript:hiddenShowDiv();">
