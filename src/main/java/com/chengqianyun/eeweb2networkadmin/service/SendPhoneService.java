@@ -116,7 +116,7 @@ public class SendPhoneService extends BaseService {
     List<Contacts> contactsList = getContactsByAreaId(deviceInfo.getAreaId());
 
     String deviceName = deviceInfo == null ? "" : (StringUtil.isEmpty(deviceInfo.getName()) ? "" : deviceInfo.getName());
-    String content = String.format(smsContent, StringUtil.isEmpty(deviceName) ? "未定义" : deviceName,
+    String content = String.format(smsRecoverContent, StringUtil.isEmpty(deviceName) ? "未定义" : deviceName,
          deviceRecoverBean.isAll() ? "" : deviceRecoverBean.getDeviceTypeEnum().getName()
         , DateUtil.getDate(deviceRecoverBean.getTime(), DateUtil.dateFullPatternNoSecond));
     sendSms(contactsList, content);
@@ -140,7 +140,7 @@ public class SendPhoneService extends BaseService {
 
     DeviceInfo deviceInfo = deviceInfoMapper.selectByPrimaryKey(deviceAlarm.getDeviceId());
     String deviceName = deviceInfo == null ? "" : (StringUtil.isEmpty(deviceInfo.getName()) ? "" : deviceInfo.getName());
-    String content = String.format(smsRecoverContent, StringUtil.isEmpty(deviceName) ? "未定义" : deviceName, deviceAlarm.showAlarmMsg(), DateUtil.getDate(deviceAlarm.getRecentlyAlarmTime(), DateUtil.dateFullPatternNoSecond));
+    String content = String.format(smsContent, StringUtil.isEmpty(deviceName) ? "未定义" : deviceName, deviceAlarm.showAlarmMsg(), DateUtil.getDate(deviceAlarm.getRecentlyAlarmTime(), DateUtil.dateFullPatternNoSecond));
 
     if (phoneFlag) {
       try {
