@@ -46,7 +46,7 @@ public class SendPhoneService extends BaseService {
   private static boolean isRecoverRunning;
 
   private final static long TIMES = 1 * Times.hour;
-  static String smsContent = "设备(%s)%s,报警时间:%s";
+  static String smsContent = "设备(%s)%s报警时间:%s";
   static String smsRecoverContent = "设备(%s)%s恢复报警,恢复时间:%s";
 
 
@@ -140,7 +140,7 @@ public class SendPhoneService extends BaseService {
 
     DeviceInfo deviceInfo = deviceInfoMapper.selectByPrimaryKey(deviceAlarm.getDeviceId());
     String deviceName = deviceInfo == null ? "" : (StringUtil.isEmpty(deviceInfo.getName()) ? "" : deviceInfo.getName());
-    String content = String.format(smsContent, StringUtil.isEmpty(deviceName) ? "未定义" : deviceName, deviceAlarm.showAlarmMsg(), DateUtil.getDate(deviceAlarm.getRecentlyAlarmTime(), DateUtil.dateFullPatternNoSecond));
+    String content = String.format(smsRecoverContent, StringUtil.isEmpty(deviceName) ? "未定义" : deviceName, deviceAlarm.showAlarmMsg(), DateUtil.getDate(deviceAlarm.getRecentlyAlarmTime(), DateUtil.dateFullPatternNoSecond));
 
     if (phoneFlag) {
       try {

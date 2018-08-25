@@ -108,11 +108,17 @@
                   首次:$!dateUtil.getDate($!{row.createdAt}, 'yyyy-MM-dd HH:mm:ss') <br/>
                   最近:$!dateUtil.getDate($!{row.recentlyAlarmTime}, 'yyyy-MM-dd HH:mm:ss') <br/>
               </td>
-              <td>#if("$!{row.alarmEndTime}" == "")
+              <td>
+
+
+                #if("$!{row.alarmEndTime}" == "")
                     未结束
                   #else
                     $!dateUtil.getDate($!{row.alarmEndTime}, 'yyyy-MM-dd HH:mm:ss')
                   #end
+                #if($!{row.confirm} == 1)
+                  <br/>已确认
+                #end
               </td>
               <td>$!{row.note}</td>
 
