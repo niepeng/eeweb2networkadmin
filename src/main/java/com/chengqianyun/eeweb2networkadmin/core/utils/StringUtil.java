@@ -14,6 +14,16 @@ public class StringUtil extends StringUtils {
   public StringUtil() {
   }
 
+  public static String showContent(String content, int length) {
+    if(content == null) {
+      return content;
+    }
+    if(content.length() <= 10) {
+      return content;
+    }
+    return content.substring(0,10) + "..";
+  }
+
   public static char[] subCharArray(char[] array, int startIndex, int endIndex) {
     if (array == null) {
       return null;

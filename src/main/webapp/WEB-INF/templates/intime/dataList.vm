@@ -114,6 +114,13 @@
               </div>
               <br/><br/>
               <div class="form-group">
+                <label>排序：</label>
+                <input type="radio" name="sortValue" #if("$!sortValue" == "time") checked #end value="time" />时间优先排序 &nbsp;&nbsp;
+                <input type="radio" name="sortValue" #if("$!sortValue" == "alarm") checked #end value="alarm" />报警优先排序
+
+              </div>
+              <br/><br/>
+              <div class="form-group">
                 <button class="btn btn-xs btn-primary" type="submit">查询</button>
               </div>
             </form>
@@ -151,7 +158,7 @@
             >
 
               ## 设备名称(区域)-标签
-              $!{tmpElementDataBean.deviceInfo.name}($!{tmpElementDataBean.area.name})-$!{tmpElementDataBean.deviceInfo.tag} <br/>
+                $stringUtil.showContent($!{tmpElementDataBean.deviceInfo.name},10)($!{tmpElementDataBean.area.name}) <br/>
 
               ## 数据值展示和单位
               #if($!{tmpElementDataBean.deviceOneTypeEnum.isDataDevice()})

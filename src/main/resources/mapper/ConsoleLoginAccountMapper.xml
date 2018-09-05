@@ -79,7 +79,7 @@
         update t_admin_loginaccount set 
         	vcLoginPassword = #{vcLoginPassword,jdbcType=VARCHAR},
         	dtModify = #{dtModify,jdbcType=TIMESTAMP} 
-        where id = #{id,jdbcType=INTEGER};
+        where id = #{id,jdbcType=INTEGER}
     </update>
 
 

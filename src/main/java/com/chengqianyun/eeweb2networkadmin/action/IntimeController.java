@@ -55,6 +55,8 @@ public class IntimeController extends BaseController {
       @RequestParam(value = "statuses", required = false, defaultValue = "") String statuses,
       // 设备区域
       @RequestParam(value = "areaIds", required = false, defaultValue = "") String areaIds,
+      // 设备区域
+      @RequestParam(value = "sortValue", required = true, defaultValue = "time") String sortValue,
 //      // 标签
 //      @RequestParam(value = "tags", required = false, defaultValue = "") String tags,
       Model model) {
@@ -77,9 +79,12 @@ public class IntimeController extends BaseController {
       dataIntimeBean.setAreaIds(areaIds);
 
       deviceIntimeService.deviceDataIntime(dataIntimeBean);
+      dataIntimeBean.sort(sortValue);
+
       model.addAttribute("alarmSong", alarmService.hasAlarmData());
       model.addAttribute("areaList", areaList);
       model.addAttribute("dataIntimeBean", dataIntimeBean);
+      model.addAttribute("sortValue", sortValue);
       return "/intime/dataList";
     } catch (Exception ex) {
       model.addAttribute(SUCCESS, false);

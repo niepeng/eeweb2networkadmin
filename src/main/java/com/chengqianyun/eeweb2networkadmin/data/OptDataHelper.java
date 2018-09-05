@@ -18,6 +18,7 @@ import com.chengqianyun.eeweb2networkadmin.core.utils.SpringContextHolder;
 import com.chengqianyun.eeweb2networkadmin.core.utils.Tuple2;
 import com.chengqianyun.eeweb2networkadmin.service.SendPhoneService;
 import java.util.Date;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -184,15 +185,22 @@ public class OptDataHelper {
   }
 
   private void resetAlarmAll(DeviceDataIntime dataIntime) {
-    Long id = deviceAlarmMapper.hasAlarmDataByDeviceId(dataIntime.getDeviceInfo().getId());
-    if(id != null && id > 0) {
+    List<DeviceAlarm> alarmList = deviceAlarmMapper.selectAlarmByDeviceId(dataIntime.getDeviceInfo().getId());
+    if (alarmList == null || alarmList.size() == 0) {
+      return;
+    }
+
+    for (DeviceAlarm deviceAlarm : alarmList) {
       // 记录恢复报警信息
       DeviceRecoverBean bean = new DeviceRecoverBean();
       bean.setDeviceInfo(dataIntime.getDeviceInfo());
-      bean.setAll(true);
+      bean.setAll(false);
       bean.setTime(new Date());
+      bean.setDeviceTypeEnum(DeviceTypeEnum.getOneById(deviceAlarm.getDeviceOneType()));
+      bean.setDeviceAlarm(deviceAlarm);
       sendPhoneService.sendAlarmRecoverInfo(bean);
     }
+
     DeviceAlarm deviceAlarm = new DeviceAlarm();
     DeviceInfo deviceInfo = dataIntime.getDeviceInfo();
     deviceAlarm.setDeviceId(deviceInfo.getId());
@@ -208,6 +216,7 @@ public class OptDataHelper {
       bean.setAll(false);
       bean.setTime(new Date());
       bean.setDeviceTypeEnum(deviceTypeEnum);
+      bean.setDeviceAlarm(deviceAlarmMapper.selectByPrimaryKey(id));
       sendPhoneService.sendAlarmRecoverInfo(bean);
     }
 

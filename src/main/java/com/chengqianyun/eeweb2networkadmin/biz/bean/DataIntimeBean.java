@@ -8,6 +8,8 @@ import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.UpDownEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.UnitUtil;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
@@ -53,6 +55,33 @@ public class DataIntimeBean {
   private String areaIds;
 
   // ================ 扩展方法 ================
+
+  /**
+   * 1.time 时间排序就是默认的
+   * 2.alarm 按照报警优先排序
+   */
+  public void sort(String type) {
+    if("time".equals(type)) {
+      return;
+    }
+
+    if(elementDataBeanList == null || elementDataBeanList.size() <= 1) {
+      return;
+    }
+
+    Collections.sort(elementDataBeanList, new Comparator<ElementDataBean>(){
+      @Override
+      public int compare(ElementDataBean o1, ElementDataBean o2) {
+        if(o1.getStatus() == StatusEnum.normal.getId()) {
+          return 1;
+        }
+        if(o2.getStatus() == StatusEnum.normal.getId()) {
+          return -1;
+        }
+        return 0;
+      }
+    });
+  }
 
   public boolean hasArea(long areaId) {
     if (areaList == null) {

@@ -17,7 +17,26 @@
     <script src="${www}/js/jquery.validate.js"></script>
     <script src="${www}/js/jquery.form.js"></script>
 ##    <script src="${www}/js/browser.js"></script>
+
 </head>
+<style>
+  .footerInfo{
+
+    height: 100px;
+
+    width: 100%;
+
+    -- background-color: #ddd;
+
+
+    position: fixed;
+
+    bottom: 0;
+
+    text-align: center;
+
+  }
+</style>
 <body class="login-layout">
 <div class="main-container">
 <div class="main-content">
@@ -29,7 +48,7 @@
         <span class="red"></span>
         <span class="white">$!{platformName}</span>
     </h1>
-    <h4 class="blue">&copy; </h4>
+##    <h4 class="blue">&copy; </h4>
 
 </div>
 
@@ -224,6 +243,13 @@ jQuery.validator.addMethod("isStrongPwd", function(value, element) {
 </div><!-- /.row -->
 </div>
 </div><!-- /.main-container -->
+
+<div class="footerInfo" style="padding-top: 10px;">
+  关于成前科技    联系客服: 0571-88192051 <br/><br/>
+  版权所有杭州成前科技有限公司  v1.0 © 2016 -2018
+
+</div>
+
 </body>
 </html>
 

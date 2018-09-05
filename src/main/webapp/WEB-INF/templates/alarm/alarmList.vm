@@ -117,7 +117,7 @@
                     $!dateUtil.getDate($!{row.alarmEndTime}, 'yyyy-MM-dd HH:mm:ss')
                   #end
                 #if($!{row.confirm} == 1)
-                  <br/>已确认
+##                  <br/>已确认
                 #end
               </td>
               <td>$!{row.note}</td>

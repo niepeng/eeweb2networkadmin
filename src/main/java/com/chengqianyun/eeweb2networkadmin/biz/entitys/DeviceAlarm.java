@@ -124,6 +124,29 @@ public class DeviceAlarm {
         return typeEnum.getName() + "报警，请及时处理!";
     }
 
+    public String showRecoverMsg() {
+        if(AlarmTypeEnum.offline.getId() == alarmType) {
+            return "设备离线,恢复报警";
+        }
+
+        DeviceTypeEnum typeEnum = DeviceTypeEnum.getOneById(deviceOneType);
+
+        if(typeEnum.isDataDevice()) {
+            if (UpDownEnum.find(upDown) == null) {
+                return "设备离线,恢复报警";
+            }
+            // 温度偏高，当前温度30℃，请及时处理！
+            // 温度偏低，当前温度10℃，请及时处理！
+            return typeEnum.getName() + (UpDownEnum.find(upDown).getMeaning()) + ",恢复报警";
+
+        }
+
+        return typeEnum.getName() + "恢复报警";
+    }
+
+
+
+
     public boolean isAlarmEnd() {
         return alarmEndTime != null;
     }

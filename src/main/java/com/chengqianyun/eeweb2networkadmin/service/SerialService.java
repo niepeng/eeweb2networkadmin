@@ -73,6 +73,7 @@ public class SerialService extends BaseService {
 
     try {
       log.error("init-getAllCom");
+      SystemClock.sleepRandom(1000 , 2000);
       List<String> list = getAllComPorts();
       if (list == null || list.size() == 0) {
         isRunning = false;
@@ -133,24 +134,8 @@ public class SerialService extends BaseService {
   }
 
   public synchronized void close() {
-    log.error("executeClosedStart");
-    if (out != null) {
-      try {
-        out.close();
-        out = null;
-      } catch (Exception e) {
-      }
-    }
-    log.error("executeClosedOutEnd");
 
-    if (in != null) {
-      try {
-        in.close();
-        in = null;
-      } catch (Exception e) {
-      }
-    }
-    log.error("executeClosedInEnd");
+    log.error("executeClosedStart");
 
     try {
       if (serialPort != null) {
@@ -163,6 +148,28 @@ public class SerialService extends BaseService {
     }catch (Error e) {
       log.error("serialCloseError" ,e);
     }
+
+    if (out != null) {
+      try {
+        out.close();
+        out = null;
+      } catch (Exception e) {
+        log.error("closedOutError", e);
+      }
+    }
+    log.error("executeClosedOutEnd");
+
+    if (in != null) {
+      try {
+        in.close();
+        in = null;
+      } catch (Exception e) {
+        log.error("closedInError", e);
+      }
+    }
+    log.error("executeClosedInEnd");
+
+
 
     log.error("executeClosedEnd");
 

@@ -47,7 +47,7 @@ public class SendPhoneService extends BaseService {
 
   private final static long TIMES = 1 * Times.hour;
   static String smsContent = "设备(%s)%s报警时间:%s";
-  static String smsRecoverContent = "设备(%s)%s恢复报警,恢复时间:%s";
+  static String smsRecoverContent = "设备(%s)%s,恢复时间:%s";
 
 
   public void sendAlarmInfo(DeviceAlarm deviceAlarm) {
@@ -117,7 +117,7 @@ public class SendPhoneService extends BaseService {
 
     String deviceName = deviceInfo == null ? "" : (StringUtil.isEmpty(deviceInfo.getName()) ? "" : deviceInfo.getName());
     String content = String.format(smsRecoverContent, StringUtil.isEmpty(deviceName) ? "未定义" : deviceName,
-         deviceRecoverBean.isAll() ? "" : deviceRecoverBean.getDeviceTypeEnum().getName()
+         deviceRecoverBean.isAll() ? "恢复报警" : deviceRecoverBean.getDeviceAlarm().showRecoverMsg()
         , DateUtil.getDate(deviceRecoverBean.getTime(), DateUtil.dateFullPatternNoSecond));
     sendSms(contactsList, content);
   }

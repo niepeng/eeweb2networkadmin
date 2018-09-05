@@ -1,19 +1,24 @@
 package com.chengqianyun.eeweb2networkadmin.action;
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.ConsoleLoginAccount;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.HttpSessionUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.MD5Util;
 import com.chengqianyun.eeweb2networkadmin.core.utils.SHAUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import com.chengqianyun.eeweb2networkadmin.service.ConsoleLoginAccountService;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
@@ -136,9 +141,7 @@ public class IndexController extends BaseController {
   @RequestMapping("/logout")
   public String logout(HttpServletRequest request, Model model) {
 //    LogFactory.logMessage("退出系统");
-    HttpSession session = request.getSession();
-    ConsoleLoginAccount account = (ConsoleLoginAccount)session.getAttribute("loginSessionInfo");
-//    sessionMap.remove(account.getVcLoginName());
+//    ConsoleLoginAccount account = HttpSessionUtil.getLoginSession();
     HttpSessionUtil.removeLoginSession();
 //    ConsoleLoginAccount consoleLoginAccountParams = new ConsoleLoginAccount();
 //    consoleLoginAccountParams.setVcLoginName(account.getVcLoginName());
@@ -147,6 +150,89 @@ public class IndexController extends BaseController {
     return "/index";
 
   }
+
+
+
+  /**
+   * 跳到更改密码页面
+   * @param model
+   * @return
+   */
+  @RequestMapping(value = "/changepassword", method = RequestMethod.GET)
+  public String changepassword(Model model) {
+//    addOptMenu(model, MenuEnum.);
+    ConsoleLoginAccount account = HttpSessionUtil.getLoginSession();
+    if(account == null) {
+      return "redirect:/index";
+    }
+
+//    //首次登录修改初始密码
+//    Map<String,String> map = new HashMap<String,String>();
+//    map.put("name",account.getVcLoginName());
+//    map.put("eventType", OperationTypeEnum.login.getCode());
+//    map.put("opeResult", OperationResultEnum.success.getCode());
+//    int allCount = operationLogService.getAllLognnOkCount(map);
+//    if(allCount<=1){
+//
+//      model.addAttribute("nav_set", "no_nav");
+//    }
+    model.addAttribute("account", account);
+    return "/changepassword";
+  }
+
+
+  /**
+   * 执行更改密码操作
+   * @param account
+   * @param oldPassword
+   * @param newPassword
+   * @param confirmNewPassword
+   * @param model
+   * @return
+   */
+  @RequestMapping(value = "/updatepassword", method = RequestMethod.POST)
+  public String updatepassword(@ModelAttribute ConsoleLoginAccount account,
+      String oldPassword, String newPassword, String confirmNewPassword,
+      Model model) {
+//    addOptMenu(model, MenuEnum.adminRole);
+    try {
+      if (StringUtils.isBlank(oldPassword)) {
+        throw new Exception("当前密码不能为空");
+      }
+      if (newPassword.equals(oldPassword)) {
+        throw new Exception("新老密码相同");
+      }
+      if (StringUtils.isBlank(newPassword)) {
+        throw new Exception("新密码不能为空");
+      }
+      if (StringUtils.isBlank(confirmNewPassword)) {
+        throw new Exception("确认密码不能为空");
+      }
+      if (!newPassword.equals(confirmNewPassword)) {
+        throw new Exception("两次输入密码不一致");
+      }
+      String pwd = SHAUtil.encode(oldPassword);
+      ConsoleLoginAccount loginAccount = HttpSessionUtil.getLoginSession();
+      if (!pwd.equals(loginAccount.getVcLoginPassword())) {
+        throw new Exception("当前密码错误");
+      }
+      account.setVcLoginPassword(SHAUtil.encode(newPassword));
+      account.setDtModify(new Date());
+      consoleLoginAccountService.updatepassword(account);
+      loginAccount.setVcLoginPassword(account.getVcLoginPassword());
+      HttpSessionUtil.setLoginSession(loginAccount);
+      return "/success";
+    } catch (Exception e) {
+      model.addAttribute("newPassword", newPassword);
+      model.addAttribute("confirmNewPassword", confirmNewPassword);
+      model.addAttribute("account", account);
+      model.addAttribute(SUCCESS, false);
+      model.addAttribute(MESSAGE, e.getMessage());
+      return "/changepassword";
+    }
+  }
+
+
 
 
 
