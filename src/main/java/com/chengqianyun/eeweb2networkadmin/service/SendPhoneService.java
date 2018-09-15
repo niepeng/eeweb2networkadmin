@@ -145,7 +145,7 @@ public class SendPhoneService extends BaseService {
     if (phoneFlag) {
       try {
         for (Contacts contacts : contactsList) {
-          boolean flag = serialService.callPhone(contacts.getPhone());
+          boolean flag = serialService.callPhoneOrSms(contacts.getPhone(), null, false);
           if (flag) {
             insertSendRecord(contacts, "phone", null);
           }
@@ -167,7 +167,7 @@ public class SendPhoneService extends BaseService {
 
     try {
       for (Contacts contacts : contactsList) {
-        boolean flag = serialService.sendSms(contacts.getPhone(), content);
+        boolean flag = serialService.callPhoneOrSms(contacts.getPhone(), content, true);
         if (flag) {
           insertSendRecord(contacts, "sms", content);
         }

@@ -45,7 +45,7 @@ public class WirelessSettingController extends BaseController {
   public String normal( Model model) {
     try {
       addOptMenu(model, MenuEnum.wirelessSetting);
-      model.addAttribute("running", serialService.isRunning());
+      model.addAttribute("running", serialService.testSerial());
       return "/wirelessSetting/normal";
     } catch (Exception ex) {
       model.addAttribute(SUCCESS, false);
@@ -55,34 +55,35 @@ public class WirelessSettingController extends BaseController {
     }
   }
 
-  /**
-   * 操作:打开关闭
-   */
-  @RequestMapping(value = "/serialOpt", method = RequestMethod.GET)
-  public String serialOpt( Model model,
-      @RequestParam(value = "newFlag", required = false, defaultValue = "") String newFlag, RedirectAttributes redirectAttributes) {
-    try {
-      if (newFlag.equalsIgnoreCase("true")) {
-        serialService.init(true);
-        if (serialService.isRunning()) {
-          redirectAttributes.addFlashAttribute(SUCCESS, true);
-          redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_OPERATE_SUCESS);
-        }
-        redirectAttributes.addFlashAttribute(SUCCESS, false);
-        redirectAttributes.addFlashAttribute(MESSAGE, "运行失败,请确保com口插入硬件设备");
-        return "redirect:/wirelessSetting/normal";
-      }
-      serialService.close();
-      redirectAttributes.addFlashAttribute(SUCCESS, true);
-      redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_OPERATE_SUCESS);
-      return "redirect:/wirelessSetting/normal";
-    } catch (Error ex) {
-      redirectAttributes.addFlashAttribute(SUCCESS, false);
-      redirectAttributes.addFlashAttribute(MESSAGE, "运行失败,请确保com口插入硬件设备,error");
-      log.error(ex);
-      return "redirect:/wirelessSetting/normal";
-    }
-  }
+
+//  /**
+//   * 操作:打开关闭
+//   */
+//  @RequestMapping(value = "/serialOpt", method = RequestMethod.GET)
+//  public String serialOpt( Model model,
+//      @RequestParam(value = "newFlag", required = false, defaultValue = "") String newFlag, RedirectAttributes redirectAttributes) {
+//    try {
+//      if (newFlag.equalsIgnoreCase("true")) {
+//        serialService.init(true);
+//        if (serialService.isRunning()) {
+//          redirectAttributes.addFlashAttribute(SUCCESS, true);
+//          redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_OPERATE_SUCESS);
+//        }
+//        redirectAttributes.addFlashAttribute(SUCCESS, false);
+//        redirectAttributes.addFlashAttribute(MESSAGE, "运行失败,请确保com口插入硬件设备");
+//        return "redirect:/wirelessSetting/normal";
+//      }
+//      serialService.close();
+//      redirectAttributes.addFlashAttribute(SUCCESS, true);
+//      redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_OPERATE_SUCESS);
+//      return "redirect:/wirelessSetting/normal";
+//    } catch (Error ex) {
+//      redirectAttributes.addFlashAttribute(SUCCESS, false);
+//      redirectAttributes.addFlashAttribute(MESSAGE, "运行失败,请确保com口插入硬件设备,error");
+//      log.error(ex);
+//      return "redirect:/wirelessSetting/normal";
+//    }
+//  }
 
 
   /**

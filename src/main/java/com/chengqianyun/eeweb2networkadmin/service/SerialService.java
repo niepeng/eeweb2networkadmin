@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class SerialService extends BaseService {
 
-  private boolean isRunning;
+  private static boolean isRunning;
 
   private SerialPort serialPort;
 
@@ -45,21 +46,21 @@ public class SerialService extends BaseService {
   static long waitMillTime = 500;
   static int PACKET_LENGTH = 500;
 
-  public boolean isRunning() {
-    return  isRunning;
-  }
+  static volatile long closeSerialTime = 0;
 
   /**
    * 是否是强制执行初始化
    *
    * @param isForce
    */
-  public synchronized void init(boolean isForce) {
+  public synchronized void init(boolean isForce, boolean checkSmsPhoneOpenClosed) {
 
     boolean sms = Boolean.valueOf(getData(SettingEnum.alarm_sms));
     boolean phone = Boolean.valueOf(getData(SettingEnum.alarm_phone));
-    if(!sms && !phone) {
-      return;
+    if(checkSmsPhoneOpenClosed) {
+      if(!sms && !phone) {
+        return;
+      }
     }
 
     if (!isForce && isRunning) {
@@ -93,9 +94,57 @@ public class SerialService extends BaseService {
       }
 
     } catch (Exception e) {
-      log.error("SerialService.init", e);
+      log.error("SerialService.init.Exception", e);
+    }catch (Error e) {
+      log.error("SerialService.init.Error", e);
     }
     isRunning = false;
+  }
+
+  public boolean testSerial() {
+    if (isRunning) {
+      return true;
+    }
+
+    init(true, false);
+    boolean flag = isRunning;
+    close();
+    return flag;
+  }
+
+  public synchronized boolean callPhoneOrSms(String phone, String smsContent, boolean isSms) {
+    if (!isRunning) {
+      init(true, false);
+      delayCloseSerial();
+    }
+
+    if (isSms) {
+      return sendSms(phone, smsContent);
+    }
+    try {
+      return callPhone(phone);
+    } catch (IOException e) {
+    } catch (InterruptedException e) {
+    }
+    return false;
+  }
+
+  private void delayCloseSerial() {
+    if (closeSerialTime == 0) {
+      closeSerialTime = System.currentTimeMillis() + 10 * 60 * 1000;
+      new Thread(new Runnable() {
+        @Override
+        public void run() {
+          while (System.currentTimeMillis() < closeSerialTime) {
+            SystemClock.sleep(25 * 1000);
+          }
+          closeSerialTime = 0;
+          close();
+        }
+      }).start();
+      return;
+    }
+    closeSerialTime = 10 * 60 * 1000 + System.currentTimeMillis();
   }
 
 
@@ -105,7 +154,7 @@ public class SerialService extends BaseService {
    * @param phone
    * @return
    */
-  public synchronized boolean callPhone(String phone) throws IOException, InterruptedException {
+  private  boolean callPhone(String phone) throws IOException, InterruptedException {
     boolean phoneFlag = Boolean.valueOf(getData(SettingEnum.alarm_phone));
     if(!phoneFlag) {
       return false;
@@ -124,7 +173,7 @@ public class SerialService extends BaseService {
    * @param content
    * @return
    */
-  public synchronized boolean sendSms(String phone, String content) {
+  private  boolean sendSms(String phone, String content) {
     boolean smsFlag = Boolean.valueOf(getData(SettingEnum.alarm_sms));
     if(!smsFlag) {
       return false;
@@ -145,8 +194,8 @@ public class SerialService extends BaseService {
         serialPort.close();
         serialPort = null;
       }
-    }catch (Error e) {
-      log.error("serialCloseError" ,e);
+    } catch (Error e) {
+      log.error("serialCloseError", e);
     }
 
     if (out != null) {
@@ -154,6 +203,8 @@ public class SerialService extends BaseService {
         out.close();
         out = null;
       } catch (Exception e) {
+        log.error("closedOutException", e);
+      } catch (Error e) {
         log.error("closedOutError", e);
       }
     }
@@ -164,15 +215,12 @@ public class SerialService extends BaseService {
         in.close();
         in = null;
       } catch (Exception e) {
-        log.error("closedInError", e);
+        log.error("closedInException", e);
+      } catch (Error e) {
+        log.error("closedOutError", e);
       }
     }
-    log.error("executeClosedInEnd");
-
-
-
     log.error("executeClosedEnd");
-
     isRunning = false;
   }
 

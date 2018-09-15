@@ -79,11 +79,11 @@ public final class ServerConnectionManager {
     }).start();
 
 
-    try {
-      SpringContextHolder.getBean(SerialService.class).init(false);
-    } catch (Error e) {
-      log.error("threadPoolTaskExecutor.SerialServiceInitError", e);
-    }
+//    try {
+//      SpringContextHolder.getBean(SerialService.class).init(false, true);
+//    } catch (Error e) {
+//      log.error("threadPoolTaskExecutor.SerialServiceInitError", e);
+//    }
 
   }
 
