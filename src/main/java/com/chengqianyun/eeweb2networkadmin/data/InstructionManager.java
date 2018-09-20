@@ -256,6 +256,53 @@ public class InstructionManager {
 
   // ----------------------------------------------------------------------------------------------------------------
 
+  /**
+   * 根据sn号得到校验码
+   * 参数:02 00 00 01 00 00
+   * sn号 = 02000001
+   * SN号校验码(AC) = CE5E
+   *
+   * 返回:02 00 00 01 CE 5E
+   */
+
+  public static char[] getSnAndCheckCodeBySn(char[] sn) {
+    char[] crcTmp = CalcCRC.getCrc16(sn);
+
+//    System.out.println("crc后的的指令为:");
+//    System.out.println(FunctionUnit.bytesToHexString(tmp));
+//    System.out.println();
+
+//    System.out.println("ac第一位为:" + Integer.toHexString(0xFF & crcTmp[4]));
+//    System.out.println("ac第二位为:" + Integer.toHexString(0xFF & crcTmp[5]));
+//    System.out.println();
+
+    char acFirstLow;
+    char acSecondLow;
+    if( (crcTmp[4] % 0x10) < 2 ) {
+      acFirstLow = (char) (crcTmp[4] % 0x10 + 0x10 - 2);
+    } else {
+      acFirstLow = (char) (crcTmp[4] % 0x10 - 2);
+    }
+
+    if( (crcTmp[5] % 0x10) < 14 ) {
+      acSecondLow = (char)(crcTmp[5] % 0x10 + 2);
+    } else {
+      acSecondLow = (char)(crcTmp[5] % 0x10 + 2 - 0x10);
+    }
+
+//    System.out.println("ac第一位低位为:" + Integer.toHexString(0xFF & acFirstLow));
+//    System.out.println("ac第二位低位为:" + Integer.toHexString(0xFF & acSecondLow));
+//    System.out.println();
+
+
+    char resultAcFirst = (char) ((crcTmp[4] / 0x10 << 4)+ (int)acFirstLow);
+    char resultAcSecond = (char) ((crcTmp[5] / 0x10 << 4) + (int)acSecondLow);
+
+    crcTmp[4] = resultAcFirst;
+    crcTmp[5] = resultAcSecond;
+
+    return crcTmp;
+  }
 
   /**
    * FC 67 09 02 00 00 01 CE 5E 01 17 03 7F F1
@@ -275,6 +322,8 @@ public class InstructionManager {
     }
 
     char[] crcTmp = CalcCRC.getCrc16(tmp);
+
+
 //    System.out.println("crc后的的指令为:");
 //    System.out.println(FunctionUnit.bytesToHexString(tmp));
 //    System.out.println();

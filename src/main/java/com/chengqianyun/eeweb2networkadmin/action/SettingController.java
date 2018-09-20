@@ -5,6 +5,9 @@ import com.chengqianyun.eeweb2networkadmin.biz.HdConstant;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.SettingAlarmBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.SettingNormalBean;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
+import com.chengqianyun.eeweb2networkadmin.core.utils.data.CalcCRC;
+import com.chengqianyun.eeweb2networkadmin.core.utils.data.FunctionUnit;
+import com.chengqianyun.eeweb2networkadmin.data.InstructionManager;
 import com.chengqianyun.eeweb2networkadmin.service.AlarmService;
 import com.chengqianyun.eeweb2networkadmin.service.SettingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -99,5 +103,69 @@ public class SettingController extends BaseController {
       return "redirect:/setting/alarm";
     }
   }
+
+  @RequestMapping(value = "/genInstructionInfo", method = RequestMethod.GET)
+  public String genInstructionInfo(
+      // 设备区域
+      @RequestParam(value = "sn",  defaultValue = "") String sn,
+      Model model) {
+
+    try {
+      addOptMenu(model, MenuEnum.setting);
+      model.addAttribute("sn", sn);
+      char[] snChars = changeSnChars(sn);
+      if(snChars != null) {
+        char[] data = genInstructionBySn(snChars);
+        String value = FunctionUnit.bytesToHexString(data);
+        model.addAttribute("value", value);
+      } else {
+        model.addAttribute("value", "请输入正确的sn格式");
+      }
+      return "/setting/genInstructionInfo";
+    } catch (Exception ex) {
+      model.addAttribute(SUCCESS, false);
+      model.addAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "/setting/genInstructionInfo";
+    }
+  }
+
+  private char[] changeSnChars(String sn) {
+    if(sn == null || sn.trim().length() == 0) {
+      return null;
+    }
+
+    String[] strs = sn.split(" ");
+    if(strs.length != 4) {
+      return null;
+    }
+
+    char[] r = new char[4];
+    for(int i=0;i<r.length;i++) {
+      r[i] = (char) Integer.parseInt(strs[i], 16);
+    }
+    return r;
+  }
+
+
+  private static char[] genInstructionBySn(char[] sn) {
+    char[] result = {0xFB, 0x68, 0x06,
+        0x00,0x00,0x00,0x00,  0x00,0x00,
+        0x00,0x00
+    };
+
+    char[] snNew = {sn[0], sn[1],sn[2], sn[3], 0x00, 0x00};
+    char[] snAndCheckCode = InstructionManager.getSnAndCheckCodeBySn(snNew);
+
+    result[3] = snAndCheckCode[0];
+    result[4] = snAndCheckCode[1];
+    result[5] = snAndCheckCode[2];
+    result[6] = snAndCheckCode[3];
+    result[7] = snAndCheckCode[4];
+    result[8] = snAndCheckCode[5];
+
+    return CalcCRC.getCrc16(result);
+  }
+  
 
 }
