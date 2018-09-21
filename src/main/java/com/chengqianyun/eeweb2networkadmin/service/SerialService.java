@@ -186,40 +186,58 @@ public class SerialService extends BaseService {
 
     log.error("executeClosedStart");
 
-    try {
-      if (serialPort != null) {
-        serialPort.notifyOnDataAvailable(false);
-        serialPort.notifyOnBreakInterrupt(false);
-        serialPort.removeEventListener();
-        serialPort.close();
-        serialPort = null;
-      }
-    } catch (Error e) {
-      log.error("serialCloseError", e);
-    }
-
     if (out != null) {
       try {
-        out.close();
-        out = null;
-      } catch (Exception e) {
-        log.error("closedOutException", e);
-      } catch (Error e) {
-        log.error("closedOutError", e);
+        out.close();		in.close();
+        out = null;			in = null;
+      } catch (IOException e) {
+        log.info("关闭串口时出错:" + e.getMessage() + e.toString());
       }
     }
-    log.error("executeClosedOutEnd");
 
-    if (in != null) {
-      try {
-        in.close();
-        in = null;
-      } catch (Exception e) {
-        log.error("closedInException", e);
-      } catch (Error e) {
-        log.error("closedOutError", e);
-      }
+    if(serialPort != null) {
+      serialPort.notifyOnDataAvailable(false);
+      serialPort.notifyOnBreakInterrupt(false);
+      serialPort.removeEventListener();
+      serialPort.close();
+      serialPort = null;
     }
+
+
+//    try {
+//      if (serialPort != null) {
+//        serialPort.notifyOnDataAvailable(false);
+//        serialPort.notifyOnBreakInterrupt(false);
+//        serialPort.removeEventListener();
+//        serialPort.close();
+//        serialPort = null;
+//      }
+//    } catch (Error e) {
+//      log.error("serialCloseError", e);
+//    }
+//
+//    if (out != null) {
+//      try {
+//        out.close();
+//        out = null;
+//      } catch (Exception e) {
+//        log.error("closedOutException", e);
+//      } catch (Error e) {
+//        log.error("closedOutError", e);
+//      }
+//    }
+//    log.error("executeClosedOutEnd");
+//
+//    if (in != null) {
+//      try {
+//        in.close();
+//        in = null;
+//      } catch (Exception e) {
+//        log.error("closedInException", e);
+//      } catch (Error e) {
+//        log.error("closedOutError", e);
+//      }
+//    }
     log.error("executeClosedEnd");
     isRunning = false;
   }
