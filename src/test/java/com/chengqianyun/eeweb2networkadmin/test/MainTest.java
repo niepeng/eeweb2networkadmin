@@ -1,6 +1,7 @@
 package com.chengqianyun.eeweb2networkadmin.test;
 
 
+import com.chengqianyun.eeweb2networkadmin.core.utils.SHAUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.data.CalcCRC;
 import com.chengqianyun.eeweb2networkadmin.core.utils.data.FunctionUnit;
 import com.chengqianyun.eeweb2networkadmin.data.InstructionManager;
@@ -14,8 +15,11 @@ import com.chengqianyun.eeweb2networkadmin.data.InstructionManager;
 public class MainTest {
 
   public static void main(String[] args) {
-    char[] result = genInstructionBySn(new char[]{0x02, 0x18, 0x05, 0x01});
-    System.out.println(FunctionUnit.bytesToHexString(result));
+//    char[] result = genInstructionBySn(new char[]{0x02, 0x18, 0x05, 0x01});
+//    System.out.println(FunctionUnit.bytesToHexString(result));
+
+    String value = SHAUtil.encode("hello@1234");
+    System.out.println(value);
   }
 
   /**

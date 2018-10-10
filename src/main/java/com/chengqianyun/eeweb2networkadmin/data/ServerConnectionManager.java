@@ -152,16 +152,15 @@ public final class ServerConnectionManager {
   public static DeviceInfo addSnConnection(String sn, int address, ServerClientHandler serverClientHandler) {
     log.info("addSnConnection start,sn={},address={}", sn, address);
     DeviceInfoMapper deviceInfoMapper = SpringHelper.getBean("deviceInfoMapper", DeviceInfoMapper.class);
-    log.info("deviceInfoMapper={}", deviceInfoMapper);
     if (snDeviceSocketMap.containsKey(sn)) {
-      log.info("addSnConnection_snDeviceSocketMap already exist");
+      log.warn("addSnConnection_snDeviceSocketMap already exist");
       close(snDeviceSocketMap.get(sn));
       snDeviceSocketMap.remove(sn);
     }
 
     int deviceType = DeviceConfigEnum.getById(sn.substring(0, 2)).getDeviceType();
     DeviceInfo fromDB = deviceInfoMapper.selectBySn(sn);
-    log.info("addSnConnection_fromDB={}", fromDB);
+    log.warn("addSnConnection_fromDB={}", fromDB);
 
     if (fromDB == null) {
       fromDB = new DeviceInfo();

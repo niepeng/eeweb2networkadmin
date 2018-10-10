@@ -18,6 +18,10 @@ CREATE TABLE `t_admin_loginaccount` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='系统管理平台登陆账号表';
 
+INSERT INTO `t_admin_loginaccount` (`id`, `vcLoginName`, `vcLoginPassword`, `vcRealName`, `vcPhone`, `iValid`, `dtCreate`, `dtModify`, `role_id`)
+VALUES ('1', 'admin', 'bfaa9914ffbd2c4a543836c34024d3488cca1398d6cb1b41d0de0bd70f6b7f52', 'chengqian', '13012345678', '1', '2017-08-22 20:28:00', '2018-09-01 00:40:13', '4');
+
+
 
 CREATE TABLE `t_setting` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -28,7 +32,7 @@ CREATE TABLE `t_setting` (
   `created_by` varchar(45) DEFAULT NULL COMMENT '创建人',
   `updated_by` varchar(45) DEFAULT NULL COMMENT '修改人',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='系统参数配置';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='系统参数配置';
 
 
 CREATE TABLE `t_area` (
@@ -41,7 +45,7 @@ CREATE TABLE `t_area` (
   `created_by` varchar(45) DEFAULT NULL COMMENT '创建人',
   `updated_by` varchar(45) DEFAULT NULL COMMENT '修改人',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='区域表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='区域表';
 
 ALTER TABLE `t_area`
 CHANGE COLUMN `sms_phones` `contacts_ids` VARCHAR(1024) NULL DEFAULT NULL COMMENT 't_send_contacts表的id,用来关联联系人,逗号分隔(报警的使用)' ;
@@ -57,7 +61,7 @@ CREATE TABLE `t_sms_phone` (
   `created_by` varchar(45) DEFAULT NULL COMMENT '创建人',
   `updated_by` varchar(45) DEFAULT NULL COMMENT '修改人',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='短信关联人表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='短信关联人表';
 
 
 CREATE TABLE `t_device_info` (
@@ -91,7 +95,7 @@ CREATE TABLE `t_device_info` (
   `created_by` varchar(45) DEFAULT NULL COMMENT '创建人',
   `updated_by` varchar(45) DEFAULT NULL COMMENT '修改人',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='设备信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='设备信息表';
 
 
 
@@ -109,7 +113,7 @@ CREATE TABLE `t_out_condition` (
   `created_by` varchar(45) DEFAULT NULL COMMENT '创建人',
   `updated_by` varchar(45) DEFAULT NULL COMMENT '修改人',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='开关量输出条件表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='开关量输出条件表';
 
 
 
@@ -136,7 +140,7 @@ CREATE TABLE `t_device_data_intime` (
   `created_by` varchar(45) DEFAULT NULL COMMENT '创建人',
   `updated_by` varchar(45) DEFAULT NULL COMMENT '修改人',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='设备实时数据表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='设备实时数据表';
 
 
 
@@ -209,7 +213,7 @@ CREATE TABLE `t_device_alarm` (
   `created_by` varchar(45) DEFAULT NULL COMMENT '创建人',
   `updated_by` varchar(45) DEFAULT NULL COMMENT '修改人',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='报警数据表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='报警数据表';
 
 
 
@@ -234,7 +238,7 @@ CREATE TABLE `t_device_data_history` (
   `created_by` varchar(45) DEFAULT NULL COMMENT '创建人',
   `updated_by` varchar(45) DEFAULT NULL COMMENT '修改人',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='设备历史数据表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='设备历史数据表';
 
 
 
@@ -248,7 +252,7 @@ CREATE TABLE `t_contacts` (
   `created_by` varchar(45) DEFAULT NULL COMMENT '创建人',
   `updated_by` varchar(45) DEFAULT NULL COMMENT '修改人',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='联系人';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='联系人';
 
 
 CREATE TABLE `t_send_contacts` (
@@ -262,7 +266,7 @@ CREATE TABLE `t_send_contacts` (
   `created_by` varchar(45) DEFAULT NULL COMMENT '创建人',
   `updated_by` varchar(45) DEFAULT NULL COMMENT '修改人',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='发送的通讯列表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='发送的通讯列表';
 
 
 

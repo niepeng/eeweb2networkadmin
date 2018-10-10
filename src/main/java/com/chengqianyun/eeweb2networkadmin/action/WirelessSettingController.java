@@ -45,7 +45,9 @@ public class WirelessSettingController extends BaseController {
   public String normal( Model model) {
     try {
       addOptMenu(model, MenuEnum.wirelessSetting);
-      model.addAttribute("running", serialService.testSerial());
+      // TODO .. 无线测试先去掉
+//      model.addAttribute("running", serialService.testSerial());
+      model.addAttribute("running", false);
       return "/wirelessSetting/normal";
     } catch (Exception ex) {
       model.addAttribute(SUCCESS, false);

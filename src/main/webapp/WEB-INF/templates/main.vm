@@ -21,8 +21,14 @@
     </div><!-- #nav-search -->
   </div>
 
+
   <div class="page-content">
     <h1>欢迎光临 $!{platformName} ！</h1>
     <br>
   </div><!-- /.page-content -->
 </div><!-- /.main-content -->
+
+<script>
+   var url = '${www}' + "/intime/dataList";
+   window.location.href=url;
+</script>

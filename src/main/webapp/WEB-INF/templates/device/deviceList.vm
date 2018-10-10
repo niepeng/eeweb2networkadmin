@@ -82,7 +82,7 @@
               <td>
                   #if($!{row.hasTemp()}) 温度: $!unitUtil.changeTemp($!{row.tempDown})℃ ~ $!unitUtil.changeTemp($!{row.tempUp}) ℃ ($!unitUtil.changeTemp($!{row.tempDev})℃)<br/> #end
                   #if($!{row.hasHumi()}) 湿度: $!unitUtil.changeHumi($!{row.humiDown})%RH ~ $!unitUtil.changeHumi($!{row.humiUp})%RH ($!unitUtil.changeHumi($!{row.humiDev})%RH)<br/> #end
-                  #if($!{row.hasPower()}) 电量 <br/> #end
+##                  #if($!{row.hasPower()}) 电量 <br/> #end
                   #if($!{row.hasShine()}) 光照: $!{row.shineDown} Lx ~ $!{row.shineUp}Lx ($!{row.shineDev}Lx)<br/> #end
                   #if($!{row.hasPressure()}) 压力: $!unitUtil.changePressure($!{row.pressureDown})Pa ~ $!unitUtil.changePressure($!{row.pressureUp})Pa ($!unitUtil.changePressure($!{row.pressureDev})Pa)<br/> #end
                   #if($!{row.hasSmoke()}) 烟感: <br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end

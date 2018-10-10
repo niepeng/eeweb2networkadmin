@@ -467,7 +467,7 @@
 
 
 	<build>
-		<finalName>eeweb2networkadmin</finalName>
+		<finalName>cqlweb</finalName>
 
 		<resources>
 			<resource>

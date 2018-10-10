@@ -78,6 +78,7 @@ public class SettingController extends BaseController {
       Model model) {
 
     try {
+      // TODO ..短信开关在页面上默认关闭
       addOptMenu(model, MenuEnum.setting);
       model.addAttribute("settingAlarmBean", settingService.alarm());
       return "/setting/alarm";
