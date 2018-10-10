@@ -18,8 +18,9 @@ CREATE TABLE `t_admin_loginaccount` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='系统管理平台登陆账号表';
 
+-- admin  admin@1234
 INSERT INTO `t_admin_loginaccount` (`id`, `vcLoginName`, `vcLoginPassword`, `vcRealName`, `vcPhone`, `iValid`, `dtCreate`, `dtModify`, `role_id`)
-VALUES ('1', 'admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin', '13012345678', '1', '2017-08-22 20:28:00', '2018-09-01 00:40:13', '4');
+VALUES ('1', 'admin', '054eff6ef923797ac42d1ea652d4d204fef31a08b449a43c74e58047a0e091e6', 'admin', '13012345678', '1', '2017-08-22 20:28:00', '2018-09-01 00:40:13', '4');
 
 
 

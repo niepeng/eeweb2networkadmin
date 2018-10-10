@@ -19,7 +19,7 @@ public class MainTest {
 //    System.out.println(FunctionUnit.bytesToHexString(result));
 
 //    String value = SHAUtil.encode("hello@1234");
-    String value = SHAUtil.encode("admin");
+    String value = SHAUtil.encode("admin@1234");
     System.out.println(value);
   }
 
