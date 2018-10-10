@@ -18,7 +18,8 @@ public class MainTest {
 //    char[] result = genInstructionBySn(new char[]{0x02, 0x18, 0x05, 0x01});
 //    System.out.println(FunctionUnit.bytesToHexString(result));
 
-    String value = SHAUtil.encode("hello@1234");
+//    String value = SHAUtil.encode("hello@1234");
+    String value = SHAUtil.encode("admin");
     System.out.println(value);
   }
 
