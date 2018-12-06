@@ -32,6 +32,9 @@ public class SendPhoneService extends BaseService {
   @Autowired
   private SerialService serialService;
 
+  @Autowired
+  private MailService mailService;
+
   /**
    * 设备报警记录,需要发送信息等
    */
@@ -125,12 +128,18 @@ public class SendPhoneService extends BaseService {
 
   private void optAlarmInfo(DeviceAlarm deviceAlarm) {
 
+    // TODO .. 这里是发送发邮件功能
+//    mailService.sendEmail()
+
+
     // 这里实现拨打电话和发送短信功能
     boolean phoneFlag = Boolean.valueOf(getData(SettingEnum.alarm_phone));
     boolean smsFlag = Boolean.valueOf(getData(SettingEnum.alarm_sms));
+
     if (!phoneFlag && !smsFlag) {
       return;
     }
+
 
     List<Contacts> contactsList = getContactsByAreaId(deviceAlarm.getAreaId());
     if(contactsList == null || contactsList.size() == 0) {

@@ -15,6 +15,13 @@ import com.chengqianyun.eeweb2networkadmin.data.InstructionManager;
 public class MainTest {
 
   public static void main(String[] args) {
+    String s = "3,2，2,";
+    System.out.println(s);
+    s = s.replaceAll(" ", "").replaceAll("，",",");
+    System.out.println(s);
+  }
+
+  public static void main1(String[] args) {
 //    char[] result = genInstructionBySn(new char[]{0x02, 0x18, 0x05, 0x01});
 //    System.out.println(FunctionUnit.bytesToHexString(result));
 

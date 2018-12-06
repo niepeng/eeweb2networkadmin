@@ -2,6 +2,7 @@ package com.chengqianyun.eeweb2networkadmin.action;
 
 
 import com.chengqianyun.eeweb2networkadmin.biz.HdConstant;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.EmailBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.SettingAlarmBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.SettingNormalBean;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
@@ -89,6 +90,42 @@ public class SettingController extends BaseController {
       return "/setting/alarm";
     }
   }
+
+  /**
+   * 邮件设置
+   */
+  @RequestMapping(value = "/email", method = RequestMethod.GET)
+  public String email(
+      Model model) {
+
+    try {
+      addOptMenu(model, MenuEnum.setting);
+      model.addAttribute("settingEmailBean", settingService.email());
+      return "/setting/email";
+    } catch (Exception ex) {
+      model.addAttribute(SUCCESS, false);
+      model.addAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "/setting/email";
+    }
+  }
+
+
+  @RequestMapping(value = "/doEmail", method = RequestMethod.POST)
+  public String doEmail(EmailBean emailBean, Model model, RedirectAttributes redirectAttributes) {
+    try {
+      settingService.save(emailBean);
+      redirectAttributes.addFlashAttribute(SUCCESS, true);
+      redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_SAVE_SUCESS);
+      return "redirect:/setting/email";
+    } catch (Exception ex) {
+      redirectAttributes.addFlashAttribute(SUCCESS, false);
+      redirectAttributes.addFlashAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "redirect:/setting/email";
+    }
+  }
+
 
   @RequestMapping(value = "/doAlarm", method = RequestMethod.POST)
   public String doAlarm(SettingAlarmBean settingAlarmBean, Model model, RedirectAttributes redirectAttributes) {

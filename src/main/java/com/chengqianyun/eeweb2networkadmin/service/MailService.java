@@ -1,7 +1,10 @@
 package com.chengqianyun.eeweb2networkadmin.service;
 
 
+import com.chengqianyun.eeweb2networkadmin.biz.enums.SettingEnum;
+import com.chengqianyun.eeweb2networkadmin.core.utils.ThreeDes;
 import com.sun.mail.util.MailSSLSocketFactory;
+import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -39,19 +42,18 @@ public class MailService extends BaseService {
   public static String charset ;
   public static String timeout;
 
-//  @PostConstruct
-//  public void initParam () {
-//    auth = env.getProperty("mail.smtp.auth");
-//    host = env.getProperty("mail.host");
-//    protocol = env.getProperty("mail.transport.protocol");
-//    port = env.getProperty("mail.smtp.port", Integer.class);
-//    authName = env.getProperty("mail.auth.name");
-//    password = env.getProperty("mail.auth.password");
-//    charset = env.getProperty("mail.send.charset");
-//    isSSL = env.getProperty("mail.is.ssl", Boolean.class);
-//    timeout = env.getProperty("mail.smtp.timeout");
-//  }
-
+  @PostConstruct
+  public void initParam() {
+    MailService.auth =  getData(SettingEnum.mail_smtp_auth);
+    MailService.host = getData(SettingEnum.mail_host);
+    MailService.protocol = getData(SettingEnum.mail_transport_protocol);
+    MailService.port = Integer.parseInt(getData(SettingEnum.mail_smtp_port));
+    MailService.authName = getData(SettingEnum.mail_auth_name);
+    MailService.password = ThreeDes.decrypt(getData(SettingEnum.mail_auth_password));
+    MailService.charset = getData(SettingEnum.mail_send_charset);
+    MailService.isSSL = Boolean.valueOf(getData(SettingEnum.mail_is_ssl));
+    MailService.timeout = getData(SettingEnum.mail_smtp_timeout);
+  }
 
   /**
    * 发送邮件
@@ -61,7 +63,7 @@ public class MailService extends BaseService {
    * @param content 邮件内容
    * @param attachfiles 附件列表  List<Map<String, String>> key: name && file
    */
-  public static boolean sendEmail(String subject, String[] toUsers, String[] ccUsers, String content, List<Map<String, String>> attachfiles) {
+  public boolean sendEmail(String subject, String[] toUsers, String[] ccUsers, String content, List<Map<String, String>> attachfiles) {
     boolean flag = true;
     try {
       JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();

@@ -1,0 +1,216 @@
+
+<script src="${www}/js/my97DatePicker/WdatePicker.js"></script>
+
+<div class="main-content">
+  <div class="breadcrumbs" id="breadcrumbs">
+    <script src="${www}/js/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript">
+      try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+
+      jQuery(function($) {
+        $('.input-mask-date').mask('9999-99-99');
+      });
+
+    </script>
+
+    <ul class="breadcrumb">
+      <li>
+        <i class="icon-home home-icon"></i>
+        <a href="${www}/main">主页</a>
+      </li>
+
+      <li>
+        <a href="${www}/setting/alarm">邮件设置</a>
+      </li>
+      <li class="active">设置</li>
+    </ul><!-- .breadcrumb -->
+
+    <div class="nav-search" id="nav-search">
+    ##      <form class="form-search">
+##						<span class="input-icon">
+##							<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+##							<i class="icon-search nav-search-icon"></i>
+##						</span>
+##      </form>
+    </div><!-- #nav-search -->
+  </div>
+
+  <div class="page-content">
+    <div class="page-header">
+      <h1>设置</h1>
+    </div>
+
+    #if(${msg})
+      <div>
+        #if(${success})
+          <li class="text-success">$!{msg}</li>
+        #else
+          <li class="text-danger">$!{msg}</li>
+        #end
+      </div>
+    #end
+
+    <form id="inputForm" action="${www}/setting/doEmail" method="post" class="form-horizontal" enctype="multipart/form-data">
+
+      <div class="row">
+        <div class="col-xs-12 col-md-8">
+          <div class="form-group">
+            <label class="col-md-4 col-sm-2 control-label">启用邮件报警</label>
+            <div class="col-md-8 col-sm-8">
+              <input type="radio"  name="alarm_email" value="true"  #if($!settingEmailBean.alarm_email) checked #end> 启用 &nbsp;
+              <input type="radio"  name="alarm_email" value="false" #if(!$!settingEmailBean.alarm_email) checked #end> 禁用
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-xs-12 col-md-8">
+          <div class="form-group">
+            <label class="col-md-4 col-sm-2 control-label">邮件接收人(如果有多个,逗号分隔)</label>
+            <div class="col-md-8 col-sm-8">
+              <input type="text"  name="receiveEmails" style="width: 300px;" value="$!settingEmailBean.receiveEmails"> &nbsp;
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="row">
+        <div class="col-xs-12 col-md-8">
+          <div class="form-group">
+            <label class="col-md-4 col-sm-2 control-label">传输协议</label>
+            <div class="col-md-8 col-sm-8">
+              <input type="text"  name="mail_transport_protocol" style="width: 300px;" value="$!settingEmailBean.mail_transport_protocol"> &nbsp;
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="row">
+        <div class="col-xs-12 col-md-8">
+          <div class="form-group">
+            <label class="col-md-4 col-sm-2 control-label">是否需要授权</label>
+            <div class="col-md-8 col-sm-8">
+              <input type="radio"  name="mail_smtp_auth" value="true"  #if($!settingEmailBean.mail_smtp_auth) checked #end> 需要 &nbsp;
+              <input type="radio"  name="mail_smtp_auth" value="false" #if(!$!settingEmailBean.mail_smtp_auth) checked #end> 不需要
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="row">
+        <div class="col-xs-12 col-md-8">
+          <div class="form-group">
+            <label class="col-md-4 col-sm-2 control-label">端口</label>
+            <div class="col-md-8 col-sm-8">
+              <input type="text"  name="mail_smtp_port" style="width: 300px;" value="$!settingEmailBean.mail_smtp_port"> &nbsp;
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+        <div class="row">
+          <div class="col-xs-12 col-md-8">
+            <div class="form-group">
+              <label class="col-md-4 col-sm-2 control-label">是否是ssl</label>
+              <div class="col-md-8 col-sm-8">
+                <input type="radio"  name="mail_is_ssl" value="true"  #if($!settingEmailBean.mail_is_ssl) checked #end> 是 &nbsp;
+                <input type="radio"  name="mail_is_ssl" value="false" #if(!$!settingEmailBean.mail_is_ssl) checked #end> 否
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+  <div class="row">
+    <div class="col-xs-12 col-md-8">
+      <div class="form-group">
+        <label class="col-md-4 col-sm-2 control-label">主机</label>
+        <div class="col-md-8 col-sm-8">
+          <input type="text"  name="mail_host" style="width: 300px;" value="$!settingEmailBean.mail_host"> &nbsp;
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="row">
+    <div class="col-xs-12 col-md-8">
+      <div class="form-group">
+        <label class="col-md-4 col-sm-2 control-label">授权用户名</label>
+        <div class="col-md-8 col-sm-8">
+          <input type="text"  name="mail_auth_name" style="width: 300px;" value="$!settingEmailBean.mail_auth_name"> &nbsp;
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-xs-12 col-md-8">
+      <div class="form-group">
+        <label class="col-md-4 col-sm-2 control-label">授权密码(不展示)</label>
+        <div class="col-md-8 col-sm-8">
+          <input type="text"  name="mail_auth_password" style="width: 300px;" value=""> &nbsp;
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="row">
+    <div class="col-xs-12 col-md-8">
+      <div class="form-group">
+        <label class="col-md-4 col-sm-2 control-label">超时时间(毫秒)</label>
+        <div class="col-md-8 col-sm-8">
+          <input type="text"  name="mail_smtp_timeout" style="width: 300px;" value="$!settingEmailBean.mail_smtp_timeout"> &nbsp;
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+      <div class="clearfix form-actions">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="col-sm-offset-4 col-md-9">
+              <button id="sbt" class="btn btn-info" type="submit">
+                <i id="iok" class="icon-ok bigger-110">保存</i>
+              </button>
+              <button class="btn" type="button" style="margin-left: 100px;" onclick="javascript:history.go(-1);">
+                <i class="icon-arrow-left bigger-110"></i>返回
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div><!-- /.page-content -->
+</div><!-- /.main-content -->
+
+<script src="${www}/js/youcaicommon.js"></script>
+<script type="text/javascript">
+
+  $("#sbt").click(function(e){
+    $("#iok").text("处理中");
+    $("#sbt").attr("disabled", true);
+    $("#inputForm").submit();
+
+  });
+
+</script>
+

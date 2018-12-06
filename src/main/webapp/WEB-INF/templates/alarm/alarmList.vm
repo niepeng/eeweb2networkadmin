@@ -80,6 +80,7 @@
           <thead>
           <tr>
             <th>名称</th>
+            <th>设备类型</th>
             <th>报警信息</th>
             <th>报警</th>
             <th>结束报警</th>
@@ -101,6 +102,7 @@
             #foreach($row in $result.rows)
             <tr>
               <td>$!{row.deviceInfo.name}</td>
+              <td>$applicationUtil.getOneById($!{row.deviceOneType}).name</td>
               <td>
                 $!{row.showAlarmMsg()}
               </td>

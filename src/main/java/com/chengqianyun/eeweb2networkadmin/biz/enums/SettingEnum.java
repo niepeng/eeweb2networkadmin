@@ -26,6 +26,9 @@ public enum SettingEnum {
 
   default_data_contain("default_data_contain", "数据默认缓存x分钟", "300" /* 单位秒 */),
 
+
+
+  alarm_email("alarm_email", "邮件报警:true启用,false:禁用", "false"),
   mail_smtp_auth("mail.smtp.auth", "是否需要授权", "true"),
   mail_transport_protocol("mail.transport.protocol", "传输协议", "smtp"),
   mail_send_charset("mail.send.charset", "传输文字格式", "UTF-8"),
@@ -35,6 +38,7 @@ public enum SettingEnum {
   mail_auth_name("mail.auth.name", "授权用户名", "cqlweb@163.com"),
   mail_auth_password("mail.auth.password", "授权密码", ThreeDes.encrypt("hello1234")),
   mail_smtp_timeout("mail.smtp.timeout", "超时时间", "5000"),
+  receiveEmails("receiveEmails", "接受邮件人", ""),
 
   ;
 
