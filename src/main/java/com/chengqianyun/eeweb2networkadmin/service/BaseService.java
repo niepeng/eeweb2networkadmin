@@ -7,6 +7,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.entitys.Contacts;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.ContactsMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarmMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistoryMapper;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntimeMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfoMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutConditionMapper;
@@ -33,6 +34,9 @@ public class BaseService {
 
   @Autowired
   protected DeviceInfoMapper deviceInfoMapper;
+
+  @Autowired
+  protected DeviceDataIntimeMapper deviceDataIntimeMapper;
 
   @Autowired
   protected OutConditionMapper outConditionMapper;

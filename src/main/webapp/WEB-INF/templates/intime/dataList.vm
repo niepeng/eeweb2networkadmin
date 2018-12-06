@@ -18,9 +18,20 @@
     background-color: #aed232;
   }
 
+  /*.blockcell_one_alarm {*/
+    /*background-color: #ddbd5f;*/
+  /*}*/
   .blockcell_one_alarm {
-    background-color: #ddbd5f;
+    background-color: red;
   }
+
+  .blockcell_one_alarm_down {
+    background-color: blue;
+  }
+  .blockcell_one_alarm_up {
+    background-color: red;
+  }
+
 
   .blockcell_one_offline {
     background-color: #bfbfbf;
@@ -40,7 +51,7 @@
     <ul class="breadcrumb">
       <li>
         <i class="icon-home home-icon"></i>
-        <a href="${www}/sp/main">主页</a>
+        <a href="${www}/main">主页</a>
       </li>
       <li class="active">实时数据</li>
     </ul><!-- .breadcrumb -->
@@ -151,9 +162,15 @@
             #elseif("$!{tmpElementDataBean.status}" == "3")
                 class="blockcell_one blockcell_one_offline"
               #set($showStatus ="离线")
+            #elseif("$!{tmpElementDataBean.status}" == "21")
+                class="blockcell_one blockcell_one_alarm_down"
+                #set($showStatus ="报警")
+            #elseif("$!{tmpElementDataBean.status}" == "22")
+                class="blockcell_one blockcell_one_alarm_up"
+                #set($showStatus ="报警")
             #else
                 class="blockcell_one blockcell_one_alarm"
-              #set($showStatus ="报警")
+                #set($showStatus ="报警")
             #end
             >
 

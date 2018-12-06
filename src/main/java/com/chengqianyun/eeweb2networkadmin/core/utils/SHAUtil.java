@@ -28,9 +28,9 @@ public class SHAUtil {
     }
     
     public static void main(String[] args) {
-    	String pwd = encode("hello@1234");
-		System.out.println(pwd);
-		System.out.println(pwd.length());
+      String pwd = encode("cql1234");
+	  	System.out.println(pwd);
+		  System.out.println(pwd.length());
 	}
 
 }

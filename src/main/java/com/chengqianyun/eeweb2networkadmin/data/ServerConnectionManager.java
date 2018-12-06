@@ -6,6 +6,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceConfigEnum;
 import com.chengqianyun.eeweb2networkadmin.core.SpringHelper;
 import com.chengqianyun.eeweb2networkadmin.core.utils.IoUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.SpringContextHolder;
+import com.chengqianyun.eeweb2networkadmin.service.PolicyService;
 import com.chengqianyun.eeweb2networkadmin.service.SendPhoneService;
 import com.chengqianyun.eeweb2networkadmin.service.SerialService;
 import java.io.IOException;
@@ -32,9 +33,9 @@ public final class ServerConnectionManager {
   public static int DEFAULT_PORT = 8234;
 
   /**
-   * 连续读取数据失败多少次,认为是当前socket无效了
+   * 连续读取数据失败多少次,认为是当前离线
    */
-  public static final int FAIL_TIMES_RETURN = 2;
+  public static final int FAIL_TIMES_RETURN = 5;
 
   /**
    * 获取数据周期:单位秒
@@ -71,12 +72,22 @@ public final class ServerConnectionManager {
       }
     }).start();
 
+
     new Thread(new Runnable() {
       @Override
       public void run() {
         SpringContextHolder.getBean(SendPhoneService.class).sendRecoverAlarm();
       }
     }).start();
+
+
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        SpringContextHolder.getBean(PolicyService.class).executeOffline();
+      }
+    }).start();
+
 
 
 //    try {
@@ -106,7 +117,7 @@ public final class ServerConnectionManager {
              */
             while (true) {
               Socket socket = server.accept();
-              socket.setSoTimeout(5000);
+              socket.setSoTimeout(20000);
               String ip = socket.getInetAddress().getHostAddress();
               int connectPort = socket.getPort();
               String ipAndPort = ip + ":" + connectPort;

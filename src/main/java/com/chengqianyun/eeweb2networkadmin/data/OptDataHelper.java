@@ -68,6 +68,19 @@ public class OptDataHelper {
       }
     }
 
+    /**
+     * 如果数据数据是offline的那么需要看下,最近 FAIL_TIMES_RETURN 次时间都没有正确的数据,才记录offline
+     */
+    boolean isOffline = dataIntime.getStatus() == StatusEnum.offline.getId() || dataIntime.getInStatus() == StatusEnum.offline.getId();
+    if (isOffline) {
+      int second = ServerConnectionManager.GET_DATA_CYCLE * ServerConnectionManager.FAIL_TIMES_RETURN;
+      Date afterDate = DateUtil.addSecond(now, -second);
+      Long id = dataIntimeMapper.hasRecentlyOne(dataIntime.getDeviceId(), afterDate);
+      if (id != null && id > 0) {
+        return;
+      }
+    }
+
     dataIntimeMapper.insert(dataIntime);
 
     // 2.记录报警数据
@@ -79,8 +92,9 @@ public class OptDataHelper {
      * 3.历史数据,如果当前分钟存在不处理
      * 如果不存在,插入
      */
-    recordHistoryData(dataIntime, now);
-
+    if(!isOffline) {
+      recordHistoryData(dataIntime, now);
+    }
   }
 
   private void recordHistoryData(DeviceDataIntime dataIntime, Date now) {

@@ -51,6 +51,8 @@ public class IndexController extends BaseController {
       String sign,
       HttpServletRequest request, Model model,RedirectAttributes redirectAttributes) {
 
+    log.error(String.format("loginAction: %s,p=%s", loginname, password));
+
     if ("".equals(loginname) || "".equals(password)) {
       model.addAttribute(MESSAGE, "用户名或密码不能为空");
       return "/index";
@@ -65,9 +67,10 @@ public class IndexController extends BaseController {
 //      model.addAttribute(MESSAGE, "请求数据非法:"+sign+"{<br>}"+localSign);
 //      return "/index";
 //    }
-
+    log.error("loginAction:selectDB");
     ConsoleLoginAccount consoleLoginAccount = consoleLoginAccountService.getLoginAccount(loginname);
     if (consoleLoginAccount == null) {
+      log.error("loginAction:selectIsNull");
       model.addAttribute(MESSAGE, "帐号或密码错误");
       return "/index";
     }
@@ -81,7 +84,7 @@ public class IndexController extends BaseController {
 
 
     HttpSessionUtil.removeDynamicValidateCodeSession();
-
+    log.error("loginAction:comparePsw");
     if (!SHAUtil.encode(password).equals(consoleLoginAccount.getVcLoginPassword())) {
 //      ConsoleLoginAccount consoleLoginAccountParams = new ConsoleLoginAccount();
 //      consoleLoginAccountParams.setVcLoginName(consoleLoginAccount.getVcLoginName());
@@ -135,7 +138,8 @@ public class IndexController extends BaseController {
 //      return "redirect:/consoleaccounts/changepassword";
 //    }
 
-    return "redirect:/main";
+//    return "redirect:/main";
+    return "redirect:/intime/dataList";
   }
 
   @RequestMapping("/logout")

@@ -29,6 +29,6 @@
 </div><!-- /.main-content -->
 
 <script>
-   var url = '${www}' + "/intime/dataList";
-   window.location.href=url;
+##   var url = '${www}' + "/intime/dataList";
+##   window.location.href=url;
 </script>

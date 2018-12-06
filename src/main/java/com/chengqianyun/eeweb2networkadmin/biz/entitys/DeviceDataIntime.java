@@ -123,6 +123,10 @@ public class DeviceDataIntime {
 
     // ==============  扩展方法  =================
 
+    public boolean hasOneNormal() {
+        return status == StatusEnum.normal.getId() || inStatus == StatusEnum.normal.getId() || outStatus == StatusEnum.normal.getId();
+    }
+
     /**
      * 配置环境状态信息
      */

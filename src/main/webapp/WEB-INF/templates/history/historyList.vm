@@ -11,7 +11,7 @@
     <ul class="breadcrumb">
       <li>
         <i class="icon-home home-icon"></i>
-        <a href="${www}/sp/main">主页</a>
+        <a href="${www}/main">主页</a>
       </li>
       <li class="active">历史数据</li>
     </ul><!-- .breadcrumb -->

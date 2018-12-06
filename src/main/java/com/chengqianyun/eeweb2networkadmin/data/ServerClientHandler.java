@@ -126,7 +126,8 @@ public class ServerClientHandler implements Runnable {
 
   private char[] writeInstruction(int address, char[] writeData) throws IOException {
     DataStatusEnum tmpDataStatusEnum;
-    for (int i = 0; i < ServerConnectionManager.FAIL_TIMES_RETURN; i++) {
+//    for (int i = 0; i < ServerConnectionManager.FAIL_TIMES_RETURN; i++) {
+    for (int i = 0; i < 1; i++) {
       log.info("发送指令:" + FunctionUnit.bytesToHexString(writeData));
       writePort(writeData, socket);
       SystemClock.sleep(ServerConnectionManager.GET_DATA_CYCLE * 1000);

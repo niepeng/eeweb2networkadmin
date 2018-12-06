@@ -13,7 +13,9 @@ import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.UnitUtil;
 import com.chengqianyun.eeweb2networkadmin.data.ServerConnectionManager;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -138,7 +140,13 @@ public class DeviceService extends BaseService {
   }
 
   public void deleteArea(long areaId) {
-    // TODO .. 是否有设备属于这个区域的,如果有,不能删除
+    // 是否有设备属于这个区域的,如果有,不能删除
+    Map<String, String> map = new HashMap<String, String>();
+    map.put("areaId", String.valueOf(areaId));
+    Integer num = deviceInfoMapper.findPageCount(map);
+    if (num != null && num > 0) {
+      throw new RuntimeException("当前区域存在设备,暂无法删除");
+    }
 
     areaMapper.deleteByPrimaryKey(areaId);
   }
@@ -327,6 +335,7 @@ public class DeviceService extends BaseService {
       throw new RuntimeException("该设备存在于开关量条件中,请先删除开关量中的条件");
     }
     deviceInfoMapper.deleteByPrimaryKey(id);
+    deviceDataIntimeMapper.deleteAllByDeviceId(id);
     ServerConnectionManager.removeDeviceInfo(deviceInfo.getSn());
   }
 

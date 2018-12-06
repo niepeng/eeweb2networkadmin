@@ -14,7 +14,12 @@ public enum StatusEnum {
 
   normal(1, "正常"),
   alarm(2, "报警"),
-  offline(3, "离线");
+  offline(3, "离线"),
+
+
+  alarm_down(21, "偏低"),
+  alarm_up(22,"偏高")
+  ;
 
 
   final int id;

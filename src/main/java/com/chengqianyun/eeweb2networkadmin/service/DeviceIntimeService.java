@@ -3,12 +3,16 @@ package com.chengqianyun.eeweb2networkadmin.service;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.DataIntimeBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.SettingEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
+import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,11 +92,35 @@ public class DeviceIntimeService extends BaseService {
       return new ArrayList<DeviceDataIntime>();
     }
     String result = StringUtil.assembleLong(ids, ",");
-    return dataIntimeMapper.listData(result);
+
+    int second = Integer.parseInt(getData(SettingEnum.default_data_contain));
+
+
+    List<DeviceDataIntime> list = dataIntimeMapper.listData(result);
+    return list;
+
+//    List<DeviceDataIntime> result = new ArrayList<DeviceDataIntime>();
+//
+//    List<DeviceInfo> deviceInfoList = deviceInfoMapper.findAll();
+//    if (deviceInfoList == null || deviceInfoList.size() == 0) {
+//      return result;
+//    }
+//
+//    Date now = new Date();
+//    Date date = DateUtil.addSecond(now, Integer.parseInt(getData(SettingEnum.default_data_contain)));
+//    DeviceDataIntime tmpIntime;
+//    for (DeviceInfo deviceInfo : deviceInfoList) {
+//      tmpIntime = dataIntimeMapper.listDataOneDeviceSuccess(deviceInfo.getId(), date);
+//      if (tmpIntime != null) {
+//        result.add(tmpIntime);
+//      }
+//    }
+
+//    return result;
   }
 
   public List<DeviceDataIntime> intimeCurveList(long deviceId) {
-    List<DeviceDataIntime> list = dataIntimeMapper.listDataOneDevice(deviceId, 100);
+    List<DeviceDataIntime> list = dataIntimeMapper.listDataOneDeviceNoOffline(deviceId, 100);
     Collections.reverse(list);
     return list;
   }

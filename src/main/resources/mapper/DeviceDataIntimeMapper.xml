@@ -43,6 +43,8 @@
     from t_device_data_intime where id in ( ${ids}) order by id asc
 
   </select>
+
+
   <select id="listDataOneDevice" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -53,6 +55,49 @@
     limit #{recordNum,jdbcType=INTEGER}
   </select>
 
+  <select id="listDataOneDeviceNoOffline" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_device_data_intime
+    WHERE
+        device_id = #{deviceId,jdbcType=BIGINT}
+    AND
+      status != 3
+    AND
+      in_status != 3
+    AND
+      out_status != 3
+    order by id desc
+    limit #{recordNum,jdbcType=INTEGER}
+  </select>
+
+
+
+  <select id="listDataOneDeviceSuccess" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_device_data_intime
+    WHERE
+        device_id = #{deviceId,jdbcType=BIGINT}
+      AND
+        created_at > #{date}
+     and (status=1 or in_status=1 or out_status=1)
+
+    order by id desc
+    limit 1
+  </select>
+
+  <select id="hasRecentlyOne" resultType="java.lang.Long">
+    select
+          id
+    from t_device_data_intime
+    WHERE
+        device_id = #{deviceId,jdbcType=BIGINT}
+      AND
+        created_at >= #{afterDate}
+    order by id desc
+    limit 1
+  </select>
 
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
@@ -265,5 +310,11 @@
         device_id = #{deviceId,jdbcType=BIGINT}
     and
         <![CDATA[ id < #{id,jdbcType=BIGINT} ]]>
+  </delete>
+
+  <delete id="deleteAllByDeviceId">
+    delete from t_device_data_intime
+    where
+        device_id = #{deviceId,jdbcType=BIGINT}
   </delete>
 </mapper>

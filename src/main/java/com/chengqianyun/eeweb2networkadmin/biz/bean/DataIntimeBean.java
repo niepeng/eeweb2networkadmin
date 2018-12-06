@@ -138,7 +138,8 @@ public class DataIntimeBean {
         elementDataBean.setStatus(dataIntime.getStatus());
         if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
           if (dataIntime.isTempUp() || dataIntime.isTempDown()) {
-            elementDataBean.setStatus(StatusEnum.alarm.getId());
+//            elementDataBean.setStatus(StatusEnum.alarm.getId());
+            elementDataBean.setStatus(dataIntime.isTempUp() ? StatusEnum.alarm_up.getId() : StatusEnum.alarm_down.getId());
           } else {
             elementDataBean.setStatus(StatusEnum.normal.getId());
           }
@@ -155,7 +156,8 @@ public class DataIntimeBean {
         elementDataBean.setStatus(dataIntime.getStatus());
         if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
           if (dataIntime.isHumiUp() || dataIntime.isHumiDown()) {
-            elementDataBean.setStatus(StatusEnum.alarm.getId());
+//            elementDataBean.setStatus(StatusEnum.alarm.getId());
+            elementDataBean.setStatus(dataIntime.isHumiUp() ? StatusEnum.alarm_up.getId() : StatusEnum.alarm_down.getId());
           } else {
             elementDataBean.setStatus(StatusEnum.normal.getId());
           }
@@ -172,6 +174,8 @@ public class DataIntimeBean {
         elementDataBean.setStatus(dataIntime.getStatus());
         if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
           if (dataIntime.isPowerUp() || dataIntime.isPowerDown()) {
+//            elementDataBean.setStatus(StatusEnum.alarm.getId());
+            elementDataBean.setStatus(dataIntime.isPowerUp() ? StatusEnum.alarm_up.getId() : StatusEnum.alarm_down.getId());
             elementDataBean.setStatus(StatusEnum.alarm.getId());
           } else {
             elementDataBean.setStatus(StatusEnum.normal.getId());
@@ -189,7 +193,8 @@ public class DataIntimeBean {
         elementDataBean.setStatus(dataIntime.getStatus());
         if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
           if (dataIntime.isShineUp() || dataIntime.isShineDown()) {
-            elementDataBean.setStatus(StatusEnum.alarm.getId());
+//            elementDataBean.setStatus(StatusEnum.alarm.getId());
+            elementDataBean.setStatus(dataIntime.isShineUp() ? StatusEnum.alarm_up.getId() : StatusEnum.alarm_down.getId());
           } else {
             elementDataBean.setStatus(StatusEnum.normal.getId());
           }
@@ -206,7 +211,8 @@ public class DataIntimeBean {
         elementDataBean.setStatus(dataIntime.getStatus());
         if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
           if (dataIntime.isPressureUp() || dataIntime.isPressureDown()) {
-            elementDataBean.setStatus(StatusEnum.alarm.getId());
+//            elementDataBean.setStatus(StatusEnum.alarm.getId());
+            elementDataBean.setStatus(dataIntime.isPressureUp() ? StatusEnum.alarm_up.getId() : StatusEnum.alarm_down.getId());
           } else {
             elementDataBean.setStatus(StatusEnum.normal.getId());
           }

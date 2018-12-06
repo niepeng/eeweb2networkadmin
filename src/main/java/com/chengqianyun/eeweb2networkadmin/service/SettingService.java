@@ -20,7 +20,6 @@ public class SettingService extends BaseService {
 
   @PostConstruct
   public void init() {
-
     PageUtilFactory.platformName = getData(SettingEnum.platform_name);
     String times = getData(SettingEnum.data_cycle_time);
     try {
@@ -47,7 +46,6 @@ public class SettingService extends BaseService {
     saveData(SettingEnum.alarm_phone, String.valueOf(Boolean.valueOf(bean.isAlarm_phone())));
     saveData(SettingEnum.sms_cnmi_type, bean.getSms_cnmi_type());
     saveData(SettingEnum.sms_center, bean.getSms_center());
-
 
     saveData(SettingEnum.alarm_song, String.valueOf(Boolean.valueOf(bean.isAlarm_song())));
     saveData(SettingEnum.alarm_song_config, bean.getAlarm_song_config());
@@ -80,12 +78,7 @@ public class SettingService extends BaseService {
     } catch(Exception e) {
 
     }
-
-
   }
-
-
-
 
 
 }

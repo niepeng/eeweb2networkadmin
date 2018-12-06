@@ -86,16 +86,16 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-xs-12 col-md-8">
-          <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">历史数据备份路径:</label>
-            <div class="col-md-8 col-sm-8">
-              <input type="text"  name="history_data_backup_path" style="width: 300px;" value="$!settingNormalBean.history_data_backup_path"> &nbsp;
-            </div>
-          </div>
-        </div>
-      </div>
+##      <div class="row">
+##        <div class="col-xs-12 col-md-8">
+##          <div class="form-group">
+##            <label class="col-md-4 col-sm-2 control-label">历史数据备份路径:</label>
+##            <div class="col-md-8 col-sm-8">
+##              <input type="text"  name="history_data_backup_path" style="width: 300px;" value="$!settingNormalBean.history_data_backup_path"> &nbsp;
+##            </div>
+##          </div>
+##        </div>
+##      </div>
 
 
 
