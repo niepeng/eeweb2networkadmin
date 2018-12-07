@@ -148,8 +148,8 @@ public class IndexController extends BaseController {
 //      return "redirect:/consoleaccounts/changepassword";
 //    }
 
-//    return "redirect:/main";
-    return "redirect:/intime/dataList";
+    return "redirect:/main";
+//    return "redirect:/intime/dataList";
   }
 
   @RequestMapping("/logout")

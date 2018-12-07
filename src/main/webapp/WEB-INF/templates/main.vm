@@ -120,7 +120,7 @@
                 #end
                                style="font-size: 16px;width: 150px;margin-top:0px;">
                 $dataBean.name <br><br>
-                在线: $dataBean.normalNum<br>
+                正常: $dataBean.normalNum<br>
                 报警: $dataBean.alarmNum<br>
                 离线: $dataBean.offlineNum<br>
               </div></a>

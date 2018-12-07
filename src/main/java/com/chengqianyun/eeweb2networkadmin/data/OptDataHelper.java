@@ -145,7 +145,7 @@ public class OptDataHelper {
       tmpUpDownEnum = dataIntime.isTempDown() ? UpDownEnum.down : tmpUpDownEnum;
       recordAlarm(dataIntime, isOffline, alarmTypeEnum, DeviceTypeEnum.temp, dataIntime.getTemp(), deviceInfo.getTempScope(), tmpUpDownEnum);
     }
-    if(deviceInfo.hasTemp() && !dataIntime.isTempUp() && ! dataIntime.isTempDown()) {
+    if(deviceInfo.hasTemp() && !dataIntime.isTempUp() && ! dataIntime.isTempDown() && !isOffline) {
       resetAlarm(dataIntime, DeviceTypeEnum.temp);
     }
 
@@ -156,7 +156,7 @@ public class OptDataHelper {
       tmpUpDownEnum = dataIntime.isHumiDown() ? UpDownEnum.down : tmpUpDownEnum;
       recordAlarm(dataIntime, isOffline, alarmTypeEnum, DeviceTypeEnum.humi, dataIntime.getHumi(), deviceInfo.getHumiScope(), tmpUpDownEnum);
     }
-    if(deviceInfo.hasHumi() && !dataIntime.isHumiUp() && ! dataIntime.isHumiDown()) {
+    if(deviceInfo.hasHumi() && !dataIntime.isHumiUp() && ! dataIntime.isHumiDown()  && !isOffline) {
       resetAlarm(dataIntime, DeviceTypeEnum.humi);
     }
 
@@ -168,7 +168,7 @@ public class OptDataHelper {
       tmpUpDownEnum = dataIntime.isShineDown() ? UpDownEnum.down : tmpUpDownEnum;
       recordAlarm(dataIntime, isOffline, alarmTypeEnum, DeviceTypeEnum.shine, dataIntime.getShine(), deviceInfo.getShineScope(), tmpUpDownEnum);
     }
-    if(deviceInfo.hasShine() && !dataIntime.isShineUp() && ! dataIntime.isShineDown()) {
+    if(deviceInfo.hasShine() && !dataIntime.isShineUp() && ! dataIntime.isShineDown() && !isOffline) {
       resetAlarm(dataIntime, DeviceTypeEnum.shine);
     }
 
@@ -180,7 +180,7 @@ public class OptDataHelper {
       tmpUpDownEnum = dataIntime.isPowerDown() ? UpDownEnum.down : tmpUpDownEnum;
       recordAlarm(dataIntime, isOffline, alarmTypeEnum, DeviceTypeEnum.power, dataIntime.getPower(), deviceInfo.getPowerScope(), tmpUpDownEnum);
     }
-    if(deviceInfo.hasPower() && !dataIntime.isPowerUp() && ! dataIntime.isPowerDown()) {
+    if(deviceInfo.hasPower() && !dataIntime.isPowerUp() && ! dataIntime.isPowerDown() && !isOffline) {
       resetAlarm(dataIntime, DeviceTypeEnum.power);
     }
 
@@ -192,7 +192,7 @@ public class OptDataHelper {
       tmpUpDownEnum = dataIntime.isPressureDown() ? UpDownEnum.down : tmpUpDownEnum;
       recordAlarm(dataIntime, isOffline, alarmTypeEnum, DeviceTypeEnum.pressure, dataIntime.getPressure(), deviceInfo.getPressureScope(), tmpUpDownEnum);
     }
-    if(deviceInfo.hasPressure() && !dataIntime.isPressureUp() && ! dataIntime.isPressureDown()) {
+    if(deviceInfo.hasPressure() && !dataIntime.isPressureUp() && ! dataIntime.isPressureDown() && !isOffline) {
       resetAlarm(dataIntime, DeviceTypeEnum.pressure);
     }
 
