@@ -52,6 +52,11 @@ public class SendPhoneService extends BaseService {
   static String smsContent = "设备(%s)%s报警时间:%s";
   static String smsRecoverContent = "设备(%s)%s,恢复时间:%s";
 
+  static String mailTitle = "设备(%s)报警";
+  static String mailContent = "设备(%s)%s报警时间:%s";
+
+  static String mailRecoverTitle = "设备(%s)恢复报警";
+  static String mailRecoverContent = "设备(%s)%s,恢复时间:%s";
 
   public void sendAlarmInfo(DeviceAlarm deviceAlarm) {
     /**
@@ -114,23 +119,35 @@ public class SendPhoneService extends BaseService {
     isRecoverRunning = false;
   }
 
+  /**
+   * 执行恢复报警
+   *
+   * @param deviceRecoverBean
+   */
   private void optAlarmRecover(DeviceRecoverBean deviceRecoverBean) {
     DeviceInfo deviceInfo = deviceRecoverBean.getDeviceInfo();
     List<Contacts> contactsList = getContactsByAreaId(deviceInfo.getAreaId());
-
     String deviceName = deviceInfo == null ? "" : (StringUtil.isEmpty(deviceInfo.getName()) ? "" : deviceInfo.getName());
-    String content = String.format(smsRecoverContent, StringUtil.isEmpty(deviceName) ? "未定义" : deviceName,
-         deviceRecoverBean.isAll() ? "恢复报警" : deviceRecoverBean.getDeviceAlarm().showRecoverMsg()
+    deviceName = StringUtil.isEmpty(deviceName) ? "未定义" : deviceName;
+
+    // 发送邮件
+    String recoverMailTitle = String.format(mailRecoverTitle, deviceName);
+    String recoverMailContent = String.format(mailRecoverContent, deviceName, deviceRecoverBean.isAll() ? "恢复报警" : deviceRecoverBean.getDeviceAlarm().showRecoverMsg(),
+        DateUtil.getDate(deviceRecoverBean.getTime(), DateUtil.dateFullPatternNoSecond));
+    sendRecoverEmail(recoverMailTitle, recoverMailContent);
+
+    // 发送短信和电话
+    String content = String.format(smsRecoverContent, deviceName,
+        deviceRecoverBean.isAll() ? "恢复报警" : deviceRecoverBean.getDeviceAlarm().showRecoverMsg()
         , DateUtil.getDate(deviceRecoverBean.getTime(), DateUtil.dateFullPatternNoSecond));
     sendSms(contactsList, content);
+
   }
 
 
   private void optAlarmInfo(DeviceAlarm deviceAlarm) {
-
-    // TODO .. 这里是发送发邮件功能
-//    mailService.sendEmail()
-
+    // 发邮件
+    sendEmail(deviceAlarm);
 
     // 这里实现拨打电话和发送短信功能
     boolean phoneFlag = Boolean.valueOf(getData(SettingEnum.alarm_phone));
@@ -139,7 +156,6 @@ public class SendPhoneService extends BaseService {
     if (!phoneFlag && !smsFlag) {
       return;
     }
-
 
     List<Contacts> contactsList = getContactsByAreaId(deviceAlarm.getAreaId());
     if(contactsList == null || contactsList.size() == 0) {
@@ -166,6 +182,67 @@ public class SendPhoneService extends BaseService {
 
     sendSms(contactsList, content);
 
+  }
+
+
+
+  private void sendEmail(DeviceAlarm deviceAlarm) {
+    try {
+      Boolean alarmEmail = Boolean.valueOf(getData(SettingEnum.alarm_email));
+      if (!alarmEmail) {
+        log.info("current config do not need send email");
+        return;
+      }
+
+      if (StringUtil.isEmpty(MailService.authName) || StringUtil.isEmpty(MailService.password)) {
+        log.info("mail user or password is null");
+        return;
+      }
+
+      String receiveEmails = getData(SettingEnum.receiveEmails);
+      if (StringUtil.isEmpty(receiveEmails)) {
+        log.info("receive email address is null");
+        return;
+      }
+
+      DeviceInfo deviceInfo = deviceInfoMapper.selectByPrimaryKey(deviceAlarm.getDeviceId());
+      String deviceName = deviceInfo == null ? "" : (StringUtil.isEmpty(deviceInfo.getName()) ? "" : deviceInfo.getName());
+      deviceName = StringUtil.isEmpty(deviceName) ? "未定义" : deviceName;
+      String content = String.format(mailContent, deviceName, deviceAlarm.showAlarmMsg(), DateUtil.getDate(deviceAlarm.getRecentlyAlarmTime(), DateUtil.dateFullPatternNoSecond));
+      String title = String.format(mailTitle, deviceName);
+
+      log.info("send alarm emails to {}", receiveEmails);
+      mailService.sendEmail(title, receiveEmails.split(","), null, content, null);
+
+    } catch (Exception e) {
+      log.error("send alarm error", e);
+    }
+  }
+
+  private void sendRecoverEmail(String title, String content) {
+    try {
+      Boolean alarmEmail = Boolean.valueOf(getData(SettingEnum.alarm_email));
+      if (!alarmEmail) {
+        log.info("recover alarm email : current config do not need send email");
+        return;
+      }
+
+      if (StringUtil.isEmpty(MailService.authName) || StringUtil.isEmpty(MailService.password)) {
+        log.info("recover alarm email : mail user or password is null");
+        return;
+      }
+
+      String receiveEmails = getData(SettingEnum.receiveEmails);
+      if (StringUtil.isEmpty(receiveEmails)) {
+        log.info("recover alarm email : receive email address is null");
+        return;
+      }
+
+      log.info("send recover alarm emails to {}", receiveEmails);
+      mailService.sendEmail(title, receiveEmails.split(","), null, content, null);
+    } catch (Exception e) {
+      log.error("send recover alarm error", e);
+    }
   }
 
   public void sendSms(List<Contacts> contactsList, String content) {
