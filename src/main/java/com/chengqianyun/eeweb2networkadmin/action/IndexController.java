@@ -6,7 +6,9 @@ import com.chengqianyun.eeweb2networkadmin.core.utils.HttpSessionUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.MD5Util;
 import com.chengqianyun.eeweb2networkadmin.core.utils.SHAUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
+import com.chengqianyun.eeweb2networkadmin.service.AlarmService;
 import com.chengqianyun.eeweb2networkadmin.service.ConsoleLoginAccountService;
+import com.chengqianyun.eeweb2networkadmin.service.DeviceIntimeService;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,13 +32,21 @@ public class IndexController extends BaseController {
   @Autowired
   private ConsoleLoginAccountService consoleLoginAccountService;
 
+  @Autowired
+  private DeviceIntimeService deviceIntimeService;
+
+  @Autowired
+  private AlarmService alarmService;
+
   @RequestMapping(value = "/")
   public String index() {
     return "/index";
   }
 
   @RequestMapping(value = "/main")
-  public String main() {
+  public String main(Model model) {
+    deviceIntimeService.main(model);
+    model.addAttribute("alarmSong", alarmService.hasAlarmData());
     return "/main";
   }
 

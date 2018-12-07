@@ -7,16 +7,15 @@ import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.SettingEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
-import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 /**
  * @author 聂鹏
@@ -29,6 +28,42 @@ public class DeviceIntimeService extends BaseService {
 
   @Autowired
   private DeviceService deviceService;
+
+
+  public void main(Model model) {
+    List<Area> list = areaMapper.listAll();
+    Area notDefineArea = new Area();
+    notDefineArea.setId(0L);
+    notDefineArea.setName("未定义");
+    list.add(notDefineArea);
+
+    List<DeviceInfo> deviceInfoList = deviceInfoMapper.findAll();
+    DeviceDataIntime tmpData;
+    Area tmpArea;
+    for (DeviceInfo deviceInfo : deviceInfoList) {
+      tmpArea = findArea(list, deviceInfo);
+      if (tmpArea == null) {
+        continue;
+      }
+      tmpData = findRecentlyOne(deviceInfo.getId());
+      if (tmpData == null) {
+        tmpArea.setOfflineNum(tmpArea.getOfflineNum() + 1);
+        continue;
+      }
+      tmpData.configStatus();
+      tmpData.configInStatus();
+      if (tmpData.hasAlarm()) {
+        tmpArea.setAlarmNum(tmpArea.getAlarmNum() + 1);
+        continue;
+      }
+      if (tmpData.hasOffline()) {
+        tmpArea.setOfflineNum(tmpArea.getOfflineNum() + 1);
+        continue;
+      }
+      tmpArea.setNormalNum(tmpArea.getNormalNum() + 1);
+    }
+    model.addAttribute("mainDataBeanList", list);
+  }
 
 
   public void deviceDataIntime(DataIntimeBean dataIntimeBean) {
@@ -221,6 +256,22 @@ public class DeviceIntimeService extends BaseService {
     dataIntimeBean.setDeviceTypeList(list);
   }
 
+  private DeviceDataIntime findRecentlyOne(long deviceId) {
+    List<DeviceDataIntime> list = dataIntimeMapper.listDataOneDevice(deviceId, 1);
+    if(list != null && list.size() > 0) {
+      return list.get(0);
+    }
+    return null;
+  }
+
+  private Area findArea(List<Area> list, DeviceInfo deviceInfo) {
+    for (Area area : list) {
+      if (area.getId() == deviceInfo.getAreaId()) {
+        return area;
+      }
+    }
+    return null;
+  }
 
   
 

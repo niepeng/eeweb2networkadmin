@@ -127,6 +127,15 @@ public class DeviceDataIntime {
         return status == StatusEnum.normal.getId() || inStatus == StatusEnum.normal.getId() || outStatus == StatusEnum.normal.getId();
     }
 
+
+    public boolean hasAlarm() {
+        return status == StatusEnum.alarm.getId() || inStatus == StatusEnum.alarm.getId() || outStatus == StatusEnum.alarm.getId();
+    }
+
+    public boolean hasOffline() {
+        return status == StatusEnum.offline.getId() || inStatus == StatusEnum.offline.getId();
+    }
+
     /**
      * 配置环境状态信息
      */

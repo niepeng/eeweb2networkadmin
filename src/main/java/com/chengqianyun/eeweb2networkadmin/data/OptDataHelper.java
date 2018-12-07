@@ -71,7 +71,7 @@ public class OptDataHelper {
     /**
      * 如果数据数据是offline的那么需要看下,最近 FAIL_TIMES_RETURN 次时间都没有正确的数据,才记录offline
      */
-    boolean isOffline = dataIntime.getStatus() == StatusEnum.offline.getId() || dataIntime.getInStatus() == StatusEnum.offline.getId();
+    boolean isOffline = dataIntime.hasOffline();
     if (isOffline) {
       int second = ServerConnectionManager.GET_DATA_CYCLE * ServerConnectionManager.FAIL_TIMES_RETURN;
       Date afterDate = DateUtil.addSecond(now, -second);

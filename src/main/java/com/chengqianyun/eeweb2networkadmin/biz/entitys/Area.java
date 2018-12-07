@@ -36,6 +36,9 @@ public class Area {
 
     private List<Contacts> contactsList;
 
+    private int normalNum;
+    private int alarmNum;
+    private int offlineNum;
 
     // ==============  扩展方法  =================
 
@@ -46,5 +49,20 @@ public class Area {
         deviceInfoList.add(deviceInfo);
     }
 
+    public boolean hasAlarm() {
+      return alarmNum > 0;
+    }
+
+    public boolean hasOffline() {
+      return offlineNum > 0;
+    }
+
+    public boolean hasNormal() {
+      return normalNum > 0;
+    }
+
+    public boolean hasNum() {
+      return normalNum + alarmNum + offlineNum > 0;
+    }
 
 }
