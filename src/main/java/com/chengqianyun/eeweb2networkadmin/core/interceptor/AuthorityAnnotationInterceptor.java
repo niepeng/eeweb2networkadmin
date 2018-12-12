@@ -64,6 +64,7 @@ public class AuthorityAnnotationInterceptor extends HandlerInterceptorAdapter {
 		String paramId = request.getParameter("id");
 		if (currentURL.substring(path.length()).equals("/")
 				|| currentURL.indexOf("/avatars/") != -1
+				|| currentURL.indexOf("/permission/") != -1
 				|| currentURL.indexOf("/css/") != -1
 				|| currentURL.indexOf("/js/") != -1
 				|| currentURL.indexOf("/ueditor/") != -1

@@ -22,6 +22,10 @@ CREATE TABLE `t_admin_loginaccount` (
 INSERT INTO `t_admin_loginaccount` (`id`, `vcLoginName`, `vcLoginPassword`, `vcRealName`, `vcPhone`, `iValid`, `dtCreate`, `dtModify`, `role_id`)
 VALUES ('1', 'admin', '054eff6ef923797ac42d1ea652d4d204fef31a08b449a43c74e58047a0e091e6', 'admin', '13012345678', '1', '2017-08-22 20:28:00', '2018-09-01 00:40:13', '4');
 
+-- cqlweb cql@1234
+INSERT INTO `t_admin_loginaccount` (`id`, `vcLoginName`, `vcLoginPassword`, `vcRealName`, `vcPhone`, `iValid`, `dtCreate`, `dtModify`, `role_id`)
+VALUES ('2', 'cqlweb', 'ab5fd996e0754170408b90db2c8fd93ec8eaa97a522269d5c8058acf816f0664', 'cqlweb', '13012345679', '1', '2017-08-22 20:28:00', '2018-09-01 00:40:13', '8');
+
 
 
 CREATE TABLE `t_setting` (

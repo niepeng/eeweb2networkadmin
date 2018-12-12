@@ -1,6 +1,8 @@
 package com.chengqianyun.eeweb2networkadmin.core.utils;
 
 //import com.hd.entitys.leopard.console.ConsoleLoginAccount;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.ConsoleLoginAccount;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
 import org.apache.velocity.context.InternalContextAdapter;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
@@ -30,12 +32,13 @@ public class AuthVelocity extends Directive{
     @Override
     public boolean render(InternalContextAdapter internalContextAdapter, Writer writer, Node node) throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
         String auth = String.valueOf(node.jjtGetChild(0).value(internalContextAdapter));
-//        ConsoleLoginAccount session = HttpSessionUtil.getLoginSession();
-//        if (session!=null&&session.getAuthCodes()!=null){
-//            if (session.getAuthCodes().contains(AuthUtil.wrapComma(auth))){
-//                node.jjtGetChild(1).render(internalContextAdapter,writer);
-//            }
-//        }
+        MenuEnum menuEnum = MenuEnum.findMenu(auth);
+        ConsoleLoginAccount loginAccount = HttpSessionUtil.getLoginSession();
+        if(menuEnum == null || loginAccount == null || loginAccount == null || !menuEnum.hasPermission(loginAccount.getRoleId())) {
+            return false;
+        }
+
+        node.jjtGetChild(1).render(internalContextAdapter,writer);
         return true;
     }
 }

@@ -29,10 +29,17 @@
 	        #{vcRealName,jdbcType=VARCHAR},
 	        #{vcPhone,jdbcType=CHAR} ,
 	        #{iValid,jdbcType=INTEGER},
-	        #{dtCreate,jdbcType=TIMESTAMP},
+	       now(),
             #{roleId,jdbcType=INTEGER}
         )
     </insert>
+
+
+  <select id="findAll" parameterType="java.util.Map" resultMap="ConsoleAccount">
+    SELECT * from t_admin_loginaccount where role_id != 8
+    ORDER BY id DESC
+  </select>
+
 
     <select id="queryAccountsCount" parameterType="java.util.Map" resultType="java.lang.Integer">
         SELECT count(*) from  t_admin_loginaccount where 1=1

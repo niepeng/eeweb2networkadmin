@@ -69,88 +69,79 @@
 ##                #end
 ##              #end
 
-                  #set($showMenu = "$!openMenu" == "intime")
-                  <li #if($showMenu) class="open" #end>
-                    <a href="#" class="dropdown-toggle">
-                      <i class="icon-tasks"></i>
-                      <span class="menu-text">实时管理</span>
-                      <b class="arrow icon-angle-down"></b>
-                    </a>
-                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
-                      <li><a href="${www}/intime/dataList">实时数据</a></li>
-                      <li><a href="${www}/intime/intimeCurveList">实时曲线</a></li>
-                    </ul>
-                  </li>
+                  #foreach($tmpMenu in $menuList)
+                    #set($showMenu = "$!openMenu" == $tmpMenu.name)
+                    <li #if($showMenu) class="open" #end>
+                      <a href="#" class="dropdown-toggle">
+                        <i class="$tmpMenu.icon"></i>
+                        <span class="menu-text">$tmpMenu.meaning</span>
+                        <b class="arrow icon-angle-down"></b>
+                      </a>
+                      <ul class="submenu" #if($showMenu) style="display: block;" #end >
+                        #foreach($subMenu in $tmpMenu.childrenList)
+                        <li><a href="${www}/${subMenu.visitUrl}">$subMenu.meaning</a></li>
+                        #end
+                      </ul>
+                    </li>
+                  #end
 
-                  #set($showMenu = "$!openMenu" == "alarm")
-                  <li #if($showMenu) class="open" #end>
-                    <a href="#" class="dropdown-toggle">
-                      <i class="icon-bell"></i>
-                      <span class="menu-text">报警记录</span>
-                      <b class="arrow icon-angle-down"></b>
-                    </a>
-                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
-                      <li><a href="${www}/alarm/alarmList">报警数据</a></li>
-                    </ul>
-                  </li>
-
-
-                  #set($showMenu = "$!openMenu" == "history")
-                  <li #if($showMenu) class="open" #end>
-                    <a href="#" class="dropdown-toggle">
-                      <i class="icon-signal"></i>
-                      <span class="menu-text">历史管理</span>
-                      <b class="arrow icon-angle-down"></b>
-                    </a>
-                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
-                      <li><a href="${www}/history/historyList">历史数据</a></li>
-                      <li><a href="${www}/history/historyCurveList">历史曲线</a></li>
-                    </ul>
-                  </li>
-
-
-                  #set($showMenu = "$!openMenu" == "device")
-                  <li #if($showMenu) class="open" #end>
-                    <a href="#" class="dropdown-toggle">
-                      <i class="icon-inbox"></i>
-                      <span class="menu-text">设备管理</span>
-                      <b class="arrow icon-angle-down"></b>
-                    </a>
-                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
-                      <li><a href="${www}/device/areaList">区域管理</a></li>
-                      <li><a href="${www}/device/deviceList">设备管理</a></li>
-                    </ul>
-                  </li>
-
-
-                  #set($showMenu = "$!openMenu" == "wirelessSetting")
-                  <li #if($showMenu) class="open" #end>
-                    <a href="#" class="dropdown-toggle">
-                      <i class="icon-envelope-alt"></i>
-                      <span class="menu-text">无线设置</span>
-                      <b class="arrow icon-angle-down"></b>
-                    </a>
-                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
-                      <li><a href="${www}/wirelessSetting/normal">通讯测试</a></li>
-                      <li><a href="${www}/wirelessSetting/list">通讯列表</a></li>
-                      <li><a href="${www}/wirelessSetting/history">通讯历史</a></li>
-                    </ul>
-                  </li>
-
-
-                  #set($showMenu = "$!openMenu" == "setting")
-                  <li #if($showMenu) class="open" #end>
-                    <a href="#" class="dropdown-toggle">
-                      <i class="icon-cog"></i>
-                      <span class="menu-text">系统设置</span>
-                      <b class="arrow icon-angle-down"></b>
-                    </a>
-                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
-                      <li><a href="${www}/setting/normal">基本设置</a></li>
-                      <li><a href="${www}/setting/alarm">报警设置</a></li>
-                      <li><a href="${www}/setting/email">邮件设置</a></li>
-                    </ul>
-                  </li>
+##
+##                  #set($showMenu = "$!openMenu" == "history")
+##                  <li #if($showMenu) class="open" #end>
+##                    <a href="#" class="dropdown-toggle">
+##                      <i class="icon-signal"></i>
+##                      <span class="menu-text">历史管理</span>
+##                      <b class="arrow icon-angle-down"></b>
+##                    </a>
+##                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
+##                      <li><a href="${www}/history/historyList">历史数据</a></li>
+##                      <li><a href="${www}/history/historyCurveList">历史曲线</a></li>
+##                    </ul>
+##                  </li>
+##
+##
+##                  #set($showMenu = "$!openMenu" == "device")
+##                  <li #if($showMenu) class="open" #end>
+##                    <a href="#" class="dropdown-toggle">
+##                      <i class="icon-inbox"></i>
+##                      <span class="menu-text">设备管理</span>
+##                      <b class="arrow icon-angle-down"></b>
+##                    </a>
+##                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
+##                      <li><a href="${www}/device/areaList">区域管理</a></li>
+##                      <li><a href="${www}/device/deviceList">设备管理</a></li>
+##                    </ul>
+##                  </li>
+##
+##
+##                  #set($showMenu = "$!openMenu" == "wirelessSetting")
+##                  <li #if($showMenu) class="open" #end>
+##                    <a href="#" class="dropdown-toggle">
+##                      <i class="icon-envelope-alt"></i>
+##                      <span class="menu-text">无线设置</span>
+##                      <b class="arrow icon-angle-down"></b>
+##                    </a>
+##                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
+##                      <li><a href="${www}/wirelessSetting/normal">通讯测试</a></li>
+##                      <li><a href="${www}/wirelessSetting/list">通讯列表</a></li>
+##                      <li><a href="${www}/wirelessSetting/history">通讯历史</a></li>
+##                    </ul>
+##                  </li>
+##
+##
+##                  #set($showMenu = "$!openMenu" == "setting")
+##                  <li #if($showMenu) class="open" #end>
+##                    <a href="#" class="dropdown-toggle">
+##                      <i class="icon-cog"></i>
+##                      <span class="menu-text">系统设置</span>
+##                      <b class="arrow icon-angle-down"></b>
+##                    </a>
+##                    <ul class="submenu" #if($showMenu) style="display: block;" #end >
+##                      <li><a href="${www}/setting/normal">基本设置</a></li>
+##                      <li><a href="${www}/setting/alarm">报警设置</a></li>
+##                      <li><a href="${www}/setting/email">邮件设置</a></li>
+##                    </ul>
+##                  </li>
 
 
           </ul>

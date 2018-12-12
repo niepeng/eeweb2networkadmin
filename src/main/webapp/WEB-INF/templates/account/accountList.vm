@@ -1,0 +1,173 @@
+<script src="${www}/js/my97DatePicker/WdatePicker.js"></script>
+
+
+<div class="main-content">
+  <div class="breadcrumbs" id="breadcrumbs">
+    <script type="text/javascript">
+      try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+
+    </script>
+
+    <ul class="breadcrumb">
+      <li>
+        <i class="icon-home home-icon"></i>
+        <a href="${www}/main">主页</a>
+      </li>
+
+      <li class="active">报警记录</li>
+    </ul><!-- .breadcrumb -->
+
+    <div class="nav-search" id="nav-search">
+      <form class="form-search">
+      ##         <span class="input-icon">
+##							<input type="text" placeholder="Search ..." class="nav-search-input"  id="nav-search-input" autocomplete="off"/>
+##							<i class="icon-search nav-search-icon"></i>
+##						</span>
+      </form>
+    </div><!-- #nav-search -->
+  </div>
+  <div class="page-content">
+    <div class="page-header">
+      <h1>账户列表</h1>
+    </div>
+    <div class="container-fluid">
+
+      #if(${msg})
+        <div>
+          #if(${success})
+            <li class="text-success">$!{msg}</li>
+          #else
+            <li class="text-danger">$!{msg}</li>
+          #end
+        </div>
+      #end
+
+      <div class="dataTables_wrapper">
+        <div class="row">
+          <div class="col-sm-11">
+            <form class="form-inline" role="form">
+              <div class="form-group">
+                <label>账户：</label>
+                <input type="text" name="userName" value="$!{userName}">
+                <label>账户类型：</label>
+                <select name="type" id="type">
+                  <option value="">全部</option>
+                  <option #if("$type" == "1") selected #end value="1">普通用户</option>
+                  <option #if("$type" == "4") selected #end value="4">管理员</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <button class="btn btn-xs btn-primary" type="submit">查询</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="col-sm-1 text-right">
+            <a href="${www}/account/accountAdd" class="btn btn-success btn-xs">添加</a>
+          </div>
+
+        </div>
+        <table id="dataTableResizeCol" class="table table-striped table-bordered table-hover dataTable">
+          <thead>
+          <tr>
+            <th>账户</th>
+            <th>名称</th>
+            <th>类型</th>
+            <th>是否有效</th>
+            <th>创建时间</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody>
+
+            #if($list.size() == 0)
+            <tr>
+              <td colspan="5" align="center">
+                暂无数据
+              </td>
+            </tr>
+            #end
+
+            #foreach($row in $list)
+            <tr>
+              <td>$!{row.vcLoginName}</td>
+              <td>$!{row.vcRealName}</td>
+              <td>$applicationUtil.getRole($!{row.roleId}).meaning</td>
+              <td>#if($row.isValid()) 有效 #else <tt style="color: red;">暂停使用</tt> #end</td>
+              <td>$!dateUtil.getDate($!{row.dtCreate}, 'yyyy-MM-dd')</td>
+              <td>
+                <a href="${www}/account/accountUpdate?id=${row.id}">修改</a> ｜
+                <a href="${www}/account/initPsw?id=${row.id}" onclick="javascript:return confirm('确认要初始化 $!{row.vcLoginName} 这个账号的密码吗?');">初始化密码</a> ｜
+                <a href="${www}/account/deleteAccount?id=${row.id}" onclick="javascript:return confirm('确认要删除 $!{row.vcLoginName} 这个账号吗?');">删除</a>
+              </td>
+          </tr>
+          #end
+          </tbody>
+        </table>
+
+
+      </div>
+    </div>
+  </div><!-- /.page-content -->
+</div><!-- /.main-content -->
+
+
+
+<script>
+
+  function markRead(id) {
+    if(confirm('确定标记已读?')) {
+      var startTime = document.getElementById("startTime").value;
+      var endTime = document.getElementById("endTime").value;
+      window.location.href = "${www}/alarm/markRead?id=" + id + "&startTime=" + startTime + "&endTime=" + endTime;
+    }
+  }
+
+  function writeNote(id) {
+    var obj = document.getElementById("noteDiv");
+    obj.style.display = "block";
+    document.getElementById("alarmId").value = id;
+  }
+
+  function editNote(id, oldNote) {
+    var obj = document.getElementById("noteDiv");
+    obj.style.display = "block";
+    document.getElementById("userNote").value = oldNote;
+    document.getElementById("alarmId").value = id;
+  }
+
+  function deleteDevice(id) {
+    if(!confirm('确认要删除 该报警记录吗?')) {
+      return;
+    }
+    window.location.href="${www}/alarm/delete?id=" + id;
+  }
+
+  function hiddenShowDiv() {
+    var obj = document.getElementById("noteDiv");
+    obj.style.display = "none";
+  }
+
+
+  $("#sbt").click(function(e){
+    $("#iok").text("处理中");
+    $("#sbt").attr("disabled", true);
+//    $("#inputForm").submit();
+    var form = new FormData(document.getElementById("inputForm"));
+
+    $.ajax({
+      url:"${www}/alarm/writeNote",
+      type:"post",
+      data:form,
+      processData:false,
+      contentType:false,
+      success:function(data){
+        window.location.href = '$pageRequestURL';
+      },
+      error:function(e){
+        window.location.href = '$pageRequestURL';
+      }
+    });
+  });
+
+</script>

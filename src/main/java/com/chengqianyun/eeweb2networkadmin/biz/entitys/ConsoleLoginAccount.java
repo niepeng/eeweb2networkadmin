@@ -47,5 +47,8 @@ public class ConsoleLoginAccount implements Serializable {
 
   // ============ 扩展方法 =================
 
+  public boolean isValid() {
+    return 1 == iValid;
+  }
 
 }

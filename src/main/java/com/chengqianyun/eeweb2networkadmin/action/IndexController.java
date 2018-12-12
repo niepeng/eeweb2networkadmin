@@ -2,6 +2,7 @@ package com.chengqianyun.eeweb2networkadmin.action;
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.ConsoleLoginAccount;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.RoleEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.HttpSessionUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.MD5Util;
 import com.chengqianyun.eeweb2networkadmin.core.utils.SHAUtil;
@@ -19,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
@@ -108,6 +111,13 @@ public class IndexController extends BaseController {
       model.addAttribute(MESSAGE, "帐号或密码错误");
       return "/index";
     }
+
+    if(!consoleLoginAccount.isValid()) {
+      model.addAttribute(MESSAGE, "当前账号暂定使用,如果有疑问联系管理员");
+      return "/index";
+    }
+
+
 
     //用户Session
 //    if(sessionMap.get(loginname)!=null){

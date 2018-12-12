@@ -11,8 +11,11 @@ import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.HttpSessionUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.PageUtilFactory;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -49,20 +52,39 @@ public abstract class BaseController {
     
     @SuppressWarnings("unused")
 	  private String www;
-    
+
+	static Map<Long, List<MenuEnum>> roleMenuMap = new HashMap<Long, List<MenuEnum>>();
+
   
     @ModelAttribute()
     public void init(ModelMap model) throws Exception {
-			model.addAttribute("www",getWww());
+			model.addAttribute("www", getWww());
 			model.addAttribute("applicationUtil", PageUtilFactory.applicationUtil);
 			model.addAttribute("dateUtil", PageUtilFactory.dateUtil);
 			model.addAttribute("stringUtil", PageUtilFactory.stringUtil);
 			model.addAttribute("unitUtil", PageUtilFactory.unitUtil);
 			model.addAttribute("platformName", PageUtilFactory.platformName);
 //			model.addAttribute("escapeUtil", new BaseEscapeUtil());
-    }
 
-		public String getWww() {
+			ConsoleLoginAccount account = getLoginAccount();
+			if(account != null) {
+				Long roleId = account.getRoleId();
+				List<MenuEnum> menuList = roleMenuMap.get(getRoleId());
+				if(menuList == null) {
+					synchronized (this) {
+						menuList = roleMenuMap.get(getRoleId());
+						if (menuList == null) {
+							menuList = new ArrayList<MenuEnum>();
+							genMenuList(menuList, roleId);
+							roleMenuMap.put(roleId, menuList);
+						}
+					}
+				}
+				model.addAttribute("menuList", menuList);
+			}
+		}
+
+	public String getWww() {
 			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 			if (request.getServerName().contains("www")) {
 				return "https://" + request.getServerName() + request.getContextPath();
@@ -75,6 +97,30 @@ public abstract class BaseController {
 			}
 
 		}
+
+	protected void genMenuList(List<MenuEnum> menuList, long roleId) {
+		// 在结果集中添加一级类目
+		for (MenuEnum menu : MenuEnum.values()) {
+			if (menu.isFirstLevel() && menu.hasPermission(roleId)) {
+				menu.clearChildren();
+				menuList.add(menu);
+			}
+		}
+
+		// 在结果集中添加二级类目
+		for (MenuEnum menu : MenuEnum.values()) {
+			if (menu.isSecondLevel() && menu.hasPermission(roleId)) {
+				for (MenuEnum firstMenu : menuList) {
+					if (firstMenu.getName().equalsIgnoreCase(menu.getParentName())) {
+						firstMenu.addChild(menu);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+
 
 		public void setWww(String www) {
 			this.www = www;
@@ -106,6 +152,11 @@ public abstract class BaseController {
 	protected ConsoleLoginAccount getLoginAccount(){
 		ConsoleLoginAccount loginSession = HttpSessionUtil.getLoginSession();
 		return loginSession;
+	}
+
+	protected Long getRoleId() {
+		ConsoleLoginAccount loginSession = getLoginAccount();
+		return loginSession.getRoleId();
 	}
 
 	protected String getLoginName(){

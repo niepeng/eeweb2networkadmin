@@ -86,7 +86,10 @@
             <th>结束报警</th>
             <th>备注信息</th>
 ##            <th>已读</th>
-            <th>操作</th>
+
+            #auth("alarm_opt")
+              <th>操作</th>
+            #end
           </tr>
           </thead>
           <tbody>
@@ -130,16 +133,19 @@
 ##                  <button class="btn btn-xs btn-primary" type="button" style="background-color:white !important;color:rgb(148,145,142) !important;border-color:rgb(148,145,142);border-width: 1px; " onclick="markRead($!{row.id});">设为已读</button>
 ##                #end
 ##              </td>
+              #auth("alarm_opt")
+                <td>
 
-              <td>
-                #if($showButton || $!{row.confirm} == 1)
-                  #if($!{row.confirm} == 0 || "$!{row.note}" == "")
-                    <button class="btn btn-xs btn-primary" type="button" onclick="writeNote($row.id)">编写备注</button>
-                  #else
-                    <button class="btn btn-xs btn-primary" type="button" onclick="editNote($row.id, '$!{row.note}')">修改备注</button>
-                  #end
-                #end
-              </td>
+                    #if($showButton || $!{row.confirm} == 1)
+                      #if($!{row.confirm} == 0 || "$!{row.note}" == "")
+                        <button class="btn btn-xs btn-primary" type="button" onclick="writeNote($row.id)">编写备注</button>
+                      #else
+                        <button class="btn btn-xs btn-primary" type="button" onclick="editNote($row.id, '$!{row.note}')">修改备注</button>
+                      #end
+                    #end
+                    <button class="btn btn-xs btn-primary" type="button"  onclick="deleteDevice('$row.id')">删除</button>
+                </td>
+              #end
 
             </tr>
             #end
@@ -226,6 +232,13 @@
     obj.style.display = "block";
     document.getElementById("userNote").value = oldNote;
     document.getElementById("alarmId").value = id;
+  }
+
+  function deleteDevice(id) {
+    if(!confirm('确认要删除 该报警记录吗?')) {
+      return;
+    }
+    window.location.href="${www}/alarm/delete?id=" + id;
   }
 
   function hiddenShowDiv() {

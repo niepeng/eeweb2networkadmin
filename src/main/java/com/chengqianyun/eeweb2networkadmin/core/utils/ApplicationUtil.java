@@ -4,6 +4,7 @@ package com.chengqianyun.eeweb2networkadmin.core.utils;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.AlarmConfirmEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.AlarmTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.RoleEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.UpDownEnum;
 import java.util.ArrayList;
@@ -24,6 +25,12 @@ public class ApplicationUtil {
 //    return list;
 //  }
 
+
+
+  public static RoleEnum getRole(Long roleId) {
+    RoleEnum roleEnum = RoleEnum.find(roleId.intValue());
+    return roleEnum;
+  }
 
   public static DeviceTypeEnum getOneById(int id) {
     return DeviceTypeEnum.getOneById(id);

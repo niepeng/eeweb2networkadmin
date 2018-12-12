@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public interface ConsoleLoginAccountMapper {
 
+    List<ConsoleLoginAccount> findAll();
+
     ConsoleLoginAccount selectByName(String loginName);
 
     ConsoleLoginAccount findById(int id);

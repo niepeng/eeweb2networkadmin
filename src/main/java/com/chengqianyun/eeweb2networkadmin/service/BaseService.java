@@ -3,6 +3,7 @@ package com.chengqianyun.eeweb2networkadmin.service;
 
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.AreaMapper;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.ConsoleLoginAccountMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Contacts;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.ContactsMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarmMapper;
@@ -58,6 +59,9 @@ public class BaseService {
 
   @Autowired
   protected SendContactsMapper sendContactsMapper;
+
+  @Autowired
+  protected ConsoleLoginAccountMapper consoleLoginAccountMapper;
 
   public String getData(SettingEnum settingEnum) {
     Setting setting = settingMapper.selectByCode(settingEnum.getCode());

@@ -14,19 +14,20 @@ import com.chengqianyun.eeweb2networkadmin.data.InstructionManager;
 
 public class MainTest {
 
-  public static void main(String[] args) {
+  public static void main3(String[] args) {
     String s = "3,2，2,";
     System.out.println(s);
     s = s.replaceAll(" ", "").replaceAll("，",",");
     System.out.println(s);
   }
 
-  public static void main1(String[] args) {
+  public static void main(String[] args) {
 //    char[] result = genInstructionBySn(new char[]{0x02, 0x18, 0x05, 0x01});
 //    System.out.println(FunctionUnit.bytesToHexString(result));
 
 //    String value = SHAUtil.encode("hello@1234");
-    String value = SHAUtil.encode("admin@1234");
+//    String value = SHAUtil.encode("admin@1234");
+    String value = SHAUtil.encode("cql@1234");
     System.out.println(value);
   }
 
