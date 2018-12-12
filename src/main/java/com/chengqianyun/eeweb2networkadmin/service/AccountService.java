@@ -49,7 +49,7 @@ public class AccountService extends BaseService {
       throw new RuntimeException("当前账号已经存在了");
     }
 
-    account.setVcLoginPassword(SHAUtil.encode("cqy1234"));
+    account.setVcLoginPassword(SHAUtil.encode("cql123456"));
     if (account.getRoleId() != RoleEnum.NORMAL.getRoleId() && account.getRoleId() != RoleEnum.ADMIN.getRoleId()) {
       throw new RuntimeException("当前参数错误");
     }
@@ -80,7 +80,7 @@ public class AccountService extends BaseService {
     if (fromDB == null) {
       throw new RuntimeException("当前账户信息不存在了");
     }
-    fromDB.setVcLoginPassword(SHAUtil.encode("cqy1234"));
+    fromDB.setVcLoginPassword(SHAUtil.encode("cql123456"));
     consoleLoginAccountMapper.update(fromDB);
   }
 

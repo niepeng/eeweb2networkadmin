@@ -27,7 +27,10 @@ public class MainTest {
 
 //    String value = SHAUtil.encode("hello@1234");
 //    String value = SHAUtil.encode("admin@1234");
-    String value = SHAUtil.encode("cql@1234");
+    String value = SHAUtil.encode("cql123456");
+
+    // 726d3b955f29d9efdce05c47ace4a05c83ec4a5b063d6c61c73ed78aa07ee438
+
     System.out.println(value);
   }
 

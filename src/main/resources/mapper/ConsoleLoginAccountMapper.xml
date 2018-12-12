@@ -78,6 +78,7 @@
 		          vcPhone = #{vcPhone,jdbcType=CHAR} ,
 		          iValid = #{iValid,jdbcType=INTEGER},
 		          dtModify = #{dtModify,jdbcType=TIMESTAMP} ,
+		          vcLoginPassword = #{vcLoginPassword,jdbcType=VARCHAR},
 		          role_id = #{roleId,jdbcType=INTEGER}
           where id = #{id,jdbcType=INTEGER};
     </update>

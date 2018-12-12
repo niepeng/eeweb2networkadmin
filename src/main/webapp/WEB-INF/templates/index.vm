@@ -147,7 +147,8 @@
                     $(function () {
                     // 强密码验证
 jQuery.validator.addMethod("isStrongPwd", function(value, element) {
-    var pwd = /((?=.*\d)(?=.*[A-Za-z])(?=.*\W).{8,20})/;
+//    var pwd = /((?=.*\d)(?=.*[A-Za-z])(?=.*\W).{8,20})/;
+    var pwd = /((?=.*\d)(?=.*[A-Za-z]).{8,20})/;
     return this.optional(element)||pwd.test(value);
 }, "密码为8-20位，必须包含字母，数字和特殊字符");
                         var form = $("#login_form");
@@ -170,7 +171,7 @@ jQuery.validator.addMethod("isStrongPwd", function(value, element) {
                                 },
                                 password: {
                                     required: "请输入密码",
-                                    isStrongPwd:"密码为8-20位，必须包含字母，数字和特殊字符"
+                                    isStrongPwd:"密码为8-20位，必须包含字母，数字"
                                 },
                                 dynamicVerifyCode: {
                                     required: "请输入手机动态码"
