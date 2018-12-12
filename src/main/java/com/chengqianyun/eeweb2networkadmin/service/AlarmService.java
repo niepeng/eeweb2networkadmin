@@ -79,5 +79,9 @@ public class AlarmService extends BaseService {
     deviceAlarmMapper.updateByPrimaryKeySelective(deviceAlarm);
   }
 
+  public void deleteAlarm(Long id) {
+    deviceAlarmMapper.deleteByPrimaryKey(id);
+  }
+
 
 }

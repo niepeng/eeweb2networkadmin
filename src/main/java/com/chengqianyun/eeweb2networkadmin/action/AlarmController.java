@@ -147,5 +147,24 @@ public class AlarmController extends BaseController {
   }
 
 
+  /**
+   * 报警管理:删除
+   */
+  @RequestMapping(value = "/deleteAlarm", method = RequestMethod.GET)
+  public String deleteAlarm(Long id, Model model, RedirectAttributes redirectAttributes) {
+    try {
+      alarmService.deleteAlarm(id);
+//      accountService.deleteAccount(id);
+      redirectAttributes.addFlashAttribute(SUCCESS, true);
+      redirectAttributes.addFlashAttribute(MESSAGE, HdConstant.MESSAGE_RECORD_DELETE_SUCESS);
+      return "redirect:/alarm/alarmList";
+    } catch (Exception ex) {
+      redirectAttributes.addFlashAttribute(SUCCESS, false);
+      redirectAttributes.addFlashAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "redirect:/alarm/alarmList";
+    }
+  }
+
 
 }

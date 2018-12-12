@@ -238,7 +238,7 @@
     if(!confirm('确认要删除 该报警记录吗?')) {
       return;
     }
-    window.location.href="${www}/alarm/delete?id=" + id;
+    window.location.href="${www}/alarm/deleteAlarm?id=" + id;
   }
 
   function hiddenShowDiv() {
