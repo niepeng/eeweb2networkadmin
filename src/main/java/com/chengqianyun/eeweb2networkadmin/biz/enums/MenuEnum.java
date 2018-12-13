@@ -17,29 +17,33 @@ public enum MenuEnum {
     intime_dataList(null, "intime_dataList", "intime", 2, "实时数据",RoleEnum.values(), "intime/dataList"),
     intime_curveList(null, "intime_curveList", "intime", 2, "实时曲线",RoleEnum.values(), "intime/intimeCurveList"),
 
+
   alarm("icon-bell","alarm", null, 1, "报警记录", RoleEnum.values(), null),
-    alarm_opt(null,"alarm_opt",null, 0, "报警操作", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, "alarm/delete,alarm/writeNote,alarm/markRead"),
+    alarm_opt(null,"alarm_opt",null, 0, "报警操作", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "alarm/delete,alarm/writeNote,alarm/markRead"),
     alarm_list(null,"alarm_list","alarm", 2, "报警数据", RoleEnum.values(), "alarm/alarmList"),
+
 
   history("icon-signal","history", null, 1, "历史管理", RoleEnum.values(), null),
     history_list(null,"history_list","history", 2, "历史数据", RoleEnum.values(), "history/historyList"),
     history_curveList(null,"history_curveList","history", 2, "历史曲线", RoleEnum.values(), "history/historyCurveList"),
 
 
-  device("icon-inbox","device", null, 1, "设备管理", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, null),
-    device_arealist(null,"device_arealist","device", 2, "区域管理", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, "device/areaList"),
-    device_list(null,"device_list","device", 2, "设备管理", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, "device/deviceList"),
+  device("icon-inbox","device", null, 1, "设备管理", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, null),
+    device_arealist(null,"device_arealist","device", 2, "区域管理", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "device/areaList"),
+    device_list(null,"device_list","device", 2, "设备管理", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "device/deviceList"),
 
 
-  wirelessSetting("icon-envelope-alt","wirelessSetting", null, 1, "无线设置", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, null),
-    wirelessSetting_normal(null,"wirelessSetting_normal","wirelessSetting", 2, "通讯测试", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, "wirelessSetting/normal"),
-    wirelessSetting_list(null,"wirelessSetting_list","wirelessSetting", 2, "通讯列表", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, "wirelessSetting/list"),
-    wirelessSetting_history(null,"wirelessSetting_history","wirelessSetting", 2, "通讯历史", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, "wirelessSetting/history"),
+  wirelessSetting("icon-envelope-alt","wirelessSetting", null, 1, "无线设置", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, null),
+    wirelessSetting_normal(null,"wirelessSetting_normal","wirelessSetting", 2, "通讯测试", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "wirelessSetting/normal"),
+    wirelessSetting_list(null,"wirelessSetting_list","wirelessSetting", 2, "通讯列表", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "wirelessSetting/list"),
+    wirelessSetting_history(null,"wirelessSetting_history","wirelessSetting", 2, "通讯历史", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "wirelessSetting/history"),
 
-  setting("icon-cog","setting", null,  1, "系统设置", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, null),
-    setting_normal(null,"setting_normal","setting", 2, "基本设置", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, "setting/normal"),
-    setting_alarm(null,"setting_alarm","setting", 2, "报警设置", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, "setting/alarm"),
-    setting_email(null,"setting_email","setting", 2, "邮件设置", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, "setting/email"),
+
+  setting("icon-cog","setting", null,  1, "系统设置", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, null),
+    setting_normal(null,"setting_normal","setting", 2, "基本设置", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "setting/normal"),
+    setting_alarm(null,"setting_alarm","setting", 2, "报警设置", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "setting/alarm"),
+    setting_email(null,"setting_email","setting", 2, "邮件设置", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "setting/email"),
+
 
   account("icon-user-md","account", null,  1, "账户管理", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, null),
     account_list(null,"account_list", "account",  2, "账户列表", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, "account/accountList"),

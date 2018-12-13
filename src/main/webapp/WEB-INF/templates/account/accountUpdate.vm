@@ -84,7 +84,7 @@
             <div class="col-md-8 col-sm-8">
               <select name="roleId">
                 <option #if($account.roleId == 1) selected  #end value="1">普通用户</option>
-                <option #if($account.roleId == 4) selected  #end value="4">管理员</option>
+                <option #if($account.roleId == 2) selected  #end value="2">管理员</option>
               </select>
             </div>
           </div>

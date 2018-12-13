@@ -13,7 +13,8 @@ import lombok.Getter;
 public enum RoleEnum {
 
   NORMAL(1,"普通用户"),
-  ADMIN(4,"管理员"),
+  MANAGER(2,"管理员"),
+  ADMIN(4,"超级管理员"),
   ROOT(8,"厂家");
 
   private int roleId;

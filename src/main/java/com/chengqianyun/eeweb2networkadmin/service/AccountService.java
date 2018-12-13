@@ -50,7 +50,7 @@ public class AccountService extends BaseService {
     }
 
     account.setVcLoginPassword(SHAUtil.encode("cql123456"));
-    if (account.getRoleId() != RoleEnum.NORMAL.getRoleId() && account.getRoleId() != RoleEnum.ADMIN.getRoleId()) {
+    if (account.getRoleId() != RoleEnum.NORMAL.getRoleId() && account.getRoleId() != RoleEnum.MANAGER.getRoleId()) {
       throw new RuntimeException("当前参数错误");
     }
     consoleLoginAccountMapper.save(account);
@@ -68,6 +68,9 @@ public class AccountService extends BaseService {
     ConsoleLoginAccount fromDB = consoleLoginAccountMapper.findById(account.getId());
     if (fromDB == null) {
       throw new RuntimeException("当前账户信息不存在了");
+    }
+    if (account.getRoleId() != RoleEnum.NORMAL.getRoleId() && account.getRoleId() != RoleEnum.MANAGER.getRoleId()) {
+      throw new RuntimeException("当前参数错误");
     }
     fromDB.setIValid(account.getIValid());
     fromDB.setVcRealName(account.getVcRealName());
