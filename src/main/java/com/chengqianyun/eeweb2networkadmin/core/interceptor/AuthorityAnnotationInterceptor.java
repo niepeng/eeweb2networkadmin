@@ -71,6 +71,7 @@ public class AuthorityAnnotationInterceptor extends HandlerInterceptorAdapter {
 				|| currentURL.indexOf("/images/") != -1
 				|| currentURL.indexOf("/fonts/") != -1
 				|| currentURL.matches(".*/login")
+				|| currentURL.indexOf("/api/") != -1
 				|| currentURL.indexOf("/logout") != -1
 				) {
 			return true;

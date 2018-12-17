@@ -184,6 +184,12 @@ public class DeviceIntimeService extends BaseService {
         dataList.remove(i);
         continue;
       }
+
+      if(!dataIntimeBean.needDevice(tmpData.getDeviceInfo().getId())) {
+        dataList.remove(i);
+        continue;
+      }
+
       i++;
     }
     dataIntimeBean.setDataList(dataList);

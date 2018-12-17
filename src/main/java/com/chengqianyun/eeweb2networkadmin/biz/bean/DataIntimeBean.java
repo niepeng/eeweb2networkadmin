@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import lombok.Data;
 import lombok.ToString;
 
@@ -36,6 +37,11 @@ public class DataIntimeBean {
    * 选中的区域
    */
   private List<Area> areaList;
+  /**
+   * 筛选的设备id列表
+   */
+  private Map<Long,Object> deviceIdMap;
+
   /**
    * 筛选结果数据
    */
@@ -103,6 +109,16 @@ public class DataIntimeBean {
       if (id == statusEnum.getId()) {
         return true;
       }
+    }
+    return false;
+  }
+
+  public boolean needDevice(Long deviceId) {
+    if (deviceIdMap == null) {
+      return true;
+    }
+    if (deviceIdMap.containsKey(deviceId)) {
+      return true;
     }
     return false;
   }

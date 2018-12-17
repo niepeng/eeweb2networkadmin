@@ -2,7 +2,13 @@ package com.chengqianyun.eeweb2networkadmin.biz;
 
 
 import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceDataHistoryBean;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.ElementDataBean;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.api.AreaResp;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.api.DeviceDataHistoryResp;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.api.DeviceResp;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.api.ElementDataResp;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.HistoryListBean;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistory;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
@@ -120,6 +126,119 @@ public class Convert {
 
     return result;
   }
+
+  public static List<AreaResp> changeAreaList(List<Area> list) {
+    List<AreaResp> result = new ArrayList<AreaResp>();
+    if (list == null || list.size() == 0) {
+      return result;
+    }
+    for (Area area : list) {
+      AreaResp resp = new AreaResp();
+      resp.setAreaId(area.getId());
+      resp.setAreaName(area.getName());
+      resp.setAreaNote(area.getNote());
+      result.add(resp);
+    }
+    return result;
+  }
+
+  public static List<DeviceResp> changeDeviceList(List<DeviceInfo> list) {
+    List<DeviceResp> result = new ArrayList<DeviceResp>();
+    if (list == null || list.size() == 0) {
+      return result;
+    }
+    for (DeviceInfo deviceInfo : list) {
+      DeviceResp resp = new DeviceResp();
+      resp.setDeviceId(deviceInfo.getId());
+      resp.setAreaId(deviceInfo.getAreaId());
+      resp.setSn(deviceInfo.getSn());
+      resp.setName(deviceInfo.getName());
+      resp.setTag(deviceInfo.getTag());
+      resp.setAddress(deviceInfo.getAddress());
+      resp.setType(deviceInfo.getType());
+
+      resp.setTempUp(UnitUtil.changeTemp(deviceInfo.getTempUp()));
+      resp.setTempDown(UnitUtil.changeTemp(deviceInfo.getTempDown()));
+      resp.setTempDev(UnitUtil.changeTemp(deviceInfo.getTempDev()));
+
+      resp.setHumiUp(UnitUtil.changeHumi(deviceInfo.getHumiUp()));
+      resp.setHumiDown(UnitUtil.changeHumi(deviceInfo.getHumiDown()));
+      resp.setHumiDev(UnitUtil.changeHumi(deviceInfo.getHumiDev()));
+
+      resp.setShineUp(String.valueOf(deviceInfo.getShineUp()));
+      resp.setShineDown(String.valueOf(deviceInfo.getShineDown()));
+      resp.setShineDev(String.valueOf(deviceInfo.getShineDev()));
+
+      resp.setPressureUp(UnitUtil.changePressure(deviceInfo.getPressureUp()));
+      resp.setPressureDown(UnitUtil.changePressure(deviceInfo.getPressureDown()));
+      resp.setPressureDev(UnitUtil.changePressure(deviceInfo.getPressureDev()));
+
+      result.add(resp);
+    }
+    return result;
+  }
+
+  public static List<ElementDataResp> changeElementDataList(List<ElementDataBean> list) {
+    List<ElementDataResp> result = new ArrayList<ElementDataResp>();
+    if (list == null || list.size() == 0) {
+      return result;
+    }
+
+    for (ElementDataBean dataBean : list) {
+      ElementDataResp resp = new ElementDataResp();
+      resp.setDeviceId(dataBean.getDeviceInfo().getId());
+      resp.setAreaId(dataBean.getArea() != null ? dataBean.getArea().getId() : 0);
+      resp.setDeviceOneType(dataBean.getDeviceOneTypeEnum().getId());
+      resp.setDate(dataBean.getData());
+      resp.setStatus(dataBean.getStatus());
+      resp.setDate(DateUtil.getDate(dataBean.getTime(), DateUtil.dateFullPattern));
+      result.add(resp);
+    }
+    return result;
+  }
+
+  public static List<DeviceDataHistoryResp> changeHistoryRespList(List<DeviceDataHistoryBean> beanList, String dataTypes) {
+    List<DeviceDataHistoryResp> result = new ArrayList<DeviceDataHistoryResp>();
+    if (beanList == null || beanList.size() == 0) {
+      return result;
+    }
+
+    boolean hasAvg = dataTypes.indexOf("avg") >= 0;
+    boolean hasMin = dataTypes.indexOf("min") >= 0;
+    boolean hasMax = dataTypes.indexOf("max") >= 0;
+
+    for (DeviceDataHistoryBean dataBean : beanList) {
+      DeviceDataHistoryResp resp = new DeviceDataHistoryResp();
+      resp.setTime(dataBean.getTime());
+
+      if (hasAvg) {
+        resp.setTempAvg(dataBean.getTempAvgStr());
+        resp.setHumiAvg(dataBean.getHumiAvgStr());
+        resp.setShineAvg(dataBean.getShineAvgStr());
+        resp.setPowerAvg(dataBean.getPowerAvgStr());
+        resp.setPressureAvg(dataBean.getPressureAvgStr());
+      }
+
+      if (hasMin) {
+        resp.setTempMin(dataBean.getTempMinStr());
+        resp.setHumiMin(dataBean.getHumiMinStr());
+        resp.setShineMin(dataBean.getShineMinStr());
+        resp.setPowerMin(dataBean.getPowerMinStr());
+        resp.setPressureMin(dataBean.getPressureMinStr());
+      }
+
+      if (hasMax) {
+        resp.setTempMax(dataBean.getTempMaxStr());
+        resp.setHumiMax(dataBean.getHumiMaxStr());
+        resp.setShineMax(dataBean.getShineMaxStr());
+        resp.setPowerMax(dataBean.getPowerMaxStr());
+        resp.setPressureMax(dataBean.getPressureMaxStr());
+      }
+      result.add(resp);
+    }
+    return result;
+  }
+
 
   public static List<DeviceDataHistory> historyBean2DataByDatatype(List<DeviceDataHistoryBean> list, String dataType) {
     int size = list.size();

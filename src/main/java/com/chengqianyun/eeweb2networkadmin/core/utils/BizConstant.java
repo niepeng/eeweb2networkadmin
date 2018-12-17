@@ -10,6 +10,11 @@ package com.chengqianyun.eeweb2networkadmin.core.utils;
 public interface BizConstant {
 
   /**
+   * token 有效期单位:天
+   */
+  public static final int token_days = 7;
+
+  /**
    * 最低电量值:3v
    */
   public static final int power_min = 300;
@@ -25,6 +30,14 @@ public interface BizConstant {
     static final long minute = second * 60;
     static final long hour = minute * 60;
     static final long day = hour * 24;
+  }
+
+  interface ApiCode {
+    int fail = 1;
+    int empty = 2;
+    int check_fail = 3;
+    int token_expire = 4;
+
   }
 
 }

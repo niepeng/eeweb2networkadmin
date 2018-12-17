@@ -2,14 +2,22 @@ package com.chengqianyun.eeweb2networkadmin.action;
 
 import com.alibaba.fastjson.JSON;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.ElementDataBean;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.ParseToken;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.Token;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.api.ApiResp;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.ConsoleLoginAccount;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
+import com.chengqianyun.eeweb2networkadmin.core.TokenHelper;
+import com.chengqianyun.eeweb2networkadmin.core.utils.BizConstant;
+import com.chengqianyun.eeweb2networkadmin.core.utils.BizConstant.ApiCode;
 import com.chengqianyun.eeweb2networkadmin.core.utils.HttpSessionUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.PageUtilFactory;
+import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
+import com.chengqianyun.eeweb2networkadmin.core.utils.Tuple2;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -200,6 +208,28 @@ public abstract class BaseController {
 		return deviceInfo;
 	}
 
+	protected ApiResp defaultApiError(String msg) {
+		return defaultApiError(msg, ApiCode.fail);
+	}
+
+
+	protected ApiResp defaultApiError(String msg, int code) {
+		ApiResp resp = new ApiResp();
+		resp.setCode(code);
+		resp.setMsg(StringUtil.isEmpty(msg) ? "系统异常" : msg);
+		return resp;
+	}
+
+	protected Tuple2<Boolean, ApiResp> checkToken(String token) {
+		ParseToken parseToken = TokenHelper.parseToken(token);
+		if (parseToken == null) {
+			return new Tuple2<Boolean, ApiResp>(false, defaultApiError("token校验失败", ApiCode.check_fail));
+		}
+		if (parseToken.isExpire()) {
+			return new Tuple2<Boolean, ApiResp>(false, defaultApiError("token过期", ApiCode.token_expire));
+		}
+		return new Tuple2<Boolean, ApiResp>(true, null);
+	}
 
 
 //	protected OperationLog convertOperationLog(String name,HttpServletRequest request,Object object,OperationResultEnum resultEnum,OperationTypeEnum operationTypeEnum){
