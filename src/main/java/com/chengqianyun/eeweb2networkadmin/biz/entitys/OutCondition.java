@@ -1,5 +1,6 @@
 package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
+import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import java.util.Date;
 import lombok.Data;
 import lombok.ToString;
@@ -76,5 +77,11 @@ public class OutCondition {
 
     // ==============  扩展方法  =================
 
+    public boolean isTrigger(int currentValue, DeviceTypeEnum deviceTypeEnum) {
+        if (deviceTypeEnum.isDataDevice()) {
+            return minMax == 1 ? currentValue < dataValue : currentValue > dataValue;
+        }
+        return true;
+    }
 
 }

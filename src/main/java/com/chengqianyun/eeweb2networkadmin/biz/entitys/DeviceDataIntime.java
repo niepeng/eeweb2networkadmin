@@ -133,7 +133,7 @@ public class DeviceDataIntime {
     }
 
     public boolean hasOffline() {
-        return status == StatusEnum.offline.getId() || inStatus == StatusEnum.offline.getId();
+        return status == StatusEnum.offline.getId() || inStatus == StatusEnum.offline.getId() || outStatus == StatusEnum.offline.getId();
     }
 
     /**

@@ -116,21 +116,6 @@ public class DeviceFormBean {
    */
   private String controlWay;
 
-  /**
-   * 只有开关量输入才有值: 联动地址
-   */
-  private String relationOutId;
-
-  /**
-   * 只有开关量输入才有值:联动开关通道
-   */
-  private String opencloseWay;
-
-  /**
-   * 只有开关量输入才有值:输入通道
-   */
-  private String inWay;
-
   // ================= 扩展属性 ======================
 
 

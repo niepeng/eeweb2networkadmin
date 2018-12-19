@@ -102,11 +102,11 @@ function contrlPressure(isShow) {
 }
 
 function contrlIn(isShow) {
-  if(isShow) {
-    document.getElementById("inDiv").style.display = "block";
-  } else {
-    document.getElementById("inDiv").style.display = "none";
-  }
+  // if(isShow) {
+  //   document.getElementById("inDiv").style.display = "block";
+  // } else {
+  //   document.getElementById("inDiv").style.display = "none";
+  // }
 }
 
 function contrlOut(isShow) {
@@ -118,4 +118,21 @@ function contrlOut(isShow) {
   refushShow();
 }
 
+/**
+ *
+ *   smoke(32,"烟感", false, true, ""),
+ *   water(64,"跑冒滴漏", false, true, ""),
+ *   electric(128,"断电来电", false, true, ""),
+ *   body(256,"人体感应", false, true, ""),
+ */
+function changeConditionDeviceType(obj) {
+   if(obj == 32 || obj == 64 || obj == 128 || obj == 256) {
+     document.getElementById("minMaxDiv").style.display = "none";
+     document.getElementById("dataValueDiv").style.display = "none";
+   } else {
+     document.getElementById("minMaxDiv").style.display = "block";
+     document.getElementById("dataValueDiv").style.display = "block";
+   }
+
+}
 

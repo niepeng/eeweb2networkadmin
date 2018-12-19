@@ -149,26 +149,26 @@
         </div>
       </div>
 
-      <div class="row" id="inDiv" style="display: none;">
-        <div class="col-xs-12 col-md-8">
-          <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">开关量输入：</label>
-            联动地址 <input type="text" style="width: 60px;" id="relationOutId" name="relationOutId" value=""> &nbsp;
-            联动通道 <select id="opencloseWay" name="opencloseWay">
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                    </select>  &nbsp;
-            输入通道  <select id="inWay" name="inWay">
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                    </select>
-          </div>
-        </div>
-      </div>
+##      <div class="row" id="inDiv" style="display: none;">
+##        <div class="col-xs-12 col-md-8">
+##          <div class="form-group">
+##            <label class="col-md-4 col-sm-2 control-label">开关量输入：</label>
+##            联动地址 <input type="text" style="width: 60px;" id="relationOutId" name="relationOutId" value=""> &nbsp;
+##            联动通道 <select id="opencloseWay" name="opencloseWay">
+##                      <option value="1">1</option>
+##                      <option value="2">2</option>
+##                      <option value="3">3</option>
+##                      <option value="4">4</option>
+##                    </select>  &nbsp;
+##            输入通道  <select id="inWay" name="inWay">
+##                      <option value="1">1</option>
+##                      <option value="2">2</option>
+##                      <option value="3">3</option>
+##                      <option value="4">4</option>
+##                    </select>
+##          </div>
+##        </div>
+##      </div>
 
       <div class="row" id="outDiv" style="display: none;">
         <div class="col-xs-12 col-md-8">

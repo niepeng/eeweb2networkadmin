@@ -44,7 +44,7 @@ public class DeviceInfo {
     private int address;
 
     /**
-     * 设备类型: DeviceTypeEnum 按位存储
+     * 设备类型: DeviceTypeEnum 按位存储 的 相加
      */
     private int type;
 
@@ -114,17 +114,17 @@ public class DeviceInfo {
     private short controlWay;
 
     /**
-     * 只有开关量输入才有值: 联动地址
+     * 废弃:只有开关量输入才有值: 联动地址
      */
     private long relationOutId;
 
     /**
-     * 只有开关量输入才有值:联动开关通道
+     * 废弃:只有开关量输入才有值:联动开关通道
      */
     private short opencloseWay;
 
     /**
-     * 只有开关量输入才有值:输入通道
+     * 废弃:只有开关量输入才有值:输入通道
      */
     private short inWay;
 

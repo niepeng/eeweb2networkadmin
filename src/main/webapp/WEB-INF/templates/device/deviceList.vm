@@ -85,9 +85,9 @@
 ##                  #if($!{row.hasPower()}) 电量 <br/> #end
                   #if($!{row.hasShine()}) 光照: $!{row.shineDown} Lx ~ $!{row.shineUp}Lx ($!{row.shineDev}Lx)<br/> #end
                   #if($!{row.hasPressure()}) 压力: $!unitUtil.changePressure($!{row.pressureDown})kPa ~ $!unitUtil.changePressure($!{row.pressureUp})kPa ($!unitUtil.changePressure($!{row.pressureDev})kPa)<br/> #end
-                  #if($!{row.hasSmoke()}) 烟感: <br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
-                  #if($!{row.hasWater()}) 跑冒滴漏:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
-                  #if($!{row.hasElectric()}) 断电来电:<br/>输入通道: $!{row.inWay}<br/>联动输出通道和地址: $!{row.opencloseWay} ,  $!{row.relationOutId}<br/> #end
+                  #if($!{row.hasSmoke()}) 烟感<br/> #end
+                  #if($!{row.hasWater()}) 跑冒滴漏<br/> #end
+                  #if($!{row.hasElectric()}) 断电来电<br/> #end
                   #if($!{row.hasOut()}) 控制通道: $!{row.controlWay}<br/>#end
               </td>
               <td>

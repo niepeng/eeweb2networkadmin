@@ -39,7 +39,7 @@ public class ApplicationUtil {
   public static List<DeviceTypeEnum> getAllDataDeviceTypes() {
     List<DeviceTypeEnum> list = new ArrayList<DeviceTypeEnum>();
     for(DeviceTypeEnum tmp : DeviceTypeEnum.values()) {
-      if(tmp.isDataDevice()) {
+      if(tmp.isDataDevice() || tmp.isIn()) {
         list.add(tmp);
       }
     }

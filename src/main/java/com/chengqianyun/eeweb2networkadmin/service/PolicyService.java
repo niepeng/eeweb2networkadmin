@@ -63,7 +63,7 @@ public class PolicyService extends BaseService {
         if (DeviceTypeEnum.hasOut(deviceInfo.getType())) {
           intime.setOutStatus(StatusEnum.offline.getId());
         }
-        optDataHelper.optData(intime, null, deviceInfo);
+        optDataHelper.optData(intime, null, deviceInfo, null);
       }
     }
   }

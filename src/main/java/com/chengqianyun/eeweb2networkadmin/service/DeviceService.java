@@ -234,9 +234,9 @@ public class DeviceService extends BaseService {
         DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.water) ||
         DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.electric)) {
 
-      deviceInfo.setRelationOutId(StringUtil.str2int(deviceFormBean.getRelationOutId()));
-      deviceInfo.setOpencloseWay((short) StringUtil.str2int(deviceFormBean.getOpencloseWay()));
-      deviceInfo.setInWay((short) StringUtil.str2int(deviceFormBean.getInWay()));
+//      deviceInfo.setRelationOutId(StringUtil.str2int(deviceFormBean.getRelationOutId()));
+//      deviceInfo.setOpencloseWay((short) StringUtil.str2int(deviceFormBean.getOpencloseWay()));
+//      deviceInfo.setInWay((short) StringUtil.str2int(deviceFormBean.getInWay()));
     }
 
     if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.out)) {
@@ -304,13 +304,13 @@ public class DeviceService extends BaseService {
         DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.water) ||
         DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.electric)) {
 
-      deviceInfo.setRelationOutId(StringUtil.str2int(deviceFormBean.getRelationOutId()));
-      deviceInfo.setOpencloseWay((short) StringUtil.str2int(deviceFormBean.getOpencloseWay()));
-      deviceInfo.setInWay((short) StringUtil.str2int(deviceFormBean.getInWay()));
+//      deviceInfo.setRelationOutId(StringUtil.str2int(deviceFormBean.getRelationOutId()));
+//      deviceInfo.setOpencloseWay((short) StringUtil.str2int(deviceFormBean.getOpencloseWay()));
+//      deviceInfo.setInWay((short) StringUtil.str2int(deviceFormBean.getInWay()));
     } else {
-      deviceInfo.setRelationOutId(0);
-      deviceInfo.setOpencloseWay((short) 0);
-      deviceInfo.setInWay((short) 0);
+//      deviceInfo.setRelationOutId(0);
+//      deviceInfo.setOpencloseWay((short) 0);
+//      deviceInfo.setInWay((short) 0);
     }
 
     if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.out)) {
@@ -330,12 +330,11 @@ public class DeviceService extends BaseService {
       return;
     }
 
-    List<OutCondition> conditionList = outConditionMapper.selectConditionSn(deviceInfo.getSn());
-    if (conditionList != null && conditionList.size() > 0) {
-      throw new RuntimeException("该设备存在于开关量条件中,请先删除开关量中的条件");
-    }
+    outConditionMapper.deleteBySn(deviceInfo.getSn());
     deviceInfoMapper.deleteByPrimaryKey(id);
     deviceDataIntimeMapper.deleteAllByDeviceId(id);
+    // 删除正在报警的数据
+    deviceAlarmMapper.deleteAlarmDataByDeviceId(deviceInfo.getId());
     ServerConnectionManager.removeDeviceInfo(deviceInfo.getSn());
   }
 

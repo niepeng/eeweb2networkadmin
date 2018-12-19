@@ -166,4 +166,10 @@
       updated_by = #{updatedBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <delete id="deleteBySn" parameterType="java.lang.String">
+   delete from t_out_condition
+    where device_sn = #{sn,jdbcType=VARCHAR}
+  </delete>
+
 </mapper>

@@ -107,7 +107,7 @@ public class ServerClientHandler implements Runnable {
           log.info("接收到开关量输出数据结果解析==>" + tuple);
         }
 
-        optDataHelper.optData(tmpDeviceData, tuple, deviceInfo);
+        optDataHelper.optData(tmpDeviceData, tuple, deviceInfo, this);
 
         tuple = null;
         tmpDeviceData = null;
@@ -124,7 +124,7 @@ public class ServerClientHandler implements Runnable {
     }
   }
 
-  private char[] writeInstruction(int address, char[] writeData) throws IOException {
+  public char[] writeInstruction(int address, char[] writeData) throws IOException {
     DataStatusEnum tmpDataStatusEnum;
 //    for (int i = 0; i < ServerConnectionManager.FAIL_TIMES_RETURN; i++) {
     for (int i = 0; i < 1; i++) {

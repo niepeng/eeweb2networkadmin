@@ -30,6 +30,9 @@ public interface DeviceAlarmMapper {
 
     List<DeviceAlarm> selectAlarmByDeviceId(long deviceId);
     Long hasAlarmDataByDeviceId(long deviceId);
+
     Long hasAlarmDataByDeviceIdAndOneType(@Param("deviceId") long deviceId, @Param("deviceOneType") int deviceOneType);
+
+    Integer deleteAlarmDataByDeviceId(long deviceId);
 
 }

@@ -9,6 +9,8 @@ import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistoryMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntimeMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutCondition;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutConditionMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.AlarmTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
@@ -17,8 +19,12 @@ import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.SpringContextHolder;
 import com.chengqianyun.eeweb2networkadmin.core.utils.Tuple2;
 import com.chengqianyun.eeweb2networkadmin.service.SendPhoneService;
+import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +50,9 @@ public class OptDataHelper {
   @Autowired
   private SendPhoneService sendPhoneService;
 
+  @Autowired
+  private OutConditionMapper outConditionMapper;
+
 
   /**
    * 处理采集的数据: 实时数据,报警数据,历史数据
@@ -53,7 +62,7 @@ public class OptDataHelper {
    * @param outInfo 开关量输出设备数据
    * @param deviceInfo 设备信息
    */
-  public void optData(DeviceDataIntime dataIntime, Tuple2<StatusEnum, Boolean> outInfo, DeviceInfo deviceInfo) {
+  public void optData(DeviceDataIntime dataIntime, Tuple2<StatusEnum, Boolean> outInfo, DeviceInfo deviceInfo, ServerClientHandler client) {
 
     Date now = new Date();
     // 1.记录实时数据
@@ -77,6 +86,8 @@ public class OptDataHelper {
       Date afterDate = DateUtil.addSecond(now, -second);
       Long id = dataIntimeMapper.hasRecentlyOne(dataIntime.getDeviceId(), afterDate);
       if (id != null && id > 0) {
+        // 触发联动开关量输入
+        optOutCondition(dataIntime, deviceInfo,outInfo, client);
         return;
       }
     }
@@ -95,6 +106,122 @@ public class OptDataHelper {
     if(!isOffline) {
       recordHistoryData(dataIntime, now);
     }
+
+    // 触发联动开关量输入
+    optOutCondition(dataIntime, deviceInfo, outInfo, client);
+
+  }
+
+  private void optOutCondition(DeviceDataIntime dataIntime, DeviceInfo deviceInfo, Tuple2<StatusEnum, Boolean> outInfo, ServerClientHandler client) {
+    List<OutCondition> list = outConditionMapper.selectConditionSn(deviceInfo.getSn());
+    if (list == null || list.size() == 0) {
+      return;
+    }
+
+    // (设备信息表id, 打开关闭条件类型:1打开,2关闭)
+    Map<Long, Short> triggerMap = new HashMap<Long, Short>();
+
+    for (OutCondition out : list) {
+      DeviceTypeEnum tmp = DeviceTypeEnum.getOneById(out.getDeviceType());
+      if (tmp == null) {
+        continue;
+      }
+      if (!DeviceTypeEnum.hasType(deviceInfo.getType(), tmp)) {
+        continue;
+      }
+
+      if (tmp.isDataDevice()) {
+        if (dataIntime.getStatus() == StatusEnum.offline.getId()) {
+          continue;
+        }
+        Integer data = getDataValue(dataIntime, tmp);
+        if (data == null) {
+          continue;
+        }
+        if (!out.isTrigger(data, tmp)) {
+          continue;
+        }
+        triggerMap.put(out.getDeviceInfoId(), out.getOpenClosed());
+        continue;
+      }
+
+      if (tmp.isIn()) {
+        if (dataIntime.getInStatus() != StatusEnum.alarm.getId()) {
+          continue;
+        }
+
+        if (tmp == DeviceTypeEnum.smoke && dataIntime.getSmokeStatusEnum() == StatusEnum.alarm) {
+          triggerMap.put(out.getDeviceInfoId(), out.getOpenClosed());
+          continue;
+        }
+        if (tmp == DeviceTypeEnum.water && dataIntime.getWaterStatusEnum() == StatusEnum.alarm) {
+          triggerMap.put(out.getDeviceInfoId(), out.getOpenClosed());
+          continue;
+        }
+        if (tmp == DeviceTypeEnum.electric && dataIntime.getElectricStatusEnum() == StatusEnum.alarm) {
+          triggerMap.put(out.getDeviceInfoId(), out.getOpenClosed());
+          continue;
+        }
+        if (tmp == DeviceTypeEnum.body && dataIntime.getBodyStatusEnum() == StatusEnum.alarm) {
+          triggerMap.put(out.getDeviceInfoId(), out.getOpenClosed());
+          continue;
+        }
+        continue;
+      }
+    }
+
+    if (triggerMap.size() == 0) {
+      return;
+    }
+
+    for (Entry<Long, Short> entry : triggerMap.entrySet()) {
+      boolean open = entry.getValue() == 1;
+      if (!isNeedSendOut(open, deviceInfo, outInfo)) {
+        continue;
+      }
+
+      if(client != null) {
+        try {
+          char[] data = client.writeInstruction(deviceInfo.getAddress(), InstructionManager.genOptOut(deviceInfo.getAddress(), deviceInfo.getControlWay(), open));
+          boolean optResult = InstructionManager.optOutResult(data, deviceInfo.getAddress());
+          log.error("sendOut:{}", optResult);
+        } catch (Exception e) {
+          log.error("sendOutError", e);
+        }
+      }
+    }
+
+  }
+
+  private boolean isNeedSendOut(boolean open, DeviceInfo deviceInfo, Tuple2<StatusEnum, Boolean> outInfo) {
+    if(outInfo != null && outInfo.getT2() == open) {
+      return false;
+    }
+    return false;
+  }
+
+  private Integer getDataValue(DeviceDataIntime dataIntime, DeviceTypeEnum typeEnum) {
+    if (typeEnum == DeviceTypeEnum.temp) {
+      return dataIntime.getTemp();
+    }
+
+    if (typeEnum == DeviceTypeEnum.humi) {
+      return dataIntime.getHumi();
+    }
+
+    if (typeEnum == DeviceTypeEnum.power) {
+      return dataIntime.getPower();
+    }
+
+    if (typeEnum == DeviceTypeEnum.shine) {
+      return dataIntime.getShine();
+    }
+
+    if (typeEnum == DeviceTypeEnum.pressure) {
+      return dataIntime.getPressure();
+    }
+
+    return null;
   }
 
   private void recordHistoryData(DeviceDataIntime dataIntime, Date now) {

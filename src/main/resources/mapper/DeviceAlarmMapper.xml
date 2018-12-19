@@ -358,4 +358,14 @@
   </update>
 
 
+  <delete id="deleteAlarmDataByDeviceId" parameterType="java.lang.Long">
+    delete from  t_device_alarm
+    WHERE
+      device_id = #{deviceId,jdbcType=BIGINT}
+    AND
+      confirm = 0
+    AND
+      alarm_end_time is null
+  </delete>
+
 </mapper>

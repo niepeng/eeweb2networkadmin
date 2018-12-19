@@ -71,7 +71,7 @@
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">条件设备类型：</label>
             <div class="col-md-8 col-sm-8">
-              <select name="deviceType" id="deviceType">
+              <select name="deviceType" id="deviceType" onchange="changeConditionDeviceType(this.value);">
                 #foreach($tmpDevice in $applicationUtil.getAllDataDeviceTypes())
                   <option value="$tmpDevice.id">$!tmpDevice.name</option>
                 #end
@@ -93,7 +93,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" id="minMaxDiv">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">大小类型：</label>
@@ -105,8 +105,7 @@
       </div>
 
 
-
-      <div class="row">
+      <div class="row"  id="dataValueDiv">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">条件值：</label>
@@ -140,6 +139,8 @@
 </div><!-- /.main-content -->
 
 <script src="${www}/js/youcaicommon.js"></script>
+<script src="${www}/js/xue.js?ts=20181218"></script>
+
 <script type="text/javascript">
 
   $("#sbt").click(function(e){

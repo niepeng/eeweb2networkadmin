@@ -16,6 +16,8 @@ public interface OutConditionMapper {
 
     int updateByPrimaryKey(OutCondition record);
 
+    Integer deleteBySn(String sn);
+
     List<OutCondition> listByDeviceId(long deviceId);
 
     List<OutCondition> selectConditionSn(String condtionSn);

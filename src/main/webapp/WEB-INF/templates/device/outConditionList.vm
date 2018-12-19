@@ -74,24 +74,28 @@
               <td> $!applicationUtil.getOneById($!{tmpOutCondition.deviceType}).name</td>
               <td> $!{tmpOutCondition.deviceInfo.name}($!{tmpOutCondition.deviceInfo.tag})<br>地址: $!{tmpOutCondition.deviceInfo.address}</td>
               <td> #if($!{tmpOutCondition.openClosed} == 1) 打开 #else 关闭 #end</td>
-              <td> #if($!{tmpOutCondition.minMax} == 1) 小于 #else 大于 #end
+              <td>
+                #if($!applicationUtil.getOneById($!{tmpOutCondition.deviceType}).isIn())
+                  --
+                #else
+                    #if($!{tmpOutCondition.minMax} == 1) 小于 #else 大于 #end
+                #end
 
+                #if($!{tmpOutCondition.tmpDeviceInfo.hasTemp()})
+                  $!unitUtil.changeTemp($!{tmpOutCondition.dataValue})℃
 
-              #if($!{tmpOutCondition.tmpDeviceInfo.hasTemp()})
-                $!unitUtil.changeTemp($!{tmpOutCondition.dataValue})℃
+                #elseif($!{tmpOutCondition.tmpDeviceInfo.hasHumi()})
+                  $!unitUtil.changeHumi($!{tmpOutCondition.dataValue})%RH
 
-              #elseif($!{tmpOutCondition.tmpDeviceInfo.hasHumi()})
-                $!unitUtil.changeHumi($!{tmpOutCondition.dataValue})%RH
+                #elseif($!{tmpOutCondition.tmpDeviceInfo.hasPower()})
+                  $!unitUtil.changePower($!{tmpOutCondition.dataValue})V
 
-              #elseif($!{tmpOutCondition.tmpDeviceInfo.hasPower()})
-                $!unitUtil.changePower($!{tmpOutCondition.dataValue})V
+                #elseif($!{tmpOutCondition.tmpDeviceInfo.hasShine()})
+                  $!{tmpOutCondition.dataValue} Lx
 
-              #elseif($!{tmpOutCondition.tmpDeviceInfo.hasShine()})
-                $!{tmpOutCondition.dataValue} Lx
-
-              #elseif($!{tmpOutCondition.tmpDeviceInfo.hasPressure()})
-                $!unitUtil.changePressure($!{tmpOutCondition.dataValue})Pa
-              #end
+                #elseif($!{tmpOutCondition.tmpDeviceInfo.hasPressure()})
+                  $!unitUtil.changePressure($!{tmpOutCondition.dataValue})Pa
+                #end
               </td>
               <td>
                 $dateUtil.getDate($!{tmpOutCondition.createdAt}, 'yyyy-MM-dd HH:mm:ss')<br/>
