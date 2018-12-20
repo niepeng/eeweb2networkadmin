@@ -1,13 +1,23 @@
 package com.chengqianyun.eeweb2networkadmin.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.EmailBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.SettingAlarmBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.SettingNormalBean;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.ConsoleLoginAccount;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutCondition;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.SendContacts;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.Setting;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.SettingEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.PageUtilFactory;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.ThreeDes;
 import com.chengqianyun.eeweb2networkadmin.data.ServerConnectionManager;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -136,6 +146,80 @@ public class SettingService extends BaseService {
     MailService.charset = SettingEnum.mail_send_charset.getDefaultValue();
     MailService.isSSL = bean.isMail_is_ssl();
     MailService.timeout = bean.getMail_smtp_timeout();
+  }
+
+  public String exportConfig() {
+    // 区域,设备,条件,区域关联人,系统设置
+    List<Area> areaList = areaMapper.listAll();
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("areaList", JSON.toJSONString(areaList));
+
+    List<DeviceInfo> deviceInfoList = deviceInfoMapper.findAll();
+    jsonObject.put("deviceInfoList", JSON.toJSONString(deviceInfoList));
+
+    List<OutCondition> outConditionList = outConditionMapper.findAll();
+    jsonObject.put("outConditionList", JSON.toJSONString(outConditionList));
+
+    List<SendContacts> sendContactsList = sendContactsMapper.selectAll();
+    jsonObject.put("sendContactsList", JSON.toJSONString(sendContactsList));
+
+    List<Setting> settingList = settingMapper.findAll();
+    jsonObject.put("settingList", JSON.toJSONString(settingList));
+
+    List<ConsoleLoginAccount> accountList = consoleLoginAccountMapper.selectAll();
+    jsonObject.put("accountList", JSON.toJSONString(accountList));
+
+    return ThreeDes.encrypt(jsonObject.toString());
+  }
+
+  public void importConfig(String fileContent) {
+    String jsonValue = ThreeDes.decrypt(fileContent);
+    JSONObject jsonObject;
+    try {
+      jsonObject = JSON.parseObject(jsonValue);
+      if (jsonObject == null) {
+        throw new RuntimeException("导入文件内容不正确");
+      }
+    } catch (Exception e) {
+      throw new RuntimeException("导入文件内容不正确");
+    }
+
+    List<Area> areaList = JSON.parseArray(jsonObject.getString("areaList"), Area.class);
+    areaMapper.deleteForExport();
+    for (Area area : areaList) {
+      areaMapper.insertSelective(area);
+    }
+
+    List<DeviceInfo> deviceInfoList = JSON.parseArray(jsonObject.getString("deviceInfoList"), DeviceInfo.class);
+    deviceInfoMapper.deleteForExport();
+    for (DeviceInfo deviceInfo : deviceInfoList) {
+      deviceInfoMapper.insertSelective(deviceInfo);
+    }
+
+    List<OutCondition> outConditionList = JSON.parseArray(jsonObject.getString("outConditionList"), OutCondition.class);
+    outConditionMapper.deleteForExport();
+    for (OutCondition outCondition : outConditionList) {
+      outConditionMapper.insertSelective(outCondition);
+    }
+
+    List<SendContacts> sendContactsList = JSON.parseArray(jsonObject.getString("sendContactsList"), SendContacts.class);
+    sendContactsMapper.deleteForExport();
+    for (SendContacts sendContacts : sendContactsList) {
+      sendContactsMapper.insertForImport(sendContacts);
+    }
+
+    List<Setting> settingList = JSON.parseArray(jsonObject.getString("settingList"), Setting.class);
+    settingMapper.deleteForExport();
+    for (Setting setting : settingList) {
+      settingMapper.insertSelective(setting);
+    }
+
+    List<ConsoleLoginAccount> accountList = JSON.parseArray(jsonObject.getString("accountList"), ConsoleLoginAccount.class);
+    consoleLoginAccountMapper.deleteForExport();
+    for (ConsoleLoginAccount account : accountList) {
+      consoleLoginAccountMapper.insertByImport(account);
+    }
+
   }
 
   private void checkEmailBean(EmailBean bean) {

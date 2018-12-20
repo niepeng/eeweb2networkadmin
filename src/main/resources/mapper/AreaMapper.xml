@@ -144,4 +144,8 @@
       updated_by = #{updatedBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <delete id="deleteForExport">
+    delete from t_area
+  </delete>
 </mapper>

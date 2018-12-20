@@ -21,4 +21,9 @@ public interface OutConditionMapper {
     List<OutCondition> listByDeviceId(long deviceId);
 
     List<OutCondition> selectConditionSn(String condtionSn);
+
+    List<OutCondition> findAll();
+
+    int deleteForExport();
+
 }

@@ -23,4 +23,6 @@ public interface AreaMapper {
     Area selectByName(String name);
 
     List<Area> listAll();
+
+    int deleteForExport();
 }

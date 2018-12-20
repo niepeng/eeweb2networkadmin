@@ -28,6 +28,11 @@
     where param_code = #{code,jdbcType=VARCHAR}
   </select>
 
+  <select id="findAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from t_setting
+  </select>
 
   <select id="findPageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
     SELECT count(*) from  t_setting where 1=1
@@ -135,4 +140,8 @@
       updated_by = #{updatedBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <delete id="deleteForExport">
+    delete from t_setting
+  </delete>
 </mapper>

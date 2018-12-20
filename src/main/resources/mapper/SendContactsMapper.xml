@@ -51,6 +51,18 @@
       #{type,jdbcType=VARCHAR}, #{smsContent,jdbcType=VARCHAR},now(), now(), #{createdBy,jdbcType=VARCHAR}, #{updatedBy,jdbcType=VARCHAR}
       )
   </insert>
+
+  <insert id="insertForImport" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.SendContacts" >
+    insert into t_send_contacts ( id, name, phone,
+    type, sms_content, created_at,
+    updated_at, created_by, updated_by
+    )
+    values (#{id}, #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+    #{type,jdbcType=VARCHAR}, #{smsContent,jdbcType=VARCHAR},now(), now(), #{createdBy,jdbcType=VARCHAR}, #{updatedBy,jdbcType=VARCHAR}
+    )
+  </insert>
+
+
   <update id="updateByPrimaryKey" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.SendContacts" >
     update t_send_contacts
     set name = #{name,jdbcType=VARCHAR},
@@ -88,6 +100,9 @@
     <![CDATA[ limit ${startRecord},${endRecord} ]]>
   </select>
 
+  <delete id="deleteForExport">
+    delete from t_send_contacts
+  </delete>
 
 
 </mapper>

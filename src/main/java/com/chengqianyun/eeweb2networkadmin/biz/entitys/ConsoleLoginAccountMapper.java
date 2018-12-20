@@ -9,11 +9,15 @@ public interface ConsoleLoginAccountMapper {
 
     List<ConsoleLoginAccount> findAll();
 
+    List<ConsoleLoginAccount> selectAll();
+
     ConsoleLoginAccount selectByName(String loginName);
 
     ConsoleLoginAccount findById(int id);
 
     int save(ConsoleLoginAccount account);
+
+    int insertByImport(ConsoleLoginAccount account);
 
     int update(ConsoleLoginAccount account);
 
@@ -37,6 +41,7 @@ public interface ConsoleLoginAccountMapper {
      * 查询所有有效的管理端平台账户信息
      */
     public List<ConsoleLoginAccount> queryConsoleLoginAccountAll();
-    
+
+    int deleteForExport();
     
 }

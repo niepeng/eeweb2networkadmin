@@ -47,6 +47,14 @@
   </select>
 
 
+  <select id="findAll"  resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> from t_out_condition
+    ORDER BY id desc
+  </select>
+
+
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from t_out_condition
     where id = #{id,jdbcType=BIGINT}
@@ -170,6 +178,10 @@
   <delete id="deleteBySn" parameterType="java.lang.String">
    delete from t_out_condition
     where device_sn = #{sn,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteForExport">
+   delete from t_out_condition
   </delete>
 
 </mapper>

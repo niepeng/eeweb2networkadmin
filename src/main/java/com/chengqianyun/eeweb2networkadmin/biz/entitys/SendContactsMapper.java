@@ -12,6 +12,8 @@ public interface SendContactsMapper {
 
     int insert(SendContacts record);
 
+    int insertForImport(SendContacts record);
+
     SendContacts selectByPrimaryKey(Long id);
 
     List<SendContacts> selectAll();
@@ -21,4 +23,6 @@ public interface SendContactsMapper {
     Integer findPageCount(Map<String,String> map);
 
     List<SendContacts> findPage(Map<String,String> map);
+
+    int deleteForExport();
 }

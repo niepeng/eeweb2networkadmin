@@ -11,6 +11,8 @@ public interface SettingMapper {
 
     List<Setting> findPage(Map<String,String> map);
 
+    List<Setting> findAll();
+
     int deleteByPrimaryKey(Long id);
 
     int insert(Setting record);
@@ -22,4 +24,8 @@ public interface SettingMapper {
     int updateByPrimaryKeySelective(Setting record);
 
     int updateByPrimaryKey(Setting record);
+
+    int deleteForExport();
+
+
 }

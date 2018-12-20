@@ -24,5 +24,8 @@ public interface DeviceInfoMapper {
 
     List<DeviceInfo> findAll();
 
+    int deleteForExport();
+
+
 
 }

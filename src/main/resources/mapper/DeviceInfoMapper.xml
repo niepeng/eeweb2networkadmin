@@ -378,4 +378,8 @@
 
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <delete id="deleteForExport">
+    delete from t_device_info
+  </delete>
 </mapper>

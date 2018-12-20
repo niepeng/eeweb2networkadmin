@@ -43,6 +43,7 @@ public enum MenuEnum {
     setting_normal(null,"setting_normal","setting", 2, "基本设置", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "setting/normal"),
     setting_alarm(null,"setting_alarm","setting", 2, "报警设置", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "setting/alarm"),
     setting_email(null,"setting_email","setting", 2, "邮件设置", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "setting/email"),
+    setting_inout_config(null,"setting_inout_config","setting", 2, "导入导出配置", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, "setting/inoutConfig"),
 
 
   account("icon-user-md","account", null,  1, "账户管理", new RoleEnum[]{RoleEnum.ADMIN ,RoleEnum.ROOT}, null),
