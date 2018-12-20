@@ -65,6 +65,12 @@
     <![CDATA[ limit ${startRecord},${endRecord} ]]>
   </select>
 
+
+  <select id="findByAreaId"  resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> from t_device_info
+    where area_id = #{areaId}
+  </select>
+
   <select id="findAll"  resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List" /> from t_device_info
     ORDER BY id desc

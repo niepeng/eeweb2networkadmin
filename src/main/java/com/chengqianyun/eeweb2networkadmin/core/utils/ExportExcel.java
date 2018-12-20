@@ -1,5 +1,6 @@
 package com.chengqianyun.eeweb2networkadmin.core.utils;
 
+import com.chengqianyun.eeweb2networkadmin.biz.bean.export.ExportHelperBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.HeaderContentBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.HistoryListBean;
 import java.io.IOException;
@@ -41,28 +42,28 @@ import org.apache.poi.hssf.util.Region;
 @Slf4j
 public class ExportExcel<T> {
 
+  public void write(HSSFWorkbook book, OutputStream out) {
+    try {
+      book.write(out);
+      out.flush();
+      out.close();
+      book.close();
+    } catch (IOException e) {
+      log.info("export excel,{}",e);
+      e.printStackTrace();
+    }
+  }
+
   /**
    * 这是一个通用的方法，利用了JAVA的反射机制，可以将放置在JAVA集合中并且符号一定条件的数据以EXCEL 的形式输出到指定IO设备上
    *
-   * @param title
-   *            表格标题名
-   * @param headerContentBean
-   *            表格头部的内容(多行)headerDataList 和 标题栏列数等信
-   * @param dataHeaders
-   *            表格数据列标题行
-   * @param dataCols
-   *            针对dataset中的具体的列
-   * @param dataset
-   *            需要显示的数据集合,集合中一定要放置符合javabean风格的类的对象。此方法支持的
-   *            javabean属性的数据类型有基本数据类型及String,Date,byte[](图片数据)
-   * @param out
-   *            与输出设备关联的流对象，可以将EXCEL文档导出到本地文件或者网络中
    */
-  public void exportExcel2(String title, HeaderContentBean headerContentBean ,String[] dataHeaders, String[] dataCols, Collection<T> dataset, OutputStream out) {
-    // 声明一个工作薄
-    HSSFWorkbook workbook = new HSSFWorkbook();
+  public HSSFWorkbook exportExcel2(HSSFWorkbook workbook, ExportHelperBean<T> exportHelperBean) {
+
+//    String title, HeaderContentBean headerContentBean ,String[] dataHeaders, String[] dataCols, Collection<T> dataset, String sheetName
+
     // 生成一个表格
-    HSSFSheet sheet = workbook.createSheet("设备数据");
+    HSSFSheet sheet = workbook.createSheet(exportHelperBean.getSheetName());
     // 设置表格默认列宽度为15个字节
     sheet.setDefaultColumnWidth((short) 30);
     // 生成一个样式
@@ -113,7 +114,7 @@ public class ExportExcel<T> {
     HSSFRow row = sheet.createRow(rowIndex++);
     HSSFCell titleCell = row.createCell((short) (0));
     titleCell.setCellStyle(style);
-    titleCell.setCellValue(title);
+    titleCell.setCellValue(exportHelperBean.getTitle());
 //    sheet.addMergedRegion(new Region(
 //        1, //first row (0-based)
 //        (short)1, //first column  (0-based)
@@ -121,10 +122,10 @@ public class ExportExcel<T> {
 //        (short)1  //last column  (0-based)
 //    ));
     // // 四个参数分别是：起始行，起始列，结束行，结束列
-    sheet.addMergedRegion(new Region(0,(short)0,0, (short)(headerContentBean.getTitleCol() -1)));
+    sheet.addMergedRegion(new Region(0,(short)0,0, (short)(exportHelperBean.getHeaderContentBean().getTitleCol() -1)));
 
     // 2.表格头部内容
-    List<String[]> headDataList = headerContentBean.getHeadDataList();
+    List<String[]> headDataList = exportHelperBean.getHeaderContentBean().getHeadDataList();
     for (int i = 0, size = headDataList.size(); i < size; i++) {
       HSSFRow rowHeadData = sheet.createRow(rowIndex++);
       for (short k = 0; k < headDataList.get(i).length; k++) {
@@ -140,14 +141,14 @@ public class ExportExcel<T> {
 
     // 3.2 数据标题行
     HSSFRow cellHeadDataTitle = sheet.createRow(rowIndex++);
-    for (short j = 0; j < dataHeaders.length; j ++) {
+    for (short j = 0; j < exportHelperBean.getDataHeaders().length; j ++) {
       HSSFCell cellTemp = cellHeadDataTitle.createCell(j);
       cellTemp.setCellStyle(style2);
-      cellTemp.setCellValue(dataHeaders[j]);
+      cellTemp.setCellValue(exportHelperBean.getDataHeaders()[j]);
     }
 
     // 3.3 遍历集合数据，产生数据行
-    Iterator<T> it = dataset.iterator();
+    Iterator<T> it = exportHelperBean.getDataset().iterator();
     String tmpValue = null;
     String tmpMin = null;
     String tmpMax = null;
@@ -157,7 +158,7 @@ public class ExportExcel<T> {
       row = sheet.createRow(rowIndex++);
       T t = (T) it.next();
       // 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值
-      for (short j = 0; j < dataCols.length; j ++) {
+      for (short j = 0; j < exportHelperBean.getDataCols().length; j ++) {
         // 需要找到标记最低和最高的样式颜色
         HSSFCell cellTemp = row.createCell(j);
         cellTemp.setCellStyle(style2);
@@ -165,15 +166,15 @@ public class ExportExcel<T> {
           cellTemp.setCellValue(String.valueOf(num++));
           continue;
         }
-        tmpValue = ReflectUtil.getStringValue(t, dataCols[j]);
+        tmpValue = ReflectUtil.getStringValue(t, exportHelperBean.getDataCols()[j]);
 
-        if(dataCols[j].indexOf("MinStr") > 0) {
-          tmpMin = ReflectUtil.getStringValue(headerContentBean, dataCols[j].substring(0,dataCols[j].indexOf("MinStr")) + "Min");
+        if(exportHelperBean.getDataCols()[j].indexOf("MinStr") > 0) {
+          tmpMin = ReflectUtil.getStringValue(exportHelperBean.getHeaderContentBean(), exportHelperBean.getDataCols()[j].substring(0,exportHelperBean.getDataCols()[j].indexOf("MinStr")) + "Min");
           if(tmpValue.equals(tmpMin)) {
             cellTemp.setCellStyle(lowStyle);
           }
-        } else if (dataCols[j].indexOf("MaxStr") > 0) {
-          tmpMax = ReflectUtil.getStringValue(headerContentBean, dataCols[j].substring(0,dataCols[j].indexOf("MaxStr")) + "Max");
+        } else if (exportHelperBean.getDataCols()[j].indexOf("MaxStr") > 0) {
+          tmpMax = ReflectUtil.getStringValue(exportHelperBean.getHeaderContentBean(), exportHelperBean.getDataCols()[j].substring(0,exportHelperBean.getDataCols()[j].indexOf("MaxStr")) + "Max");
           if(tmpValue.equals(tmpMax)) {
             cellTemp.setCellStyle(highStyle);
           }
@@ -188,15 +189,7 @@ public class ExportExcel<T> {
 //    sheet.autoSizeColumn((short)3);
 //    sheet.autoSizeColumn((short)4);
 
-    try {
-      workbook.write(out);
-      out.flush();
-      out.close();
-      workbook.close();
-    } catch (IOException e) {
-      log.info("export excel,{}",e);
-      e.printStackTrace();
-    }
+    return workbook;
   }
 
 

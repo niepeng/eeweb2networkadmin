@@ -1,5 +1,7 @@
 package com.chengqianyun.eeweb2networkadmin.core.utils;
 
+import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceDataHistoryBean;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.export.ExportHelperBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.HeaderContentBean;
 import com.lowagie.text.BadElementException;
 import com.lowagie.text.Cell;
@@ -35,24 +37,13 @@ public class ExportPdf<T> {
   /**
    * 这是一个通用的方法，利用了JAVA的反射机制，可以将放置在JAVA集合中并且符号一定条件的数据以pdf 的形式输出到指定IO设备上
    *
-   * @param title
-   *            表格标题名
-   * @param headerContentBean
-   *            表格头部的内容(多行)headerDataList 和 标题栏列数等信
-   * @param dataHeaders
-   *            表格数据列标题行
-   * @param dataCols
-   *            针对dataset中的具体的列
-   * @param dataset
-   *            需要显示的数据集合,集合中一定要放置符合javabean风格的类的对象。此方法支持的
-   *            javabean属性的数据类型有基本数据类型及String,Date,byte[](图片数据)
    * @param out
    *            与输出设备关联的流对象，可以将EXCEL文档导出到本地文件或者网络中
    */
-  public void exportPdf(String title, HeaderContentBean headerContentBean ,String[] dataHeaders, String[] dataCols, Collection<T> dataset, OutputStream out) throws Exception {
+  public void exportPdf(ExportHelperBean<T> exportHelperBean, OutputStream out) throws Exception {
 
     // 最终表格的最大列的数量
-    int colNum = Math.max(headerContentBean.getTitleCol(),dataHeaders.length);
+    int colNum = Math.max(exportHelperBean.getHeaderContentBean().getTitleCol(),exportHelperBean.getDataHeaders().length);
     widthPercent = 100 / colNum + "%";
 
     // 创建Document对象(页面的大小为A4,左、右、上、下的页边距为10)
@@ -60,7 +51,7 @@ public class ExportPdf<T> {
     // 建立书写器
     PdfWriter.getInstance(document, out);
     // 设置相关的参数
-    setParameters(document, title);
+    setParameters(document, exportHelperBean.getTitle());
     // 打开文档
     document.open();
 
@@ -73,12 +64,12 @@ public class ExportPdf<T> {
     Cell emptyCell = genCell("", normalFont, widthPercent);
 
     // 1.表格标题
-    Cell titleCell = genCell(title, getFont(15), widthPercent);
+    Cell titleCell = genCell(exportHelperBean.getTitle(), getFont(15), widthPercent);
     titleCell.setColspan(colNum);
     table.addCell(titleCell);
 
     // 2.表格头部内容
-    List<String[]> headDataList = headerContentBean.getHeadDataList();
+    List<String[]> headDataList = exportHelperBean.getHeaderContentBean().getHeadDataList();
     for (int i = 0, size = headDataList.size(); i < size; i++) {
       for (short k = 0; k < headDataList.get(i).length; k++) {
         table.addCell(genCell(headDataList.get(i)[k], normalFont, widthPercent));
@@ -97,11 +88,11 @@ public class ExportPdf<T> {
     table.addCell(emptyCellLine);
 
     // 3.2 数据标题行
-    for (short j = 0; j < dataHeaders.length; j ++) {
-      table.addCell(genCell(dataHeaders[j], normalFont, widthPercent));
+    for (short j = 0; j < exportHelperBean.getDataHeaders().length; j ++) {
+      table.addCell(genCell(exportHelperBean.getDataHeaders()[j], normalFont, widthPercent));
     }
     // 补充空元素
-    int tmpCol = dataHeaders.length;
+    int tmpCol = exportHelperBean.getDataHeaders().length;
     while (tmpCol < colNum) {
       table.addCell(emptyCell);
       tmpCol++;
@@ -111,7 +102,7 @@ public class ExportPdf<T> {
     table.endHeaders();
 
 
-    Iterator<T> it = dataset.iterator();
+    Iterator<T> it = exportHelperBean.getDataset().iterator();
     String tmpValue = null;
     String tmpMin = null;
     String tmpMax = null;
@@ -120,7 +111,7 @@ public class ExportPdf<T> {
     while (it.hasNext()) {
       T t = (T) it.next();
       // 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值
-      for (short j = 0; j < dataCols.length; j ++) {
+      for (short j = 0; j < exportHelperBean.getDataCols().length; j ++) {
         // 需要找到标记最低和最高的样式颜色
         if (j == 0) {
           tmpValue = String.valueOf(num++);
@@ -128,9 +119,9 @@ public class ExportPdf<T> {
           continue;
         }
 
-        tmpValue = ReflectUtil.getStringValue(t, dataCols[j]);
-        if (dataCols[j].indexOf("MinStr") > 0) {
-          tmpMin = ReflectUtil.getStringValue(headerContentBean, dataCols[j].substring(0, dataCols[j].indexOf("MinStr")) + "Min");
+        tmpValue = ReflectUtil.getStringValue(t, exportHelperBean.getDataCols()[j]);
+        if (exportHelperBean.getDataCols()[j].indexOf("MinStr") > 0) {
+          tmpMin = ReflectUtil.getStringValue(exportHelperBean.getHeaderContentBean(), exportHelperBean.getDataCols()[j].substring(0, exportHelperBean.getDataCols()[j].indexOf("MinStr")) + "Min");
           if (tmpValue.equals(tmpMin)) {
             table.addCell(genCell(tmpValue, getFont(8, Color.blue), widthPercent));
             continue;
@@ -139,8 +130,8 @@ public class ExportPdf<T> {
           continue;
         }
 
-        if (dataCols[j].indexOf("MaxStr") > 0) {
-          tmpMax = ReflectUtil.getStringValue(headerContentBean, dataCols[j].substring(0, dataCols[j].indexOf("MaxStr")) + "Max");
+        if (exportHelperBean.getDataCols()[j].indexOf("MaxStr") > 0) {
+          tmpMax = ReflectUtil.getStringValue(exportHelperBean.getHeaderContentBean(), exportHelperBean.getDataCols()[j].substring(0, exportHelperBean.getDataCols()[j].indexOf("MaxStr")) + "Max");
           if (tmpValue.equals(tmpMax)) {
             table.addCell(genCell(tmpValue, getFont(8, Color.red), widthPercent));
             continue;
@@ -153,7 +144,7 @@ public class ExportPdf<T> {
       }
 
       // 补充空元素
-      tmpCol = dataCols.length;
+      tmpCol = exportHelperBean.getDataCols().length;
       while (tmpCol < colNum) {
         table.addCell(emptyCell);
         tmpCol++;

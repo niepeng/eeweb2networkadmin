@@ -3,6 +3,7 @@ package com.chengqianyun.eeweb2networkadmin.action;
 
 import com.chengqianyun.eeweb2networkadmin.biz.Convert;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceDataHistoryBean;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.export.ExportHelperBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.HeaderContentBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistory;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -237,56 +239,26 @@ public class HistoryController extends BaseController {
         throw new Exception("开始时间和结束时间的 间隔不能超过"+(7 * distanceTimeInt)+"天");
       }
 
-      PaginationQuery query = new PaginationQuery();
-      query.setPageIndex(1);
-      query.setRowsPerPage(24 * 60 * 7);
-      query.addQueryData("startTime", startTime);
-      query.addQueryData("endTime", endTime);
-      query.addQueryData("deviceId", String.valueOf(deviceId));
-
-//      Tuple2< ,List<DeviceDataHistory>> tuple2 =
-      List<DeviceDataHistoryBean> dataList = historyService.getHistoryDataAll(query, distanceTimeInt, deviceInfo);
-
-//      List<HistoryListBean> dataList = Convert.convertHistoryList(historyDataList, deviceInfo);
-
       String fileName = "data_" + DateUtil.getDate(new Date(), DateUtil.PATTERN_YYYYMMDDANDHHMMSS) + ("excel".equals(exportType) ?  ".xls" : ".pdf");
-      String title = "监控平台历史数据查询结果";
-      HeaderContentBean headerContentBean = new HeaderContentBean();
-      headerContentBean.setDeviceInfo(deviceInfo);
-      if (deviceInfo.getAreaId() > 0 && areaList != null) {
-        for (Area area : areaList) {
-          if (deviceInfo.getAreaId() == area.getId().longValue()) {
-            headerContentBean.setArea(area);
-            break;
-          }
-        }
-      }
-
-      headerContentBean.setStartTime(startTime);
-      headerContentBean.setEndTime(endTime);
-      headerContentBean.setDistanceTimes( distanceTime + "分钟");
-      headerContentBean.setRecordNum(dataList.size());
-      setDataMinMax2(dataList, headerContentBean, deviceInfo);
-      headerContentBean.calcHeadDataList();
-
+      ExportHelperBean<DeviceDataHistoryBean> exportHelperBean = historyService.genExportBean(startTime, endTime, distanceTimeInt, dataTypes, deviceInfo);
 
       try {
         OutputStream os = response.getOutputStream();
         response.reset();
         response.setHeader("Content-disposition", "attachment; filename=" + new String(fileName.getBytes("GB2312"), "ISO8859-1"));
         response.setContentType( "pdf".equals(exportType) ? "application/pdf" :  "application/msexcel");// 定义输出类型
-        Tuple2<String[], String[]> dataheaderTuple = genDataHeader(deviceInfo, dataTypes);
 
         if("excel".equals(exportType)) {
           ExportExcel<DeviceDataHistoryBean> exportExcel = new ExportExcel<DeviceDataHistoryBean>();
-          exportExcel.exportExcel2(title, headerContentBean,  dataheaderTuple.getT1(),  dataheaderTuple.getT2(), dataList, os);
+          HSSFWorkbook workbook = new HSSFWorkbook();
+          exportExcel.exportExcel2(workbook, exportHelperBean);
+          exportExcel.write(workbook, os);
           return null;
         }
 
         if("pdf".equals(exportType)) {
-//          ExportPdf<HistoryListBean> exportPdf = new ExportPdf<HistoryListBean>();
           ExportPdf<DeviceDataHistoryBean> exportPdf = new ExportPdf<DeviceDataHistoryBean>();
-          exportPdf.exportPdf(title, headerContentBean,  dataheaderTuple.getT1(),  dataheaderTuple.getT2(), dataList, os);
+          exportPdf.exportPdf(exportHelperBean, os);
           return null;
         }
 
@@ -314,110 +286,6 @@ public class HistoryController extends BaseController {
   }
 
 
-
-
-  /**
-   * 返回结果类似如下:
-   * new String[]{"NO", "记录时间", "温度(℃)", "湿度(%RH)"},  new String[]{"num", "time", "temp", "humi"}
-   * @param deviceInfo
-   * @param dataTypes avg,min,max 至少一个
-   * @return
-   */
-  private Tuple2<String[],String[]> genDataHeader(DeviceInfo deviceInfo, String dataTypes) {
-    List<String> list1 = new ArrayList<String>();
-    List<String> list2 = new ArrayList<String>();
-
-    boolean hasAvg = dataTypes.indexOf("avg") >= 0;
-    boolean hasMin = dataTypes.indexOf("min") >= 0;
-    boolean hasMax = dataTypes.indexOf("max") >= 0;
-
-    list1.add("NO");
-    list1.add("记录时间");
-
-    list2.add("num");
-    list2.add("time");
-    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.temp)) {
-      if(hasAvg) {
-        list1.add(DeviceTypeEnum.temp.getName() + "平均值(" + DeviceTypeEnum.temp.getUnit() + ")");
-        list2.add("tempAvgStr");
-      }
-      if(hasMin) {
-        list1.add(DeviceTypeEnum.temp.getName() + "最小值(" + DeviceTypeEnum.temp.getUnit() + ")");
-        list2.add("tempMinStr");
-      }
-      if(hasMax) {
-        list1.add(DeviceTypeEnum.temp.getName() + "最大值(" + DeviceTypeEnum.temp.getUnit() + ")");
-        list2.add("tempMaxStr");
-      }
-
-    }
-    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.humi)) {
-      if(hasAvg) {
-        list1.add(DeviceTypeEnum.humi.getName() + "平均值(" + DeviceTypeEnum.humi.getUnit() + ")");
-        list2.add("humiAvgStr");
-      }
-      if(hasMin) {
-        list1.add(DeviceTypeEnum.humi.getName() + "最小值(" + DeviceTypeEnum.humi.getUnit() + ")");
-        list2.add("humiMinStr");
-      }
-      if(hasMax) {
-        list1.add(DeviceTypeEnum.humi.getName() + "最大值(" + DeviceTypeEnum.humi.getUnit() + ")");
-        list2.add("humiMaxStr");
-      }
-
-    }
-    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.shine)) {
-      if(hasAvg) {
-        list1.add(DeviceTypeEnum.shine.getName() + "平均值(" + DeviceTypeEnum.shine.getUnit() + ")");
-        list2.add("shineAvgStr");
-      }
-      if(hasMin) {
-        list1.add(DeviceTypeEnum.shine.getName() + "最小值(" + DeviceTypeEnum.shine.getUnit() + ")");
-        list2.add("shineMinStr");
-      }
-      if(hasMax) {
-        list1.add(DeviceTypeEnum.shine.getName() + "最大值(" + DeviceTypeEnum.shine.getUnit() + ")");
-        list2.add("shineMaxStr");
-      }
-
-    }
-    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.pressure)) {
-      if(hasAvg) {
-        list1.add(DeviceTypeEnum.pressure.getName() + "平均值(" + DeviceTypeEnum.pressure.getUnit() + ")");
-        list2.add("pressureAvgStr");
-      }
-      if(hasMin) {
-        list1.add(DeviceTypeEnum.pressure.getName() + "最大值(" + DeviceTypeEnum.pressure.getUnit() + ")");
-        list2.add("pressureMinStr");
-      }
-      if(hasMax) {
-        list1.add(DeviceTypeEnum.pressure.getName() + "最小值(" + DeviceTypeEnum.pressure.getUnit() + ")");
-        list2.add("pressureMaxStr");
-      }
-
-    }
-    if (DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.power)) {
-      if(hasAvg) {
-        list1.add(DeviceTypeEnum.power.getName() + "平均值(" + DeviceTypeEnum.power.getUnit() + ")");
-        list2.add("powerAvgStr");
-      }
-      if(hasMin) {
-        list1.add(DeviceTypeEnum.power.getName() + "最小值(" + DeviceTypeEnum.power.getUnit() + ")");
-        list2.add("powerMinStr");
-      }
-      if(hasMax) {
-        list1.add(DeviceTypeEnum.power.getName() + "最大值(" + DeviceTypeEnum.power.getUnit() + ")");
-        list2.add("powerMaxStr");
-      }
-
-    }
-
-    String[] strings1 = new String[list1.size()];
-    String[] strings2 = new String[list2.size()];
-    list1.toArray(strings1);
-    list2.toArray(strings2);
-    return new Tuple2<String[], String[]>(strings1, strings2);
-  }
 
   private void setDataMinMax(List<DeviceDataHistory>  dataList, HeaderContentBean headerContentBean, DeviceInfo deviceInfo) {
     if (dataList == null || dataList.size() == 0) {
@@ -458,67 +326,6 @@ public class HistoryController extends BaseController {
       if (hasPressure) {
         pressureMin = Math.min(pressureMin, tmpData.getPressure());
         pressureMax = Math.max(pressureMax, tmpData.getPressure());
-      }
-
-    }
-
-    if (hasTemp) {
-      headerContentBean.setTempMin(UnitUtil.changeTemp(tempMin));
-      headerContentBean.setTempMax(UnitUtil.changeTemp(tempMax));
-    }
-    if (hasHumi) {
-      headerContentBean.setHumiMin(UnitUtil.changeHumi(humiMin));
-      headerContentBean.setHumiMax(UnitUtil.changeHumi(humiMax));
-    }
-    if (hasShine) {
-      headerContentBean.setShineMin(String.valueOf(shineMin));
-      headerContentBean.setShineMax(String.valueOf(shineMax));
-    }
-    if (hasPressure) {
-      headerContentBean.setPressureMin(UnitUtil.changePressure(pressureMin));
-      headerContentBean.setPressureMax(UnitUtil.changeTemp(pressureMax));
-    }
-  }
-
-  private void setDataMinMax2(List<DeviceDataHistoryBean>  dataList, HeaderContentBean headerContentBean, DeviceInfo deviceInfo) {
-    if (dataList == null || dataList.size() == 0) {
-      return;
-    }
-    int tempMin = dataList.get(0).getTempMin();
-    int tempMax = dataList.get(0).getTempMax();
-    int humiMin = dataList.get(0).getHumiMin();
-    int humiMax = dataList.get(0).getHumiMax();
-    int shineMin = dataList.get(0).getShineMin();
-    int shineMax = dataList.get(0).getShineMax();
-    int pressureMin = dataList.get(0).getPressureMin();
-    int pressureMax = dataList.get(0).getPressureMax();
-
-    boolean hasTemp = DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.temp);
-    boolean hasHumi = DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.humi);
-    boolean hasShine = DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.shine);
-    boolean hasPressure = DeviceTypeEnum.hasType(deviceInfo.getType(), DeviceTypeEnum.pressure);
-
-    DeviceDataHistoryBean tmpData = null;
-    for (int i = 0, size = dataList.size(); i < size; i++) {
-      tmpData = dataList.get(i);
-      if (hasTemp) {
-        tempMin = Math.min(tempMin, tmpData.getTempMin());
-        tempMax = Math.max(tempMax, tmpData.getTempMax());
-      }
-
-      if (hasHumi) {
-        humiMin = Math.min(humiMin, tmpData.getHumiMin());
-        humiMax = Math.max(humiMax, tmpData.getHumiMax());
-      }
-
-      if (hasShine) {
-        shineMin = Math.min(shineMin, tmpData.getShineMin());
-        shineMax = Math.max(shineMax, tmpData.getShineMax());
-      }
-
-      if (hasPressure) {
-        pressureMin = Math.min(pressureMin, tmpData.getPressureMin());
-        pressureMax = Math.max(pressureMax, tmpData.getPressureMax());
       }
 
     }

@@ -24,6 +24,8 @@ public interface DeviceInfoMapper {
 
     List<DeviceInfo> findAll();
 
+    List<DeviceInfo> findByAreaId(long areaId);
+
     int deleteForExport();
 
 
