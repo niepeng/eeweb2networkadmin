@@ -238,12 +238,14 @@ public class DataIntimeBean {
         elementDataBean.setDeviceOneTypeEnum(DeviceTypeEnum.pressure);
         elementDataBeanList.add(elementDataBean);
       }
+
+
       if (hasOneDeviceType(DeviceTypeEnum.smoke.getId()) && DeviceTypeEnum.hasType(tmpType, DeviceTypeEnum.smoke)) {
         ElementDataBean elementDataBean = new ElementDataBean();
         elementDataBean.setDeviceInfo(dataIntime.getDeviceInfo());
         elementDataBean.setArea(dataIntime.getDeviceInfo().getArea());
-        elementDataBean.setStatus(dataIntime.getStatus());
-        if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
+        elementDataBean.setStatus(dataIntime.getInStatus());
+        if(dataIntime.getInStatus() == StatusEnum.alarm.getId()) {
           if (dataIntime.isSmokeAlarm()) {
             elementDataBean.setStatus(StatusEnum.alarm.getId());
           } else {
@@ -259,8 +261,8 @@ public class DataIntimeBean {
         ElementDataBean elementDataBean = new ElementDataBean();
         elementDataBean.setDeviceInfo(dataIntime.getDeviceInfo());
         elementDataBean.setArea(dataIntime.getDeviceInfo().getArea());
-        elementDataBean.setStatus(dataIntime.getStatus());
-        if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
+        elementDataBean.setStatus(dataIntime.getInStatus());
+        if(dataIntime.getInStatus() == StatusEnum.alarm.getId()) {
           if (dataIntime.isWaterAlarm()) {
             elementDataBean.setStatus(StatusEnum.alarm.getId());
           } else {
@@ -276,8 +278,8 @@ public class DataIntimeBean {
         ElementDataBean elementDataBean = new ElementDataBean();
         elementDataBean.setDeviceInfo(dataIntime.getDeviceInfo());
         elementDataBean.setArea(dataIntime.getDeviceInfo().getArea());
-        elementDataBean.setStatus(dataIntime.getStatus());
-        if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
+        elementDataBean.setStatus(dataIntime.getInStatus());
+        if(dataIntime.getInStatus() == StatusEnum.alarm.getId()) {
           if (dataIntime.isElectricAlarm()) {
             elementDataBean.setStatus(StatusEnum.alarm.getId());
           } else {
@@ -293,8 +295,8 @@ public class DataIntimeBean {
         ElementDataBean elementDataBean = new ElementDataBean();
         elementDataBean.setDeviceInfo(dataIntime.getDeviceInfo());
         elementDataBean.setArea(dataIntime.getDeviceInfo().getArea());
-        elementDataBean.setStatus(dataIntime.getStatus());
-        if(dataIntime.getStatus() == StatusEnum.alarm.getId()) {
+        elementDataBean.setStatus(dataIntime.getInStatus());
+        if(dataIntime.getInStatus() == StatusEnum.alarm.getId()) {
           if (dataIntime.isBodyAlarm()) {
             elementDataBean.setStatus(StatusEnum.alarm.getId());
           } else {
@@ -310,7 +312,7 @@ public class DataIntimeBean {
         ElementDataBean elementDataBean = new ElementDataBean();
         elementDataBean.setDeviceInfo(dataIntime.getDeviceInfo());
         elementDataBean.setArea(dataIntime.getDeviceInfo().getArea());
-        elementDataBean.setStatus(dataIntime.getStatus());
+        elementDataBean.setStatus(dataIntime.getOutStatus());
         elementDataBean.setTime(dataIntime.getUpdatedAt());
         elementDataBean.setData(String.valueOf(dataIntime.getOut()));
         elementDataBean.setDeviceOneTypeEnum(DeviceTypeEnum.out);

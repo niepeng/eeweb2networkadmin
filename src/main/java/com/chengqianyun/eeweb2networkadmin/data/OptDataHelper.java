@@ -82,7 +82,8 @@ public class OptDataHelper {
      */
     boolean isOffline = dataIntime.hasOffline();
     if (isOffline) {
-      int second = ServerConnectionManager.GET_DATA_CYCLE * ServerConnectionManager.FAIL_TIMES_RETURN;
+//      int second = ServerConnectionManager.GET_DATA_CYCLE * ServerConnectionManager.FAIL_TIMES_RETURN;
+      int second = 4 * 60;
       Date afterDate = DateUtil.addSecond(now, -second);
       Long id = dataIntimeMapper.hasRecentlyOne(dataIntime.getDeviceId(), afterDate);
       if (id != null && id > 0) {
@@ -254,6 +255,10 @@ public class OptDataHelper {
    * @param dataIntime
    */
   private void recordEnvAlarm(DeviceDataIntime dataIntime) {
+    if(!DeviceTypeEnum.hasEnv(dataIntime.getDeviceInfo().getType())) {
+      return;
+    }
+
     if (dataIntime.getStatus() == StatusEnum.normal.getId() || dataIntime.getStatus() == 0) {
       if(dataIntime.getStatus() == StatusEnum.normal.getId()) {
         resetAlarmAll(dataIntime);
@@ -375,6 +380,10 @@ public class OptDataHelper {
    * @param dataIntime
    */
   private void recordInAlarm(DeviceDataIntime dataIntime) {
+    if(!DeviceTypeEnum.hasIn(dataIntime.getDeviceInfo().getType())) {
+      return;
+    }
+
     if (dataIntime.getInStatus() == StatusEnum.normal.getId() || dataIntime.getInStatus() == 0) {
       return;
     }
