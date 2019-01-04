@@ -240,22 +240,10 @@ public final class ServerConnectionManager {
   }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}  
+  public static ServerClientHandler getClient(String sn) {
+    if(snDeviceSocketMap.containsKey(sn)) {
+      return snDeviceSocketMap.get(sn).getServerClientHandler();
+    }
+    return null;
+  }
+}

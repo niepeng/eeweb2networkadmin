@@ -104,10 +104,11 @@ public class ServerClientHandler implements Runnable {
         if (DeviceTypeEnum.hasOut(deviceInfo.getType())) {
           char[] data = writeInstruction(address, InstructionManager.genGetOut(address, deviceInfo.getControlWay()));
           tuple = InstructionManager.parseGetOut(data, address);
+          tmpDeviceData = new DeviceDataIntime();
           log.info("接收到开关量输出数据结果解析==>" + tuple);
         }
 
-        optDataHelper.optData(tmpDeviceData, tuple, deviceInfo, this);
+        optDataHelper.optData(tmpDeviceData, tuple, deviceInfo);
 
         tuple = null;
         tmpDeviceData = null;
@@ -124,7 +125,7 @@ public class ServerClientHandler implements Runnable {
     }
   }
 
-  public char[] writeInstruction(int address, char[] writeData) throws IOException {
+  public synchronized char[] writeInstruction(int address, char[] writeData) throws IOException {
     DataStatusEnum tmpDataStatusEnum;
 //    for (int i = 0; i < ServerConnectionManager.FAIL_TIMES_RETURN; i++) {
     for (int i = 0; i < 1; i++) {

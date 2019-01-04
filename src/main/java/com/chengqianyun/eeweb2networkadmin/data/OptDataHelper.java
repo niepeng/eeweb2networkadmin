@@ -9,6 +9,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistoryMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntimeMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfoMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutCondition;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutConditionMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.AlarmTypeEnum;
@@ -45,6 +46,9 @@ public class OptDataHelper {
   private DeviceAlarmMapper deviceAlarmMapper;
 
   @Autowired
+  private DeviceInfoMapper deviceInfoMapper;
+
+  @Autowired
   private DeviceDataHistoryMapper deviceDataHistoryMapper;
 
   @Autowired
@@ -62,7 +66,7 @@ public class OptDataHelper {
    * @param outInfo 开关量输出设备数据
    * @param deviceInfo 设备信息
    */
-  public void optData(DeviceDataIntime dataIntime, Tuple2<StatusEnum, Boolean> outInfo, DeviceInfo deviceInfo, ServerClientHandler client) {
+  public void optData(DeviceDataIntime dataIntime, Tuple2<StatusEnum, Boolean> outInfo, DeviceInfo deviceInfo) {
 
     Date now = new Date();
     // 1.记录实时数据
@@ -88,7 +92,7 @@ public class OptDataHelper {
       Long id = dataIntimeMapper.hasRecentlyOne(dataIntime.getDeviceId(), afterDate);
       if (id != null && id > 0) {
         // 触发联动开关量输入
-        optOutCondition(dataIntime, deviceInfo,outInfo, client);
+        optOutCondition(dataIntime, deviceInfo);
         return;
       }
     }
@@ -109,11 +113,11 @@ public class OptDataHelper {
     }
 
     // 触发联动开关量输入
-    optOutCondition(dataIntime, deviceInfo, outInfo, client);
+    optOutCondition(dataIntime, deviceInfo);
 
   }
 
-  private void optOutCondition(DeviceDataIntime dataIntime, DeviceInfo deviceInfo, Tuple2<StatusEnum, Boolean> outInfo, ServerClientHandler client) {
+  private void optOutCondition(DeviceDataIntime dataIntime, DeviceInfo deviceInfo) {
     List<OutCondition> list = outConditionMapper.selectConditionSn(deviceInfo.getSn());
     if (list == null || list.size() == 0) {
       return;
@@ -177,14 +181,20 @@ public class OptDataHelper {
 
     for (Entry<Long, Short> entry : triggerMap.entrySet()) {
       boolean open = entry.getValue() == 1;
-      if (!isNeedSendOut(open, deviceInfo, outInfo)) {
+      if (!isNeedSendOut(open, deviceInfo, entry.getKey())) {
         continue;
       }
 
+      DeviceInfo tmpDeviceInfo = deviceInfoMapper.selectByPrimaryKey(entry.getKey());
+      if(tmpDeviceInfo == null) {
+        continue;
+      }
+
+      ServerClientHandler client = ServerConnectionManager.getClient(tmpDeviceInfo.getSn());
       if(client != null) {
         try {
-          char[] data = client.writeInstruction(deviceInfo.getAddress(), InstructionManager.genOptOut(deviceInfo.getAddress(), deviceInfo.getControlWay(), open));
-          boolean optResult = InstructionManager.optOutResult(data, deviceInfo.getAddress());
+          char[] data = client.writeInstruction(tmpDeviceInfo.getAddress(), InstructionManager.genOptOut(tmpDeviceInfo.getAddress(), tmpDeviceInfo.getControlWay(), open));
+          boolean optResult = InstructionManager.optOutResult(data, tmpDeviceInfo.getAddress());
           log.error("sendOut:{}", optResult);
         } catch (Exception e) {
           log.error("sendOutError", e);
@@ -194,11 +204,19 @@ public class OptDataHelper {
 
   }
 
-  private boolean isNeedSendOut(boolean open, DeviceInfo deviceInfo, Tuple2<StatusEnum, Boolean> outInfo) {
-    if(outInfo != null && outInfo.getT2() == open) {
-      return false;
-    }
-    return false;
+  /**
+   * 不判断原来的状态,直接发送指令
+   * @param open
+   * @param deviceInfo
+   * @param outDeviceId
+   * @return
+   */
+  private boolean isNeedSendOut(boolean open, DeviceInfo deviceInfo, Long outDeviceId) {
+//    if(outInfo != null && outInfo.getT2() == open) {
+//      return false;
+//    }
+//    return false;
+    return true;
   }
 
   private Integer getDataValue(DeviceDataIntime dataIntime, DeviceTypeEnum typeEnum) {
