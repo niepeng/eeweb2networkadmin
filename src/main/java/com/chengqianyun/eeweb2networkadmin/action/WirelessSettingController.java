@@ -9,7 +9,6 @@ import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import com.chengqianyun.eeweb2networkadmin.service.ContactService;
-import com.chengqianyun.eeweb2networkadmin.service.SerialService;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,8 +34,8 @@ public class WirelessSettingController extends BaseController {
   @Autowired
   private ContactService contactService;
 
-  @Autowired
-  private SerialService serialService;
+//  @Autowired
+//  private SerialService serialService;
 
   /**
    * 通讯测试

@@ -2,16 +2,12 @@ package com.chengqianyun.eeweb2networkadmin.service;
 
 import com.chengqianyun.eeweb2networkadmin.biz.SystemConstants.Times;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceRecoverBean;
-import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Contacts;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceAlarm;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
-import com.chengqianyun.eeweb2networkadmin.biz.entitys.SendContacts;
-import com.chengqianyun.eeweb2networkadmin.biz.entitys.SendContactsMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.SettingEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -30,7 +26,7 @@ import org.springframework.stereotype.Service;
 public class SendPhoneService extends BaseService {
 
   @Autowired
-  private SerialService serialService;
+  private PhoneSmsService phoneSmsService;
 
   @Autowired
   private MailService mailService;
@@ -136,7 +132,7 @@ public class SendPhoneService extends BaseService {
         DateUtil.getDate(deviceRecoverBean.getTime(), DateUtil.dateFullPatternNoSecond));
     sendRecoverEmail(recoverMailTitle, recoverMailContent);
 
-    // 发送短信和电话
+    // 发送短信
     String content = String.format(smsRecoverContent, deviceName,
         deviceRecoverBean.isAll() ? "恢复报警" : deviceRecoverBean.getDeviceAlarm().showRecoverMsg()
         , DateUtil.getDate(deviceRecoverBean.getTime(), DateUtil.dateFullPatternNoSecond));
@@ -167,21 +163,9 @@ public class SendPhoneService extends BaseService {
     String deviceName = deviceInfo == null ? "" : (StringUtil.isEmpty(deviceInfo.getName()) ? "" : deviceInfo.getName());
     String content = String.format(smsContent, StringUtil.isEmpty(deviceName) ? "未定义" : deviceName, deviceAlarm.showAlarmMsg(), DateUtil.getDate(deviceAlarm.getRecentlyAlarmTime(), DateUtil.dateFullPatternNoSecond));
 
-    if (phoneFlag) {
-      try {
-        for (Contacts contacts : contactsList) {
-          boolean flag = serialService.callPhoneOrSms(contacts.getPhone(), null, false);
-          if (flag) {
-            insertSendRecord(contacts, "phone", null);
-          }
-        }
-      } catch (Exception e) {
-        log.error("callPhone_error", e);
-      }
+    for (Contacts contacts : contactsList) {
+      phoneSmsService.callPhoneOrSms(contacts.getPhone(), content, contacts.getName(), true, true);
     }
-
-    sendSms(contactsList, content);
-
   }
 
 
@@ -246,31 +230,14 @@ public class SendPhoneService extends BaseService {
   }
 
   public void sendSms(List<Contacts> contactsList, String content) {
-    boolean smsFlag = Boolean.valueOf(getData(SettingEnum.alarm_sms));
-    if(!smsFlag) {
-      return;
-    }
-
     try {
       for (Contacts contacts : contactsList) {
-        boolean flag = serialService.callPhoneOrSms(contacts.getPhone(), content, true);
-        if (flag) {
-          insertSendRecord(contacts, "sms", content);
-        }
+        phoneSmsService.callPhoneOrSms(contacts.getPhone(),content, contacts.getName(), false, true);
       }
     } catch (Exception e) {
       log.error("sendSms_error", e);
     }
 
-  }
-
-  private void insertSendRecord(Contacts contacts, String type, String smsContent) {
-    SendContacts s = new SendContacts();
-    s.setName(contacts.getName());
-    s.setPhone(contacts.getPhone());
-    s.setType(type);
-    s.setSmsContent(smsContent);
-    sendContactsMapper.insert(s);
   }
 
 }

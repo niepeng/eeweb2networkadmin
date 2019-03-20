@@ -12,6 +12,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntimeMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfoMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.OutConditionMapper;
+import com.chengqianyun.eeweb2networkadmin.biz.entitys.SendContacts;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.SendContactsMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Setting;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.SettingMapper;
@@ -124,5 +125,6 @@ public class BaseService {
     }
     return result;
   }
+
 
 }
