@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * 无线设置
+ * 短信设置
  *
  * @author 聂鹏
  * @version 1.0

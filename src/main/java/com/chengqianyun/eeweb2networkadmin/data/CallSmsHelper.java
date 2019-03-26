@@ -86,7 +86,7 @@ public class CallSmsHelper {
 
      if(phoneTask.isSms()) {
        try {
-         tuple2.setT2(sendMessage(URLDecoder.decode(getData(SettingEnum.sms_center), "utf-8"), URLDecoder.decode(phoneTask.getPhone(), "utf-8"), URLDecoder.decode(phoneTask.getSmsContent(), "utf-8")));
+         tuple2.setT2(sendMessage(URLDecoder.decode(getData(SettingEnum.sms_center), "utf-8"), URLDecoder.decode(phoneTask.getPhone(), "utf-8"), phoneTask.getSmsContent()));
        } catch (Exception e) {
          log.error("发送短信异常;{}", e);
        }

@@ -33,8 +33,8 @@ public enum MenuEnum {
     device_list(null,"device_list","device", 2, "设备管理", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "device/deviceList"),
 
 
-  wirelessSetting("icon-envelope-alt","wirelessSetting", null, 1, "无线设置", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, null),
-    wirelessSetting_normal(null,"wirelessSetting_normal","wirelessSetting", 2, "通讯测试", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "wirelessSetting/normal"),
+  wirelessSetting("icon-envelope-alt","wirelessSetting", null, 1, "短信设置", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, null),
+    wirelessSetting_normal(null,"wirelessSetting_normal","wirelessSetting", 2, "通讯状态", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "wirelessSetting/normal"),
     wirelessSetting_list(null,"wirelessSetting_list","wirelessSetting", 2, "通讯列表", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "wirelessSetting/list"),
     wirelessSetting_history(null,"wirelessSetting_history","wirelessSetting", 2, "通讯历史", new RoleEnum[]{RoleEnum.MANAGER, RoleEnum.ADMIN ,RoleEnum.ROOT}, "wirelessSetting/history"),
 

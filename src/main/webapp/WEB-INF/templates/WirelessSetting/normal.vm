@@ -21,9 +21,9 @@
       </li>
 
       <li>
-        <a href="${www}/setting/alarm">无线设置</a>
+        <a href="${www}/setting/alarm">短信设置</a>
       </li>
-      <li class="active">测试</li>
+      <li class="active">通讯状态</li>
     </ul><!-- .breadcrumb -->
 
     <div class="nav-search" id="nav-search">
@@ -32,7 +32,7 @@
 
   <div class="page-content">
     <div class="page-header">
-      <h1>通讯测试</h1>
+      <h1>通讯状态</h1>
     </div>
 
     #if(${msg})

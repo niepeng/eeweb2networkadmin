@@ -5,6 +5,8 @@ import com.chengqianyun.eeweb2networkadmin.core.utils.SHAUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.data.CalcCRC;
 import com.chengqianyun.eeweb2networkadmin.core.utils.data.FunctionUnit;
 import com.chengqianyun.eeweb2networkadmin.data.InstructionManager;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * @author 聂鹏
@@ -14,6 +16,12 @@ import com.chengqianyun.eeweb2networkadmin.data.InstructionManager;
 
 public class MainTest {
 
+  public static void main(String[] args) throws UnsupportedEncodingException {
+    String smscontent = "设备(ceshi)设备离线，请及时处理!报警时间:2019-03-22 13:38, 34%RH,..";
+    String msg = URLDecoder.decode(smscontent, "utf-8");
+    System.out.println(msg);
+  }
+
   public static void main3(String[] args) {
     String s = "3,2，2,";
     System.out.println(s);
@@ -21,7 +29,7 @@ public class MainTest {
     System.out.println(s);
   }
 
-  public static void main(String[] args) {
+  public static void main4(String[] args) {
 //    char[] result = genInstructionBySn(new char[]{0x02, 0x18, 0x05, 0x01});
 //    System.out.println(FunctionUnit.bytesToHexString(result));
 

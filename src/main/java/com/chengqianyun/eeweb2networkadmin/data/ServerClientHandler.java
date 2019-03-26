@@ -129,11 +129,11 @@ public class ServerClientHandler implements Runnable {
     DataStatusEnum tmpDataStatusEnum;
 //    for (int i = 0; i < ServerConnectionManager.FAIL_TIMES_RETURN; i++) {
     for (int i = 0; i < 1; i++) {
-      log.info("发送指令:" + FunctionUnit.bytesToHexString(writeData));
+//      log.info("发送指令:" + FunctionUnit.bytesToHexString(writeData));
       writePort(writeData, socket);
       SystemClock.sleep(ServerConnectionManager.GET_DATA_CYCLE * 1000);
       char[] readData3 = read(socket.getInputStream());
-      log.info("接收到数据结果====>" + FunctionUnit.bytesToHexString(readData3));
+//      log.info("接收到数据结果====>" + FunctionUnit.bytesToHexString(readData3));
 //      readData3 = Char55util.dealwith55NewV2(readData3);
       tmpDataStatusEnum = checkReturn(readData3, address);
       if (!DataStatusEnum.isSuccess(tmpDataStatusEnum)) {

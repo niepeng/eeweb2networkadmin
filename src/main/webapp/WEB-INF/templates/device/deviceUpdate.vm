@@ -149,9 +149,9 @@
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
             <label class="col-md-4 col-sm-2 control-label">压力信息：</label>
-            压力下限 <input type="text" style="width: 60px;" id="pressureDownStr" name="pressureDownStr" value="$unitUtil.changePressure($!{deviceInfo.pressureDown})"> Pa &nbsp;
-            压力上限 <input type="text" style="width: 60px;" id="pressureUpStr" name="pressureUpStr" value="$unitUtil.changePressure($!{deviceInfo.pressureUp})"> Pa &nbsp;
-            压力校正值 <input type="text" style="width: 60px;" id="pressureDevStr" name="pressureDevStr" value="$unitUtil.changePressure($!{deviceInfo.pressureDev})"> Pa
+            压力下限 <input type="text" style="width: 60px;" id="pressureDownStr" name="pressureDownStr" value="$unitUtil.changePressure($!{deviceInfo.pressureDown})"> kPa &nbsp;
+            压力上限 <input type="text" style="width: 60px;" id="pressureUpStr" name="pressureUpStr" value="$unitUtil.changePressure($!{deviceInfo.pressureUp})"> kPa &nbsp;
+            压力校正值 <input type="text" style="width: 60px;" id="pressureDevStr" name="pressureDevStr" value="$unitUtil.changePressure($!{deviceInfo.pressureDev})"> kPa
           </div>
         </div>
       </div>

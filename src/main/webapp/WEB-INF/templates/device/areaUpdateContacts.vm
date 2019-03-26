@@ -80,7 +80,7 @@
                 <input type="checkbox" name="contactsIds" #if($currentChecked) checked #end value="${tmpContacts.id}" >${tmpContacts.name}(${tmpContacts.phone})  &nbsp;&nbsp;
               #end
               #if($contactsList.size() == 0)
-                暂无联系人数据,请在"无线设置"-> "通讯列表中" 添加联系人
+                暂无联系人数据,请在"短信设置"-> "通讯列表中" 添加联系人
               #end
             </div>
           </div>

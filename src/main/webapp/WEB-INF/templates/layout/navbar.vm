@@ -15,19 +15,19 @@
 
             <div class="sidebar-shortcuts" id="sidebar-shortcuts">
                 <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-                    <button class="btn btn-success">
+                    <button class="btn btn-success" onclick="click1();">
                         <i class="icon-tasks"></i>
                     </button>
 
-                    <button class="btn btn-info">
+                    <button class="btn btn-info" onclick="click2();">
                         <i class="icon-signal"></i>
                     </button>
 
-                    <button class="btn btn-warning">
+                    <button class="btn btn-warning" onclick="click3();">
                         <i class="icon-inbox"></i>
                     </button>
 
-                    <button class="btn btn-danger">
+                    <button class="btn btn-danger" onclick="click4();">
                         <i class="icon-cog"></i>
                     </button>
                 </div>
@@ -153,6 +153,19 @@
 
             <script type="text/javascript">
                 try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+
+              function click1() {
+                window.location.href="/intime/dataList";
+              }
+              function click2() {
+                window.location.href="/history/historyCurveList";
+              }
+              function click3() {
+                window.location.href="/device/deviceList";
+              }
+              function click4() {
+                window.location.href="/setting/alarm";
+              }
             </script>
         </div><!-- /.sidebar -->
 

@@ -128,7 +128,7 @@
                 <option value="cqAlarm6.mp3" #if("$!settingAlarmBean.alarm_song_config" == "cqAlarm6.mp3") selected #end>cqAlarm6.mp3</option>
               </select>
 
-              <div style="height: 35px;margin-top: 10px;">
+              <div style="height: 35px;margin-top: 30px;">
                 <audio id="sourceSongAuto" controls="controls" style="height: 35px; ">
                   <source id="sourceSong" src="${www}/music/$!settingAlarmBean.alarm_song_config" type="audio/mpeg" />
                   当前浏览器不支持播放报警声音

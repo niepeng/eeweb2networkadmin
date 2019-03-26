@@ -145,7 +145,7 @@ public class HistoryController extends BaseController {
       }
 
       model.addAttribute("deviceInfo", deviceInfo);
-      model.addAttribute("area", deviceService.getArea(deviceInfo.getAreaId()));
+//      model.addAttribute("area", deviceService.getArea(deviceInfo.getAreaId()));
       model.addAttribute("areaList", areaList);
       model.addAttribute("startTime", startTime);
       model.addAttribute("endTime", endTime);
