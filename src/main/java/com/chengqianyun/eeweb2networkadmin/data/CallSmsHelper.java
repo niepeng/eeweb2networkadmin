@@ -61,6 +61,19 @@ public class CallSmsHelper {
 
   }
 
+  public synchronized boolean checkSerialAvailable() {
+    if (serialPort != null) {
+      return true;
+    }
+    init();
+    if (serialPort == null) {
+      log.error("init serialPort fail,串口无法控制发送短信和拨打电话");
+      return false;
+    }
+    PhoneSmsService.markRunning();
+    return true;
+  }
+
   /**
    * Tuple2<Boolean, Boolean>  第一个返回拨打电话情况成功或失败,第二个返回发送短信成功或失败;
    *

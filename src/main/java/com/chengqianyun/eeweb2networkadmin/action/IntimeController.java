@@ -109,6 +109,10 @@ public class IntimeController extends BaseController {
     try {
       addOptMenu(model, MenuEnum.intime);
       List<Area> areaList = deviceService.getAreaAll();
+      /**
+       * 前台去掉了偏高和偏低,这里手动转换成状态值是:报警
+       */
+
       List<DeviceDataIntime> dataIntimeList = deviceIntimeService.deviceDataIntimeFor2(status, areaId, name);
       model.addAttribute("alarmSong", alarmService.hasAlarmData());
       model.addAttribute("dataIntimeList", dataIntimeList);

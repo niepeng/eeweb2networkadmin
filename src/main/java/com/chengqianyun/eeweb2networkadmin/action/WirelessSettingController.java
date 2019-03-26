@@ -9,6 +9,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import com.chengqianyun.eeweb2networkadmin.service.ContactService;
+import com.chengqianyun.eeweb2networkadmin.service.PhoneSmsService;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,6 +38,9 @@ public class WirelessSettingController extends BaseController {
 //  @Autowired
 //  private SerialService serialService;
 
+  @Autowired
+  private PhoneSmsService phoneSmsService;
+
   /**
    * 通讯测试
    */
@@ -44,9 +48,7 @@ public class WirelessSettingController extends BaseController {
   public String normal( Model model) {
     try {
       addOptMenu(model, MenuEnum.wirelessSetting);
-      // TODO .. 无线测试先去掉
-//      model.addAttribute("running", serialService.testSerial());
-      model.addAttribute("running", false);
+      model.addAttribute("running", phoneSmsService.serialIsAvaliable());
       return "/wirelessSetting/normal";
     } catch (Exception ex) {
       model.addAttribute(SUCCESS, false);

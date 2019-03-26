@@ -94,6 +94,8 @@ public class DeviceIntimeService extends BaseService {
       return dataList;
     }
 
+    status = changeStatus(status);
+
     if (dataList != null) {
       int statusInt = StringUtil.str2int(status);
       long areaIdLong = StringUtil.str2long(areaId);
@@ -119,6 +121,14 @@ public class DeviceIntimeService extends BaseService {
       }
     }
     return dataList;
+  }
+
+  private String changeStatus(String status) {
+    int st = StringUtil.str2int(status);
+    if(StatusEnum.alarm_down.getId() == st || StatusEnum.alarm_up.getId() == st) {
+      return String.valueOf(StatusEnum.alarm.getId());
+    }
+    return status;
   }
 
   private List<DeviceDataIntime> listDataOneRecentlyAll() {
@@ -239,6 +249,14 @@ public class DeviceIntimeService extends BaseService {
       }
     }
     dataIntimeBean.setStatusList(list);
+
+    // 前台的偏高和偏低,需要转换成 报警
+    if (!list.add(StatusEnum.alarm)) {
+      if (list.contains(StatusEnum.alarm_down) || list.contains(StatusEnum.alarm_up)) {
+        list.add(StatusEnum.alarm);
+      }
+    }
+
   }
 
   /**

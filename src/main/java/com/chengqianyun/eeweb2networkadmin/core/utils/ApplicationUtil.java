@@ -55,7 +55,7 @@ public class ApplicationUtil {
   }
 
   public static StatusEnum[] getStatus() {
-    return StatusEnum.values();
+    return StatusEnum.show();
   }
 
 

@@ -64,9 +64,9 @@
                 <button class="btn btn-info" type="button">
                     <i id="iok" class="bigger-110">
                     #if($!running)
-                        串口运行正常
+                      短信设备 正在运行
                     #else
-                      串口运行异常,请检查串口,请稍后再试
+                      短信设备 连接失败
                     #end
                     </i>
                 </button>

@@ -31,13 +31,20 @@ public class PhoneSmsService extends BaseService {
   // 需要关闭串口的时间
   static AtomicLong closeSerialTime = new AtomicLong();
   // 当前窗口是否已开启
-  static AtomicBoolean serialRunning = new AtomicBoolean(false);
+  public static AtomicBoolean serialRunning = new AtomicBoolean(false);
 
   // 当前系统中的任务(短信和电话)
   static LinkedBlockingQueue<PhoneTask> taskQueue = new LinkedBlockingQueue();
 
   @Autowired
   private CallSmsHelper callSmsHelper;
+
+  public boolean serialIsAvaliable() {
+    if (serialRunning.get()) {
+      return true;
+    }
+    return callSmsHelper.checkSerialAvailable();
+  }
 
   public static void markRunning() {
     if(!serialRunning.get()) {

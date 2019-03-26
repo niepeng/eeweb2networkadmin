@@ -39,5 +39,13 @@ public enum StatusEnum {
     return null;
   }
 
+  public static StatusEnum[] show() {
+    StatusEnum[] result = new StatusEnum[3];
+    result[0] = normal;
+    result[1] = alarm;
+    result[2] = offline;
+    return result;
+  }
+
 
 }
