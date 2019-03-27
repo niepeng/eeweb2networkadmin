@@ -47,31 +47,32 @@ public class CallSmsHelper {
   static SerialPort serialPort;
 
 
-  public void init() {
+  public boolean init() {
     List<String> list = getAllComPorts();
     if (list == null || list.size() == 0) {
-      return;
+      return false;
     }
 
     for(String comName : list) {
       if(findComm(comName)) {
-        break;
+        return true;
       }
     }
-
+    return false;
   }
 
   public synchronized boolean checkSerialAvailable() {
     if (serialPort != null) {
       return true;
     }
-    init();
-    if (serialPort == null) {
-      log.error("init serialPort fail,串口无法控制发送短信和拨打电话");
-      return false;
+    boolean flag = init();
+    if (flag) {
+      PhoneSmsService.markRunning();
+      return true;
     }
-    PhoneSmsService.markRunning();
-    return true;
+    close();
+    log.error("init serialPort fail,串口无法控制发送短信和拨打电话");
+    return false;
   }
 
   /**
@@ -83,7 +84,11 @@ public class CallSmsHelper {
   public Tuple2<Boolean, Boolean> execute(PhoneTask phoneTask) {
     Tuple2<Boolean, Boolean> tuple2 = new Tuple2<Boolean, Boolean>();
     if(serialPort == null) {
-      init();
+      boolean flag = init();
+      if(!flag) {
+        close();
+        return tuple2;
+      }
     }
 
     if(serialPort == null) {

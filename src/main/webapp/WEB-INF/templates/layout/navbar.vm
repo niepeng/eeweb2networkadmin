@@ -155,16 +155,16 @@
                 try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
 
               function click1() {
-                window.location.href="/intime/dataList";
+                window.location.href="${www}/intime/dataList";
               }
               function click2() {
-                window.location.href="/history/historyCurveList";
+                window.location.href="${www}/history/historyCurveList";
               }
               function click3() {
-                window.location.href="/device/deviceList";
+                window.location.href="${www}/device/deviceList";
               }
               function click4() {
-                window.location.href="/setting/alarm";
+                window.location.href="${www}/setting/alarm";
               }
             </script>
         </div><!-- /.sidebar -->

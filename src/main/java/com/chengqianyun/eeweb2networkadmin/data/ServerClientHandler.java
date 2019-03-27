@@ -59,10 +59,10 @@ public class ServerClientHandler implements Runnable {
       // 1.接收到第一次客户端连接上来
       char[] readData = read(in);
       String tmpData1 = FunctionUnit.bytesToHexString(readData);
-      log.warn("接受到客户端连接上来的内容==>{}", tmpData1);
+//      log.warn("接受到客户端连接上来的内容==>{}", tmpData1);
 
       // 2.建立sokcet和地址的关系
-      log.warn("发送获取sn和地址指令：{}", FunctionUnit.bytesToHexString(InstructionManager.genGetSnAddress()));
+//      log.warn("发送获取sn和地址指令：{}", FunctionUnit.bytesToHexString(InstructionManager.genGetSnAddress()));
 
       writePort(InstructionManager.genGetSnAddress(), socket);
 
@@ -71,7 +71,7 @@ public class ServerClientHandler implements Runnable {
       char[] readData2 = read(in);
       String tmpData2 = FunctionUnit.bytesToHexString(readData2);
       readData2 = Char55util.dealwith55NewV2(readData2);
-      log.info("tmpData2==>(" + tmpData2 + ")");
+//      log.info("tmpData2==>(" + tmpData2 + ")");
 
       Tuple2<String, Integer> snAddressTuple = InstructionManager.parseGetSnAddress(readData2);
       if(snAddressTuple == null) {
@@ -80,9 +80,9 @@ public class ServerClientHandler implements Runnable {
 
       String sn = snAddressTuple.getT1();
       int address = snAddressTuple.getT2();
-      log.warn("sn={},address={}", sn, address);
+//      log.warn("sn={},address={}", sn, address);
       DeviceInfo deviceInfo = ServerConnectionManager.addSnConnection(sn, address, this);
-      log.warn("addSnConnection_result={}", deviceInfo);
+//      log.warn("addSnConnection_result={}", deviceInfo);
 
       //  3.持续发送和获取数据(一段时间发送和接收),如果连接断了,释放当前链路,重新尝试
       DeviceDataIntime tmpDeviceData = null;
@@ -92,20 +92,20 @@ public class ServerClientHandler implements Runnable {
         if (DeviceTypeEnum.hasEnv(deviceInfo.getType())) {
           char[] data = writeInstruction(address, InstructionManager.genGetEnv(address));
           tmpDeviceData = InstructionManager.parseGetEnv(data, address);
-          log.info("接收到环境数据结果解析==>" + tmpDeviceData);
+//          log.info("接收到环境数据结果解析==>" + tmpDeviceData);
         }
 
         if (DeviceTypeEnum.hasIn(deviceInfo.getType())) {
           char[] data = writeInstruction(address, InstructionManager.genGetIn(address));
           tmpDeviceData = InstructionManager.parseGetIn(data, address, tmpDeviceData);
-          log.info("接收到开关量输入数据结果解析==>" + tmpDeviceData);
+//          log.info("接收到开关量输入数据结果解析==>" + tmpDeviceData);
         }
 
         if (DeviceTypeEnum.hasOut(deviceInfo.getType())) {
           char[] data = writeInstruction(address, InstructionManager.genGetOut(address, deviceInfo.getControlWay()));
           tuple = InstructionManager.parseGetOut(data, address);
           tmpDeviceData = new DeviceDataIntime();
-          log.info("接收到开关量输出数据结果解析==>" + tuple);
+//          log.info("接收到开关量输出数据结果解析==>" + tuple);
         }
 
         optDataHelper.optData(tmpDeviceData, tuple, deviceInfo);

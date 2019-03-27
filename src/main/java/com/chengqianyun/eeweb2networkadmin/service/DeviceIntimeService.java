@@ -251,7 +251,7 @@ public class DeviceIntimeService extends BaseService {
     dataIntimeBean.setStatusList(list);
 
     // 前台的偏高和偏低,需要转换成 报警
-    if (!list.add(StatusEnum.alarm)) {
+    if (!list.contains(StatusEnum.alarm)) {
       if (list.contains(StatusEnum.alarm_down) || list.contains(StatusEnum.alarm_up)) {
         list.add(StatusEnum.alarm);
       }

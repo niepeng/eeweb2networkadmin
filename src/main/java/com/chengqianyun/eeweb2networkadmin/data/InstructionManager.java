@@ -310,8 +310,8 @@ public class InstructionManager {
    * SN号校验码(AC) = CE5E
    */
   private static boolean checkSn(char[] responses) {
-    System.out.println(FunctionUnit.bytesToHexString(responses));
-    System.out.println();
+//    System.out.println(FunctionUnit.bytesToHexString(responses));
+//    System.out.println();
     char[] tmp = StringUtil.subCharArray(responses, 3, 9);
 
 //    System.out.println("初始的指令为:");
