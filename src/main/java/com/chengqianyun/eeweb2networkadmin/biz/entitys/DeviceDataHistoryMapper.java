@@ -25,4 +25,6 @@ public interface DeviceDataHistoryMapper {
 
     List<DeviceDataHistory> findPageAll(Map<String,String> map);
 
+    void deleteByTime(String maxTime);
+
 }

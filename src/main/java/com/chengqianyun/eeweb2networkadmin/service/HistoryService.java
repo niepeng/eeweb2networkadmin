@@ -178,6 +178,10 @@ public class HistoryService extends BaseService {
     return list;
   }
 
+  public void deleteByTime(String maxTime) {
+    deviceDataHistoryMapper.deleteByTime(maxTime);
+  }
+
 
   private void setDataMinMax2(List<DeviceDataHistoryBean>  dataList, HeaderContentBean headerContentBean, DeviceInfo deviceInfo) {
     if (dataList == null || dataList.size() == 0) {

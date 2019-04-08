@@ -62,6 +62,12 @@ public class BaseOptTest extends BaseTest {
   }
 
   @Test
+  public void test3() {
+    deviceDataHistoryMapper.deleteByTime("2018-04-22");
+  }
+
+
+  @Test
   public void test_deviceDataIntime() {
 //    DeviceDataIntime record = new DeviceDataIntime();
 //    record.setOut((short)1);

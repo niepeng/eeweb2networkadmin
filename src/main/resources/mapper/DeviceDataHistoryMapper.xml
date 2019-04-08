@@ -79,6 +79,13 @@
     delete from t_device_data_history
     where id = #{id,jdbcType=BIGINT}
   </delete>
+
+  <delete id="deleteByTime" parameterType="java.lang.String" >
+    delete from t_device_data_history
+    where created_at  <![CDATA[ < ]]>  #{maxTime}
+  </delete>
+
+
   <insert id="insert" parameterType="com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistory" >
     insert into t_device_data_history ( device_id, status,
       temp, humi, power, 

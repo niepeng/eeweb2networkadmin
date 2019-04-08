@@ -129,7 +129,17 @@ public class AutoJob {
         log.error("autoBackupDeviceHistoryError", e);
       }
     }
+
+    try {
+      // 删除超过1年的历史数据
+      Date maxTimeDate = DateUtil.addDate(date, -365);
+      String maxTime = DateUtil.getDate(maxTimeDate, DateUtil.datePattern);
+      historyService.deleteByTime(maxTime);
+    } catch (Exception e) {
+      log.error("删除超过1年的历史数据出错", e);
+    }
   }
+
 
   private void optClearIntime(List<DeviceInfo> list) {
     if (list == null || list.size() == 0) {
