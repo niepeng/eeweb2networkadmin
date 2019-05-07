@@ -92,6 +92,7 @@ public class SendPhoneService extends BaseService {
         optAlarmInfo(deviceAlarm);
       }
     } catch (Exception e) {
+      log.error("sendAlarmError", e);
     }
 
     isRunning = false;
@@ -110,6 +111,7 @@ public class SendPhoneService extends BaseService {
         optAlarmRecover(deviceRecoverBean);
       }
     } catch (Exception e) {
+      log.error("sendRecoverAlarmError", e);
     }
 
     isRecoverRunning = false;

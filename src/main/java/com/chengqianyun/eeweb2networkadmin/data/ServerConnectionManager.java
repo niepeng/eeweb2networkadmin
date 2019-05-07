@@ -55,13 +55,15 @@ public final class ServerConnectionManager {
       @Override
       public void run() {
         try {
+          // 启动监听端口，等待连接上来
           start(DEFAULT_PORT);
-        } catch (IOException e) {
+        } catch (Exception e) {
           log.error("threadPoolTaskExecutor.executeError", e);
         }
       }
     });
 
+    // 启动发送报警信息线程
     new Thread(new Runnable() {
       @Override
       public void run() {
@@ -69,7 +71,7 @@ public final class ServerConnectionManager {
       }
     }).start();
 
-
+    // 启动恢复报警信息线程
     new Thread(new Runnable() {
       @Override
       public void run() {
@@ -77,7 +79,7 @@ public final class ServerConnectionManager {
       }
     }).start();
 
-
+    // 启动离线处理线程
     new Thread(new Runnable() {
       @Override
       public void run() {
@@ -95,10 +97,7 @@ public final class ServerConnectionManager {
 
   }
 
-  /**
-   * 这个方法不会被大量并发访问，不太需要考虑效率，直接进行方法同步就行了
-   */
-    public synchronized static void start(int port) throws IOException {
+    public static void start(int port) throws IOException {
         if (server != null) {
             return;
         }

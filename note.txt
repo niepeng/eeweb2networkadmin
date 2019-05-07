@@ -1,0 +1,15 @@
+
+
+// 启动的时候初始化相关内容
+ServerConnectionManager.start()
+
+// 通过生产者和消费者模式去处理发送短信和电话的事项
+PhoneSmsService.init()
+
+
+----------------------------------------------------------------------------
+
+其他信息：
+代码：/Users/lsb/data/code/git/eeweb2networkadmin
+打出的是 cqlweb.war ；
+teamviewer的机器：E:\cqlweb2018\apache-tomcat-7.0.88

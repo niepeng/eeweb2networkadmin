@@ -135,25 +135,29 @@ public class CallSmsHelper {
       try {
         out.close();
         out = null;
-      } catch (IOException e) {
-        e.printStackTrace();
+      } catch (Exception e) {
+        log.error("e,closeOutError", e);
       }
     }
     if (in != null) {
       try {
         in.close();
         in = null;
-      } catch (IOException e) {
-        e.printStackTrace();
+      } catch (Exception e) {
+        log.error("e,closeInError", e);
       }
     }
 
     if (serialPort != null) {
-      serialPort.notifyOnDataAvailable(false);
-      serialPort.notifyOnBreakInterrupt(false);
-      serialPort.removeEventListener();
-      serialPort.close();
-      serialPort = null;
+      try {
+        serialPort.notifyOnDataAvailable(false);
+        serialPort.notifyOnBreakInterrupt(false);
+        serialPort.removeEventListener();
+        serialPort.close();
+        serialPort = null;
+      } catch (Exception e) {
+        log.error("e,closeSerialPortError", e);
+      }
     }
 
   }
@@ -271,16 +275,8 @@ public class CallSmsHelper {
       flag = sendCommand("AT+CNMI=2,2\r");
       return flag;
 
-    }catch (UnsupportedCommOperationException e) {
-      e.printStackTrace();
-    } catch (NoSuchPortException e) {
-      e.printStackTrace();
-    } catch (PortInUseException e) {
-      e.printStackTrace();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
+    } catch (Exception e) {
+      log.error("findCommError:comName=" + comName, e);
     }
 
     return false;
