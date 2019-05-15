@@ -403,6 +403,7 @@ public class OptDataHelper {
     }
 
     if (dataIntime.getInStatus() == StatusEnum.normal.getId() || dataIntime.getInStatus() == 0) {
+      resetAlarmAll(dataIntime);
       return;
     }
 
