@@ -137,6 +137,8 @@
     where device_id = #{deviceId,jdbcType=BIGINT}
     AND
     confirm = 0
+    AND
+    alarm_end_time is null
   </select>
 
 
