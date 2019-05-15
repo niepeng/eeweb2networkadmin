@@ -8,6 +8,8 @@
 .metadata/
 .idea/
 logs/
+target/
+target/*
 *.log
 dependency-reduced-pom.xml
 /bin
