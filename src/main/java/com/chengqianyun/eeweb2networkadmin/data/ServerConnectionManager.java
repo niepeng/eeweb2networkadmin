@@ -40,6 +40,11 @@ public final class ServerConnectionManager {
   public static int GET_DATA_CYCLE = 10;
 
   /**
+   * socketClient time out
+   */
+  public static final int SOCKET_TIME_OUT = 20 * 1000;
+
+  /**
    * 单例的ServerSocket
    */
   private static ServerSocket server;
@@ -113,7 +118,7 @@ public final class ServerConnectionManager {
              */
             while (true) {
               Socket socket = server.accept();
-              socket.setSoTimeout(20000);
+              socket.setSoTimeout(SOCKET_TIME_OUT);
               String ip = socket.getInetAddress().getHostAddress();
               int connectPort = socket.getPort();
               String ipAndPort = ip + ":" + connectPort;

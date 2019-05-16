@@ -3,6 +3,7 @@
 // 启动的时候初始化相关内容
 ServerConnectionManager.start()
 ServerClientHandler 处理与设备的数据采集交互
+ServerConnectionManager 中的常量配置超时时间
 
 // 通过生产者和消费者模式去处理发送短信和电话的事项
 PhoneSmsService.init()

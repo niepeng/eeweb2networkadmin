@@ -66,7 +66,7 @@ public class ServerClientHandler implements Runnable {
 
       writePort(InstructionManager.genGetSnAddress(), socket);
 
-      SystemClock.sleep(6000);
+      SystemClock.sleep(ServerConnectionManager.GET_DATA_CYCLE * 1000);
 
       char[] readData2 = read(in);
       String tmpData2 = FunctionUnit.bytesToHexString(readData2);
