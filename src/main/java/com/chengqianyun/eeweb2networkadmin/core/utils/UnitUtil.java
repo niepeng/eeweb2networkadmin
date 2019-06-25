@@ -31,6 +31,10 @@ public class UnitUtil {
     return String.valueOf(ArithUtil.div(value, 100));
   }
 
+  public static double chu100Double(int value) {
+    return ArithUtil.div(value, 100);
+  }
+
   public static int changeTemp(String value) {
     return (int)ArithUtil.mul(StringUtil.str2Double(value), 100);
   }

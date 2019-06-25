@@ -1,17 +1,18 @@
 package com.chengqianyun.eeweb2networkadmin.service;
 
-import cn.jpush.api.common.DeviceType;
 import com.chengqianyun.eeweb2networkadmin.biz.Convert;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceDataHistoryBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.ExportBatchDataBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.ExportBatchBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.ExportHelperBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.HeaderContentBean;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.export.MarkStyleBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistory;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MaxMinEnum;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.StatusEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.core.utils.*;
@@ -55,10 +56,10 @@ public class HistoryService extends BaseService {
 //    String[] headerList = new String[] {"数据类型：温度湿度", "间隔：" + distanceTime , "区域1-涉笔1","区域1-涉笔1","区域1-涉笔2","区域1-涉笔2" };
 //    String[] dataHeaderList = new String[]{"NO", "记录时间", "温度平均值(℃)", "湿度平均值(%RH)", "温度平均值(℃)", "湿度平均值(%RH)"};
 
-    String distanceTime = (distanceTimeInt < 60 ?  distanceTimeInt + "分钟" : distanceTimeInt/60 + "小时");
+    String distanceTime = "时间间隔：" +  (distanceTimeInt < 60 ?  distanceTimeInt + "分钟" : distanceTimeInt/60 + "小时");
 
     List<String> headerList = Lists.newArrayList();
-    headerList.add("数据类型：xxxx");
+    headerList.add("数据类型：" + getDeviceTypeNames(typeEnums));
     headerList.add(distanceTime);
 
     List<String> dataHeaderList = Lists.newArrayList();
@@ -88,6 +89,8 @@ public class HistoryService extends BaseService {
 
     // 数据处理
     List<String[]> dataValueList = Lists.newArrayList();
+    // 标记颜色处理
+    Map<String, MarkStyleBean> markStyleBeanMap = Maps.newHashMap();
 
     Date startDate = DateUtil.getDate(startTime,DateUtil.dateFullPatternNoSecond);
     Date endDate = DateUtil.getDate(endTime,DateUtil.dateFullPatternNoSecond);
@@ -111,7 +114,7 @@ public class HistoryService extends BaseService {
       dbParams.put("endTime", DateUtil.getDate(tmpEnd));
       currentDataBeanList = deviceDataHistoryMapper.exportAvgInfo(dbParams);
       if(!CollectionUtils.isEmpty(currentDataBeanList)) {
-        optData4export(dataValueList, currentDataBeanList, tmpStart, typeEnums, maxMinEnums, deviceInfoList);
+        optData4export(dataValueList, currentDataBeanList, tmpStart, typeEnums, maxMinEnums, deviceInfoList, markStyleBeanMap);
       }
       dbParams.clear();
       tmpStart = tmpEnd;
@@ -122,6 +125,9 @@ public class HistoryService extends BaseService {
 //    String[] s1 = new String[] {"2019-06-20","33.56","24.56","25.56","26.56"};
 //    dataValueList.add(s1);
     exportHelperBean.setDataValue(dataValueList);
+//    MarkStyleBean markStyleBean = new MarkStyleBean(0, 2, 1);
+//    markStyleBeanMap.put(markStyleBean.genKey(), markStyleBean);
+    exportHelperBean.setMarkStyleBeanMap(markStyleBeanMap);
     return exportHelperBean;
   }
 
@@ -568,9 +574,10 @@ public class HistoryService extends BaseService {
     return sb.toString();
   }
 
-  private void optData4export(List<String[]> dataValueList, List<ExportBatchDataBean> currentDataBeanList, Date tmpStart, List<DeviceTypeEnum> typeEnums, List<MaxMinEnum> maxMinEnums, List<DeviceInfo> deviceInfoList) {
+  private void optData4export(List<String[]> dataValueList, List<ExportBatchDataBean> currentDataBeanList, Date tmpStart, List<DeviceTypeEnum> typeEnums, List<MaxMinEnum> maxMinEnums, List<DeviceInfo> deviceInfoList, Map<String, MarkStyleBean> markStyleBeanMap) {
     List<String> dataList = Lists.newArrayList();
     dataList.add(DateUtil.getDate(tmpStart, DateUtil.dateFullPatternNoSecond));
+    int lineIndex = dataValueList.size();
 
     Map<Long, ExportBatchDataBean> currentDataBeanMap = Maps.newHashMap();
     for(ExportBatchDataBean tmp : currentDataBeanList) {
@@ -596,55 +603,67 @@ public class HistoryService extends BaseService {
             continue;
           }
           if(maxMinEnum == MaxMinEnum.avg && typeEnum == DeviceTypeEnum.temp) {
+            optStatusMarkStyleTemp(lineIndex, dataList.size(), tmpDataBean.getAvgTemp(), markStyleBeanMap, deviceInfo);
             dataList.add(trim0(tmpDataBean.getAvgTemp()));
             continue;
           }
           if(maxMinEnum == MaxMinEnum.max && typeEnum == DeviceTypeEnum.temp) {
+            optStatusMarkStyleTemp(lineIndex, dataList.size(), tmpDataBean.getMaxTemp(), markStyleBeanMap, deviceInfo);
             dataList.add(trim0(tmpDataBean.getMaxTemp()));
             continue;
           }
           if(maxMinEnum == MaxMinEnum.min && typeEnum == DeviceTypeEnum.temp) {
+            optStatusMarkStyleTemp(lineIndex, dataList.size(), tmpDataBean.getMinTemp(), markStyleBeanMap, deviceInfo);
             dataList.add(trim0(tmpDataBean.getMinTemp()));
             continue;
           }
 
 
           if(maxMinEnum == MaxMinEnum.avg && typeEnum == DeviceTypeEnum.humi) {
+            optStatusMarkStyleHumi(lineIndex, dataList.size(), tmpDataBean.getMinHumi(), markStyleBeanMap, deviceInfo);
             dataList.add(trim0(tmpDataBean.getAvgHumi()));
             continue;
           }
           if(maxMinEnum == MaxMinEnum.max && typeEnum == DeviceTypeEnum.humi) {
+            optStatusMarkStyleHumi(lineIndex, dataList.size(), tmpDataBean.getMaxHumi(), markStyleBeanMap, deviceInfo);
             dataList.add(trim0(tmpDataBean.getMaxHumi()));
             continue;
           }
           if(maxMinEnum == MaxMinEnum.min && typeEnum == DeviceTypeEnum.humi) {
+            optStatusMarkStyleHumi(lineIndex, dataList.size(), tmpDataBean.getMinHumi(), markStyleBeanMap, deviceInfo);
             dataList.add(trim0(tmpDataBean.getMinHumi()));
             continue;
           }
 
 
           if(maxMinEnum == MaxMinEnum.avg && typeEnum == DeviceTypeEnum.shine) {
+            optStatusMarkStyleShine(lineIndex, dataList.size(), tmpDataBean.getAvgShine(), markStyleBeanMap, deviceInfo);
             dataList.add(trim0(tmpDataBean.getAvgShine()));
             continue;
           }
           if(maxMinEnum == MaxMinEnum.max && typeEnum == DeviceTypeEnum.shine) {
+            optStatusMarkStyleShine(lineIndex, dataList.size(), tmpDataBean.getMaxShine(), markStyleBeanMap, deviceInfo);
             dataList.add(trim0(tmpDataBean.getMaxShine()));
             continue;
           }
           if(maxMinEnum == MaxMinEnum.min && typeEnum == DeviceTypeEnum.shine) {
+            optStatusMarkStyleShine(lineIndex, dataList.size(), tmpDataBean.getMinShine(), markStyleBeanMap, deviceInfo);
             dataList.add(trim0(tmpDataBean.getMinShine()));
             continue;
           }
 
           if(maxMinEnum == MaxMinEnum.avg && typeEnum == DeviceTypeEnum.pressure) {
+            optStatusMarkStylePressure(lineIndex, dataList.size(), tmpDataBean.getAvgPressure(), markStyleBeanMap, deviceInfo);
             dataList.add(trim0(tmpDataBean.getAvgPressure()));
             continue;
           }
           if(maxMinEnum == MaxMinEnum.max && typeEnum == DeviceTypeEnum.pressure) {
+            optStatusMarkStylePressure(lineIndex, dataList.size(), tmpDataBean.getMaxPressure(), markStyleBeanMap, deviceInfo);
             dataList.add(trim0(tmpDataBean.getMaxPressure()));
             continue;
           }
           if(maxMinEnum == MaxMinEnum.min && typeEnum == DeviceTypeEnum.pressure) {
+            optStatusMarkStylePressure(lineIndex, dataList.size(), tmpDataBean.getMinPressure(), markStyleBeanMap, deviceInfo);
             dataList.add(trim0(tmpDataBean.getMinPressure()));
             continue;
           }
@@ -666,5 +685,75 @@ public class HistoryService extends BaseService {
     return String.valueOf(d);
   }
 
+  private String getDeviceTypeNames(List<DeviceTypeEnum> list) {
+    StringBuilder sb = new StringBuilder();
+    for(DeviceTypeEnum tmp : list) {
+      sb.append(tmp.getName());
+    }
+    return sb.toString();
+  }
+
+  private void optStatusMarkStyleTemp(int lineIndex, int rowIndex, Double value, Map<String, MarkStyleBean> markStyleBeanMap, DeviceInfo deviceInfo) {
+    int min = deviceInfo.getTempDown() + deviceInfo.getTempDev();
+    int max = deviceInfo.getTempUp() + deviceInfo.getTempDev();
+    StatusEnum tmp = findStatus(value, UnitUtil.chu100Double(min), UnitUtil.chu100Double(max));
+    if (tmp == null) {
+      return;
+    }
+    optStatusMarkStyle(lineIndex, rowIndex, markStyleBeanMap, tmp);
+  }
+
+  private void optStatusMarkStyleHumi(int lineIndex, int rowIndex, Double value, Map<String, MarkStyleBean> markStyleBeanMap, DeviceInfo deviceInfo) {
+    int min = deviceInfo.getHumiDown() + deviceInfo.getHumiDev();
+    int max = deviceInfo.getHumiUp() + deviceInfo.getHumiDev();
+    StatusEnum tmp = findStatus(value, UnitUtil.chu100Double(min), UnitUtil.chu100Double(max));
+    if (tmp == null) {
+      return;
+    }
+    optStatusMarkStyle(lineIndex, rowIndex, markStyleBeanMap, tmp);
+  }
+
+  private void optStatusMarkStyleShine(int lineIndex, int rowIndex, Double value, Map<String, MarkStyleBean> markStyleBeanMap, DeviceInfo deviceInfo) {
+    int min = deviceInfo.getShineDown() + deviceInfo.getShineDev();
+    int max = deviceInfo.getShineUp() + deviceInfo.getShineDev();
+    StatusEnum tmp = findStatus(value, min, max);
+    if (tmp == null) {
+      return;
+    }
+    optStatusMarkStyle(lineIndex, rowIndex, markStyleBeanMap, tmp);
+  }
+
+  private void optStatusMarkStylePressure(int lineIndex, int rowIndex, Double value, Map<String, MarkStyleBean> markStyleBeanMap, DeviceInfo deviceInfo) {
+    int min = deviceInfo.getPressureDown() + deviceInfo.getPressureDev();
+    int max = deviceInfo.getPressureUp() + deviceInfo.getPressureDev();
+    StatusEnum tmp = findStatus(value, min, max);
+    if (tmp == null) {
+      return;
+    }
+    optStatusMarkStyle(lineIndex, rowIndex, markStyleBeanMap, tmp);
+  }
+
+
+
+  private void optStatusMarkStyle(int lineIndex, int rowIndex, Map<String, MarkStyleBean> markStyleBeanMap, StatusEnum tmp) {
+    MarkStyleBean markStyleBean = new MarkStyleBean(lineIndex, rowIndex, 0);
+    if (StatusEnum.alarm_down == tmp) {
+      markStyleBean.setMarkType(1);
+    }
+    if (StatusEnum.alarm_up == tmp) {
+      markStyleBean.setMarkType(2);
+    }
+    markStyleBeanMap.put(markStyleBean.genKey(), markStyleBean);
+  }
+
+  private StatusEnum findStatus(Double value, double min, double max) {
+    if (value < min) {
+      return StatusEnum.alarm_down;
+    }
+    if (value > max) {
+      return StatusEnum.alarm_up;
+    }
+    return null;
+  }
 
 }

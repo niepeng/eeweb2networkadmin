@@ -3,8 +3,6 @@ package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.UnitUtil;
 import com.chengqianyun.eeweb2networkadmin.data.ServerClientHandler;
-import com.google.gson.annotations.Until;
-import java.net.Socket;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;

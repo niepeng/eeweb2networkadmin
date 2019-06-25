@@ -1,19 +1,14 @@
 package com.chengqianyun.eeweb2networkadmin.core.utils;
 
-import com.chengqianyun.eeweb2networkadmin.biz.bean.export.ExportBatchBean;
-import com.chengqianyun.eeweb2networkadmin.biz.bean.export.ExportHelperBean;
-import com.chengqianyun.eeweb2networkadmin.biz.bean.export.HeaderContentBean;
-import com.chengqianyun.eeweb2networkadmin.biz.bean.export.HistoryListBean;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.export.*;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,6 +65,12 @@ public class ExportExcel<T> {
     // 把字体应用到当前的样式
     style.setFont(font);
 
+    // 生成一个样式
+    HSSFCellStyle styleLeft = workbook.createCellStyle();
+    styleLeft.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+    styleLeft.setFont(font);
+
+
 
     // 生成并设置另一个样式
     HSSFCellStyle style2 = workbook.createCellStyle();
@@ -108,7 +109,7 @@ public class ExportExcel<T> {
     int rowIndex = 0;
     HSSFRow row = sheet.createRow(rowIndex++);
     HSSFCell titleCell = row.createCell((short) (0));
-    titleCell.setCellStyle(style);
+    titleCell.setCellStyle(styleLeft);
     titleCell.setCellValue(exportHelperBean.getTitle());
 //    sheet.addMergedRegion(new Region(
 //        1, //first row (0-based)
@@ -144,9 +145,15 @@ public class ExportExcel<T> {
       cellTemp.setCellValue(exportHelperBean.getDataHeaders()[j]);
     }
 
-    if(exportHelperBean.getDataValue() != null) {
+
+    Map<String, MarkStyleBean> markStyleBeanMap = exportHelperBean.getMarkStyleBeanMap();
+    List<String[]> dataValue = exportHelperBean.getDataValue();
+    String[] dataArray;
+    MarkStyleBean tmpMarkStyleBean;
+    if (exportHelperBean.getDataValue() != null) {
       int num = 1;
-      for(String[] dataArray : exportHelperBean.getDataValue()) {
+      for (int i = 0, size = dataValue.size(); i < size; i++) {
+        dataArray = dataValue.get(i);
         row = sheet.createRow(rowIndex++);
         for (int j = 0; j < dataArray.length + 1; j++) {
           HSSFCell cellTemp = row.createCell(j);
@@ -155,7 +162,16 @@ public class ExportExcel<T> {
             cellTemp.setCellValue(String.valueOf(num++));
             continue;
           }
-          cellTemp.setCellValue(dataArray[j-1]);
+          cellTemp.setCellValue(dataArray[j - 1]);
+          // findStyle(style2, lowStyle, highStyle, markStyleBeanMap)
+          tmpMarkStyleBean = (markStyleBeanMap.get(i + BizConstant.SPLIT + (j-1)));
+          if(tmpMarkStyleBean != null) {
+            if(tmpMarkStyleBean.isLow()) {
+              cellTemp.setCellStyle(lowStyle);
+            } else if(tmpMarkStyleBean.isHigh()) {
+              cellTemp.setCellStyle(highStyle);
+            }
+          }
         }
       }
     }
@@ -331,6 +347,10 @@ public class ExportExcel<T> {
 //    sheet.autoSizeColumn((short)4);
 
     return workbook;
+  }
+
+  private void findStyle(HSSFCellStyle defaultStyle, HSSFCellStyle lowStyle, HSSFCellStyle highStyle, Map<String, MarkStyleBean> markStyleBeanMap) {
+
   }
 
 
