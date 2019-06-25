@@ -20,6 +20,27 @@
     <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
     <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
   </resultMap>
+
+  <resultMap id="exportDataMap" type="com.chengqianyun.eeweb2networkadmin.biz.bean.ExportBatchDataBean" >
+    <result column="deviceId" property="deviceId" jdbcType="BIGINT" />
+    <result column="avgTemp" property="avgTemp" jdbcType="DOUBLE" />
+    <result column="maxTemp" property="maxTemp" jdbcType="DOUBLE" />
+    <result column="minTemp" property="minTemp" jdbcType="DOUBLE" />
+
+    <result column="avgHumi" property="avgHumi" jdbcType="DOUBLE" />
+    <result column="maxHumi" property="maxHumi" jdbcType="DOUBLE" />
+    <result column="minHumi" property="minHumi" jdbcType="DOUBLE" />
+
+    <result column="avgShine" property="avgShine" jdbcType="DOUBLE" />
+    <result column="maxShine" property="maxShine" jdbcType="DOUBLE" />
+    <result column="minShine" property="minShine" jdbcType="DOUBLE" />
+
+    <result column="avgPressure" property="avgPressure" jdbcType="DOUBLE" />
+    <result column="maxPressure" property="maxPressure" jdbcType="DOUBLE" />
+    <result column="minPressure" property="minPressure" jdbcType="DOUBLE" />
+
+  </resultMap>
+
   <sql id="Base_Column_List" >
     id, device_id, status, temp, humi, power, shine, pressure, smoke, water, electric, body,
     `out`, created_at, updated_at, created_by, updated_by
@@ -30,6 +51,9 @@
     <where>
       <if test="deviceId != null and deviceId !=''" >
         device_id = #{deviceId,jdbcType=BIGINT}
+      </if>
+      <if test="deviceIds != null and deviceIds !=''" >
+        AND device_id in (${deviceIds})
       </if>
       <if test="startTime != null and startTime !=''" >
         AND created_at >= #{startTime}
@@ -49,6 +73,18 @@
         created_at = #{dateStr}
    order by id desc limit 1
   </select>
+
+  <select id="exportAvgInfo" parameterType="java.util.Map" resultMap="exportDataMap">
+        select device_id deviceId ,
+          round(avg(temp)/100,2) as avgTemp, round(max(temp)/100,2) as maxTemp, round(min(temp)/100,2) as minTemp,
+          round(avg(humi)/100,2) as avgHumi, round(max(humi)/100,2) as maxHumi, round(min(humi)/100,2) as minHumi,
+          round(avg(shine)/100,2) as avgShine, round(max(shine)/100,2) as maxShine, round(min(shine)/100,2) as minShine,
+          round(avg(pressure)/100,2) as avgPressure, round(max(pressure)/100,2) as maxPressure, round(min(pressure)/100,2) as minPressure
+        FROM t_device_data_history
+        <include refid="pageSearch"/>
+        group by device_id
+  </select>
+
 
   <select id="findPageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
     SELECT count(*) from  t_device_data_history

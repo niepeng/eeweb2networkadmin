@@ -2,6 +2,8 @@ package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
 import java.util.List;
 import java.util.Map;
+
+import com.chengqianyun.eeweb2networkadmin.biz.bean.ExportBatchDataBean;
 import org.apache.ibatis.annotations.Param;
 
 public interface DeviceDataHistoryMapper {
@@ -20,6 +22,8 @@ public interface DeviceDataHistoryMapper {
     int updateByPrimaryKey(DeviceDataHistory record);
 
     Integer findPageCount(Map<String,String> map);
+
+    List<ExportBatchDataBean> exportAvgInfo(Map<String,String> map);
 
     List<DeviceDataHistory> findPage(Map<String,String> map);
 

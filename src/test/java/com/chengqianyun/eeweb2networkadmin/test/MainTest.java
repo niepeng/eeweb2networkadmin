@@ -1,12 +1,15 @@
 package com.chengqianyun.eeweb2networkadmin.test;
 
 
+import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.SHAUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.data.CalcCRC;
 import com.chengqianyun.eeweb2networkadmin.core.utils.data.FunctionUnit;
 import com.chengqianyun.eeweb2networkadmin.data.InstructionManager;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author 聂鹏
@@ -17,9 +20,22 @@ import java.net.URLDecoder;
 public class MainTest {
 
   public static void main(String[] args) throws UnsupportedEncodingException {
-    String smscontent = "设备(ceshi)设备离线，请及时处理!报警时间:2019-03-22 13:38, 34%RH,..";
-    String msg = URLDecoder.decode(smscontent, "utf-8");
-    System.out.println(msg);
+    double d = 0.0d;
+
+    System.out.println(d == 0.0);
+//    String smscontent = "设备(ceshi)设备离线，请及时处理!报警时间:2019-03-22 13:38, 34%RH,..";
+//    String msg = URLDecoder.decode(smscontent, "utf-8");
+//    System.out.println(msg);
+//    List<DeviceTypeEnum> result =  new ArrayList<DeviceTypeEnum>();
+//    result.add(DeviceTypeEnum.humi);
+//    result.add(DeviceTypeEnum.temp);
+//
+//    result.forEach(a -> System.out.println(a.getName()));
+//
+//    System.out.println("\n");
+//    result.sort((a,b) -> a.getId() - b.getId());
+//
+//    result.forEach(a -> System.out.println(a.name()));
   }
 
   public static void main3(String[] args) {

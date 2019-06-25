@@ -23,7 +23,7 @@ public class ExportHelperBean<T> {
   private String title;
 
   /**
-   *  表格头部的内容(多行)headerDataList 和 标题栏列数等信
+   *  表格头部的内容(多行)headerDataList 和 标题栏列数等信息
    */
   private HeaderContentBean headerContentBean;
 

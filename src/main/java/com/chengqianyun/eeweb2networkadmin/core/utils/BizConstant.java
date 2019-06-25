@@ -9,6 +9,8 @@ package com.chengqianyun.eeweb2networkadmin.core.utils;
 
 public interface BizConstant {
 
+  public static final String SPLIT = ",";
+
   /**
    * token 有效期单位:天
    */

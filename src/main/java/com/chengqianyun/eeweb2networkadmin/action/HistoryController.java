@@ -3,6 +3,7 @@ package com.chengqianyun.eeweb2networkadmin.action;
 
 import com.chengqianyun.eeweb2networkadmin.biz.Convert;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceDataHistoryBean;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.export.ExportBatchBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.ExportHelperBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.HeaderContentBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
@@ -12,20 +13,10 @@ import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
-import com.chengqianyun.eeweb2networkadmin.core.utils.BizConstant;
-import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
-import com.chengqianyun.eeweb2networkadmin.core.utils.ExportExcel;
-import com.chengqianyun.eeweb2networkadmin.core.utils.ExportPdf;
-import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
-import com.chengqianyun.eeweb2networkadmin.core.utils.Tuple2;
-import com.chengqianyun.eeweb2networkadmin.core.utils.UnitUtil;
+import com.chengqianyun.eeweb2networkadmin.core.utils.*;
 import com.chengqianyun.eeweb2networkadmin.service.DeviceService;
 import com.chengqianyun.eeweb2networkadmin.service.HistoryService;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
+import com.google.common.base.Splitter;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +24,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 历史管理
@@ -107,7 +103,7 @@ public class HistoryController extends BaseController {
       }
 
 
-      PageResult<DeviceDataHistory> params = historyService.historyDataList(query, deviceInfo);
+      PageResult<DeviceDataHistory> params = historyService.historyDataList(query, deviceInfo, null);
       model.addAttribute("result", params);
 
 
@@ -119,6 +115,80 @@ public class HistoryController extends BaseController {
       return "/history/historyList";
     }
   }
+
+  /**
+   * 历史批量数据
+   */
+  @RequestMapping(value = "/historyBatchList", method = RequestMethod.GET)
+  public String historyBatchList(
+          @RequestParam(value = "deviceIds", required = false, defaultValue = "0") String deviceIds,
+          @RequestParam(value = "startTime", required = false) String startTime,
+          @RequestParam(value = "endTime", required = false) String endTime,
+          @RequestParam(value = "distanceTime", defaultValue = "1440") String distanceTime,
+          @RequestParam(value = "dataTypes", defaultValue = "avg") String dataTypes,
+          @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
+          @RequestParam(value = "pageSize", required = false, defaultValue = "15") int pageSize,
+          Model model) {
+
+    try {
+      addOptMenu(model, MenuEnum.history);
+      List<Area> areaList = deviceService.getAreaAndDeviceInfo();
+//      DeviceInfo deviceInfo = findOneDeviceId(areaList, deviceId);
+      if (StringUtil.isEmpty(startTime) || StringUtil.isEmpty(endTime)) {
+        Date now = new Date();
+        endTime = DateUtil.getDate(now, DateUtil.dateFullPatternNoSecond);
+        startTime = DateUtil.getDate(DateUtil.addDate(now, -1), DateUtil.dateFullPatternNoSecond);
+      }
+
+      PaginationQuery query = new PaginationQuery();
+      query.setPageIndex(pageIndex);
+      query.setRowsPerPage(pageSize);
+//      query.addQueryData("deviceId", String.valueOf(deviceInfo.getId()));
+      query.addQueryData("startTime", startTime);
+      query.addQueryData("endTime", endTime);
+
+//      model.addAttribute("deviceInfo", deviceInfo);
+//      model.addAttribute("area", deviceService.getArea(deviceInfo.getAreaId()));
+//
+//
+//
+      Splitter split = Splitter.on(',').trimResults().omitEmptyStrings(); // 去前后空格&&去空string
+      List<String> deviceIdList = split.splitToList(deviceIds);
+
+      model.addAttribute("distanceTime", distanceTime);
+      model.addAttribute("dataTypes", dataTypes);
+      model.addAttribute("areaList", areaList);
+      model.addAttribute("startTime", startTime);
+      model.addAttribute("endTime", endTime);
+      model.addAttribute("deviceIds", deviceIds);
+      model.addAttribute("deviceIdList", deviceIdList);
+
+
+      // 检查时间段不能超过7天
+      Date startTimeDate = DateUtil.getDate(startTime, DateUtil.dateFullPatternNoSecond);
+      Date endTimeDate = DateUtil.getDate(endTime, DateUtil.dateFullPatternNoSecond);
+      if(startTimeDate.getTime() > endTimeDate.getTime()) {
+        throw new Exception("开始时间不能大于结束时间");
+      }
+
+      int distanceTimeInt = Integer.parseInt(distanceTime);
+      if (endTimeDate.getTime() - startTimeDate.getTime() >  BizConstant.Times.day * 7 * distanceTimeInt) {
+        throw new Exception("所选时间段超出查询范围");
+      }
+
+      PageResult<DeviceDataHistory> params = historyService.historyDataList(query, null, areaList);
+      model.addAttribute("result", params);
+
+
+      return "/history/historyBatchList";
+    } catch(Exception ex) {
+      model.addAttribute(SUCCESS, false);
+      model.addAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "/history/historyBatchList";
+    }
+  }
+
 
 
 
@@ -270,14 +340,6 @@ public class HistoryController extends BaseController {
 
       return null;
     } catch (Exception ex) {
-//      model.addAttribute("realname", realname);
-//      model.addAttribute("billCode", billCode);
-//      model.addAttribute("investId", investId);
-//      model.addAttribute("status", status);
-//      model.addAttribute("startTimeStr", startTimeStr);
-//      model.addAttribute("endTimeStr", endTimeStr);
-//      model.addAttribute("startAmountStr", startAmountStr);
-//      model.addAttribute("endAmountStr", endAmountStr);
       model.addAttribute(SUCCESS, false);
       model.addAttribute(MESSAGE, ex.getMessage());
       log.error(ex);
@@ -285,6 +347,92 @@ public class HistoryController extends BaseController {
     }
   }
 
+
+  @RequestMapping(value = "/historyListBatchExport", method = RequestMethod.GET)
+  public String historyListBatchExport(
+          @RequestParam(value = "deviceIds", required = false, defaultValue = "0") String deviceIds,
+          @RequestParam(value = "startTime", required = false) String startTime,
+          @RequestParam(value = "endTime", required = false) String endTime,
+          @RequestParam(value = "distanceTime", required = false) String distanceTime,  /* 间隔 */
+          @RequestParam(value = "dataTypes", required = false) String dataTypes,  /* 统计类型,注意可以多选 */
+          /**
+           * excel
+           */
+          @RequestParam(value = "exportType", required = false) String exportType,
+          @RequestParam(required = false, defaultValue = "") String exportFlag,
+          HttpServletResponse response,
+          Model model) {
+    try {
+      if (!"true".equals(exportFlag)) {
+        throw new Exception("参数错误,请刷新重试");
+      }
+
+      if(!"excel".equals(exportType)) {
+        throw new Exception("参数错误,请刷新重试");
+      }
+
+//      List<Area> areaList = deviceService.getAreaAndDeviceInfo();
+////      DeviceInfo deviceInfo = findOneDeviceId(areaList, deviceId);
+////      if (deviceInfo == null) {
+////        throw new Exception("请先选择设备");
+////      }
+
+      if (StringUtil.isEmpty(startTime) || StringUtil.isEmpty(endTime)) {
+        Date now = new Date();
+        endTime = DateUtil.getDate(now, DateUtil.dateFullPatternNoSecond);
+        startTime = DateUtil.getDate(DateUtil.addDate(now, -1), DateUtil.dateFullPatternNoSecond);
+      }
+
+      int distanceTimeInt = Integer.parseInt(distanceTime);
+      // 检查时间段不能超过7天(1分钟间隔情况,如果间隔多些,那么时间就成正比)
+      Date startTimeDate = DateUtil.getDate(startTime, DateUtil.dateFullPatternNoSecond);
+      Date endTimeDate = DateUtil.getDate(endTime, DateUtil.dateFullPatternNoSecond);
+
+      if (startTimeDate.getTime() > endTimeDate.getTime()) {
+        throw new Exception("开始时间不能大于结束时间");
+      }
+      if (endTimeDate.getTime() - startTimeDate.getTime() >  BizConstant.Times.day * 7 * distanceTimeInt) {
+        throw new Exception("开始时间和结束时间的 间隔不能超过"+(7 * distanceTimeInt)+"天");
+      }
+
+      String fileName = "data_" + DateUtil.getDate(new Date(), DateUtil.PATTERN_YYYYMMDDANDHHMMSS) + ("excel".equals(exportType) ?  ".xls" : ".pdf");
+      ExportBatchBean exportHelperBean = historyService.genExportBatchBean(startTime, endTime, distanceTimeInt, dataTypes, deviceIds);
+//      ExportHelperBean<DeviceDataHistoryBean> exportHelperBean = historyService.genExportBean(startTime, endTime, distanceTimeInt, dataTypes, deviceInfo);
+
+      try {
+        OutputStream os = response.getOutputStream();
+        response.reset();
+        response.setHeader("Content-disposition", "attachment; filename=" + new String(fileName.getBytes("GB2312"), "ISO8859-1"));
+        response.setContentType( "pdf".equals(exportType) ? "application/pdf" :  "application/msexcel");// 定义输出类型
+
+        if("excel".equals(exportType)) {
+          ExportExcel<DeviceDataHistoryBean> exportExcel = new ExportExcel<DeviceDataHistoryBean>();
+          HSSFWorkbook workbook = new HSSFWorkbook();
+          exportExcel.exportExcel2(workbook, exportHelperBean);
+          exportExcel.write(workbook, os);
+          return null;
+        }
+
+//        if("pdf".equals(exportType)) {
+//          ExportPdf<DeviceDataHistoryBean> exportPdf = new ExportPdf<DeviceDataHistoryBean>();
+//          exportPdf.exportPdf(exportHelperBean, os);
+//          return null;
+//        }
+
+      } catch (Exception e) {
+        log.info("export excel,{}",e);
+      }
+
+
+
+      return null;
+    } catch (Exception ex) {
+      model.addAttribute(SUCCESS, false);
+      model.addAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "/history/historyList";
+    }
+  }
 
 
   private void setDataMinMax(List<DeviceDataHistory>  dataList, HeaderContentBean headerContentBean, DeviceInfo deviceInfo) {

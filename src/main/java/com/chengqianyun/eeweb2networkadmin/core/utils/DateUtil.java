@@ -389,6 +389,11 @@ public class DateUtil {
     return c.getTime();
   }
 
+  public static Date min(Date d1, Date d2) {
+    return d1.before(d2) ? d1 : d2;
+  }
+
+
 
   /**
    * 日期相减

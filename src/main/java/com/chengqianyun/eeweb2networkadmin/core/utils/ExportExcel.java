@@ -1,5 +1,6 @@
 package com.chengqianyun.eeweb2networkadmin.core.utils;
 
+import com.chengqianyun.eeweb2networkadmin.biz.bean.export.ExportBatchBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.ExportHelperBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.HeaderContentBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.HistoryListBean;
@@ -54,10 +55,150 @@ public class ExportExcel<T> {
     }
   }
 
-  /**
-   * 这是一个通用的方法，利用了JAVA的反射机制，可以将放置在JAVA集合中并且符号一定条件的数据以EXCEL 的形式输出到指定IO设备上
-   *
-   */
+  public HSSFWorkbook exportExcel2(HSSFWorkbook workbook, ExportBatchBean exportHelperBean) {
+
+    // 生成一个表格
+    HSSFSheet sheet = workbook.createSheet(exportHelperBean.getSheetName());
+    // 设置表格默认列宽度为15个字节
+    sheet.setDefaultColumnWidth((short) 30);
+    // 生成一个样式
+    HSSFCellStyle style = workbook.createCellStyle();
+    style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+    HSSFFont font = workbook.createFont();
+    font.setFontHeightInPoints((short) 10);
+//    font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+    // 把字体应用到当前的样式
+    style.setFont(font);
+
+
+    // 生成并设置另一个样式
+    HSSFCellStyle style2 = workbook.createCellStyle();
+    style2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+    style2.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+    // 生成另一个字体
+    HSSFFont font2 = workbook.createFont();
+//    font2.setBoldweight(HSSFFont.BOLDWEIGHT_NORMAL);
+    // 把字体应用到当前的样式
+    style2.setFont(font2);
+
+
+    HSSFCellStyle lowStyle = workbook.createCellStyle();
+    lowStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+    HSSFFont lowFont = workbook.createFont();
+    lowFont.setColor(BLUE.index);
+    lowStyle.setFont(lowFont);
+
+    HSSFCellStyle highStyle = workbook.createCellStyle();
+    highStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+    HSSFFont heighFont = workbook.createFont();
+    heighFont.setColor(RED.index);
+    highStyle.setFont(heighFont);
+
+
+    // 声明一个画图的顶级管理器
+    HSSFPatriarch patriarch = sheet.createDrawingPatriarch();
+    // 定义注释的大小和位置,详见文档
+    HSSFComment comment = patriarch.createComment(new HSSFClientAnchor(0, 0, 0, 0, (short) 4, 2, (short) 6, 5));
+    // 设置注释内容
+    comment.setString(new HSSFRichTextString("导出数据"));
+    // 设置注释作者，当鼠标移动到单元格上是可以在状态栏中看到该内容.
+    comment.setAuthor("eeweb");
+
+    // 1.产生表格标题行
+    int rowIndex = 0;
+    HSSFRow row = sheet.createRow(rowIndex++);
+    HSSFCell titleCell = row.createCell((short) (0));
+    titleCell.setCellStyle(style);
+    titleCell.setCellValue(exportHelperBean.getTitle());
+//    sheet.addMergedRegion(new Region(
+//        1, //first row (0-based)
+//        (short)1, //first column  (0-based)
+//        2, //last row (0-based)
+//        (short)1  //last column  (0-based)
+//    ));
+    // // 四个参数分别是：起始行，起始列，结束行，结束列
+    sheet.addMergedRegion(new Region(0,(short)0,0, (short)(exportHelperBean.getTitleMergeCol() -1)));
+
+    // 2.表格头部内容
+    List<String[]> headDataList = exportHelperBean.getHeaders();
+    if(headDataList != null) {
+      for (int i = 0, size = headDataList.size(); i < size; i++) {
+        HSSFRow rowHeadData = sheet.createRow(rowIndex++);
+        for (short k = 0; k < headDataList.get(i).length; k++) {
+          HSSFCell cellHeadData = rowHeadData.createCell(k);
+          cellHeadData.setCellStyle(style);
+          cellHeadData.setCellValue(headDataList.get(i)[k]);
+        }
+      }
+    }
+
+    // 3.填充表格数据内容
+    // 3.1 空一行
+    sheet.createRow(rowIndex++);
+
+    // 3.2 数据标题行
+    HSSFRow cellHeadDataTitle = sheet.createRow(rowIndex++);
+    for (short j = 0; j < exportHelperBean.getDataHeaders().length; j ++) {
+      HSSFCell cellTemp = cellHeadDataTitle.createCell(j);
+      cellTemp.setCellStyle(style2);
+      cellTemp.setCellValue(exportHelperBean.getDataHeaders()[j]);
+    }
+
+    if(exportHelperBean.getDataValue() != null) {
+      int num = 1;
+      for(String[] dataArray : exportHelperBean.getDataValue()) {
+        row = sheet.createRow(rowIndex++);
+        for (int j = 0; j < dataArray.length + 1; j++) {
+          HSSFCell cellTemp = row.createCell(j);
+          cellTemp.setCellStyle(style2);
+          if (j == 0) {
+            cellTemp.setCellValue(String.valueOf(num++));
+            continue;
+          }
+          cellTemp.setCellValue(dataArray[j-1]);
+        }
+      }
+    }
+
+//    // 3.3 遍历集合数据，产生数据行
+//    Iterator<T> it = exportHelperBean.getDataset().iterator();
+//    Object tmpValue = null;
+//    String tmpMin = null;
+//    String tmpMax = null;
+//
+//    int num = 1;
+//    while (it.hasNext()) {
+//      row = sheet.createRow(rowIndex++);
+//      T t = (T) it.next();
+//      // 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值
+//      for (short j = 0; j < exportHelperBean.getDataCols().length; j ++) {
+//        // 需要找到标记最低和最高的样式颜色
+//        HSSFCell cellTemp = row.createCell(j);
+//        cellTemp.setCellStyle(style2);
+//        if(j == 0) {
+//          cellTemp.setCellValue(String.valueOf(num++));
+//          continue;
+//        }
+//        tmpValue = ReflectUtil.getValue(t, exportHelperBean.getDataCols()[j]);
+//        if(exportHelperBean.getDataCols()[j].indexOf("temp") >= 0) {
+//          cellTemp.setCellValue(UnitUtil.chu100((Integer)(tmpValue)));
+//          continue;
+//        }
+//        if(exportHelperBean.getDataCols()[j].indexOf("humi") >= 0) {
+//          cellTemp.setCellValue(UnitUtil.chu100((Integer)(tmpValue)));
+//          continue;
+//        }
+//        cellTemp.setCellValue(String.valueOf(tmpValue));
+//      }
+//    }
+
+    return workbook;
+  }
+
+    /**
+     * 这是一个通用的方法，利用了JAVA的反射机制，可以将放置在JAVA集合中并且符号一定条件的数据以EXCEL 的形式输出到指定IO设备上
+     *
+     */
   public HSSFWorkbook exportExcel2(HSSFWorkbook workbook, ExportHelperBean<T> exportHelperBean) {
 
 //    String title, HeaderContentBean headerContentBean ,String[] dataHeaders, String[] dataCols, Collection<T> dataset, String sheetName

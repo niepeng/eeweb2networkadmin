@@ -1,6 +1,7 @@
 package com.chengqianyun.eeweb2networkadmin.test.crud;
 
 
+import com.chengqianyun.eeweb2networkadmin.biz.bean.ExportBatchDataBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.AreaMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistory;
@@ -11,7 +12,11 @@ import com.chengqianyun.eeweb2networkadmin.biz.entitys.Setting;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.SettingMapper;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import com.chengqianyun.eeweb2networkadmin.test.BaseTest;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +43,16 @@ public class BaseOptTest extends BaseTest {
 
   @Autowired
   private DeviceDataIntimeMapper dataIntimeMapper;
+
+  @Test
+  public void test_0() {
+    Map<String, String> map = new HashMap<>();
+    map.put("startTime", "2019-06-20");
+    map.put("endTime", "2019-06-25");
+    map.put("deviceIds", "'1','2','3'");
+    List<ExportBatchDataBean> list = deviceDataHistoryMapper.exportAvgInfo(map);
+    System.out.println("\n\n ================  " + list.size() + "  =============");
+  }
 
   @Test
   public void test_1() {

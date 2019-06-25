@@ -18,7 +18,7 @@ import java.util.List;
  * @date 18/8/21
  */
 
-public class SerialTest {
+public class SerialTEst {
 
   static int MAX_SEND_LEN = 70;			// 单条短信最长的发送字数(70个)
   static int SMS_SEND_INTERVAL =5*1000;	// 短信发完后等待间隔(5000毫秒)

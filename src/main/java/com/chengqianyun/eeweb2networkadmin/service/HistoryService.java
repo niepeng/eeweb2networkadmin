@@ -1,25 +1,28 @@
 package com.chengqianyun.eeweb2networkadmin.service;
 
+import cn.jpush.api.common.DeviceType;
 import com.chengqianyun.eeweb2networkadmin.biz.Convert;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceDataHistoryBean;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.ExportBatchDataBean;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.export.ExportBatchBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.ExportHelperBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.HeaderContentBean;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistory;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.MaxMinEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
-import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
-import com.chengqianyun.eeweb2networkadmin.core.utils.Tuple2;
-import com.chengqianyun.eeweb2networkadmin.core.utils.UnitUtil;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.chengqianyun.eeweb2networkadmin.core.utils.*;
+
+import java.util.*;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author 聂鹏
@@ -31,8 +34,100 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class HistoryService extends BaseService {
 
+  public ExportBatchBean genExportBatchBean(String startTime, String endTime, int distanceTimeInt, String dataTypes, String deviceIds) {
+    ExportBatchBean exportHelperBean = new ExportBatchBean();
 
-  public ExportHelperBean<DeviceDataHistoryBean> genExportBean(String startTime, String endTime, int distanceTimeInt, String dataTypes, DeviceInfo deviceInfo) {
+    DeviceTypeEnum[] exportOptTypeEnums = new DeviceTypeEnum[]{DeviceTypeEnum.temp, DeviceTypeEnum.humi, DeviceTypeEnum.shine, DeviceTypeEnum.pressure};
+    List<DeviceInfo> deviceInfoList = findDeviceInfo(deviceIds, exportOptTypeEnums);
+    if(CollectionUtils.isEmpty(deviceInfoList)) {
+      return exportHelperBean;
+    }
+
+    List<DeviceTypeEnum> typeEnums = findDeviceTypes(deviceInfoList, exportOptTypeEnums);
+    List<MaxMinEnum> maxMinEnums = findMaxMinEnums(dataTypes);
+
+    /**
+     *  温度，湿度，光照，压强: DeviceTypeEnum
+     *  平均值，最大值，最小值: MaxMinEnum
+     * 展示数据标题部分顺序是：根据温度，湿度，光照，压力
+     * 根据开始时间，然后加上间隔，去获取数据，得到最大，最小，平均值
+     */
+//    String[] headerList = new String[] {"数据类型：温度湿度", "间隔：" + distanceTime , "区域1-涉笔1","区域1-涉笔1","区域1-涉笔2","区域1-涉笔2" };
+//    String[] dataHeaderList = new String[]{"NO", "记录时间", "温度平均值(℃)", "湿度平均值(%RH)", "温度平均值(℃)", "湿度平均值(%RH)"};
+
+    String distanceTime = (distanceTimeInt < 60 ?  distanceTimeInt + "分钟" : distanceTimeInt/60 + "小时");
+
+    List<String> headerList = Lists.newArrayList();
+    headerList.add("数据类型：xxxx");
+    headerList.add(distanceTime);
+
+    List<String> dataHeaderList = Lists.newArrayList();
+    dataHeaderList.add("NO");
+    dataHeaderList.add("记录时间");
+
+    addHeaderAndDataTitle(headerList, dataHeaderList, typeEnums, maxMinEnums, deviceInfoList);
+
+
+    String sheetName = "设备数据";
+    String title = "监控平台历史数据查询结果";
+
+    exportHelperBean.setSheetName(sheetName);
+    exportHelperBean.setTitle(title);
+    exportHelperBean.setTitleMergeCol(dataHeaderList.size());
+    exportHelperBean.setHeaders(null);
+
+    String[] dataHeaderArray = new String[dataHeaderList.size()];
+    dataHeaderList.toArray(dataHeaderArray);
+    exportHelperBean.setDataHeaders(dataHeaderArray);
+    List<String[]> headersList = Lists.newArrayList();
+
+    String[] headerArray = new String[headerList.size()];
+    headerList.toArray(headerArray);
+    headersList.add(headerArray);
+    exportHelperBean.setHeaders(headersList);
+
+    // 数据处理
+    List<String[]> dataValueList = Lists.newArrayList();
+
+    Date startDate = DateUtil.getDate(startTime,DateUtil.dateFullPatternNoSecond);
+    Date endDate = DateUtil.getDate(endTime,DateUtil.dateFullPatternNoSecond);
+
+    String currentDeviceIds = findDeviceIds(deviceInfoList);
+    Date tmpStart = startDate;
+    Date tmpEnd = null;
+    List<ExportBatchDataBean> currentDataBeanList;
+    boolean needBreak = false;
+    Map<String, String> dbParams = Maps.newHashMap();
+    while(!needBreak) {
+      tmpEnd = DateUtil.addMinitue(tmpStart, distanceTimeInt);
+      if(!tmpEnd.before(endDate)) {
+        tmpEnd = endDate;
+        needBreak = true;
+      }
+
+      // 取： 【tmpStart,tmpEnd) 这段时间的数据
+      dbParams.put("deviceIds", currentDeviceIds);
+      dbParams.put("startTime", DateUtil.getDate(tmpStart));
+      dbParams.put("endTime", DateUtil.getDate(tmpEnd));
+      currentDataBeanList = deviceDataHistoryMapper.exportAvgInfo(dbParams);
+      if(!CollectionUtils.isEmpty(currentDataBeanList)) {
+        optData4export(dataValueList, currentDataBeanList, tmpStart, typeEnums, maxMinEnums, deviceInfoList);
+      }
+      dbParams.clear();
+      tmpStart = tmpEnd;
+    }
+
+
+
+//    String[] s1 = new String[] {"2019-06-20","33.56","24.56","25.56","26.56"};
+//    dataValueList.add(s1);
+    exportHelperBean.setDataValue(dataValueList);
+    return exportHelperBean;
+  }
+
+
+
+    public ExportHelperBean<DeviceDataHistoryBean> genExportBean(String startTime, String endTime, int distanceTimeInt, String dataTypes, DeviceInfo deviceInfo) {
 
 
     PaginationQuery query = new PaginationQuery();
@@ -146,26 +241,34 @@ public class HistoryService extends BaseService {
 
   }
 
-  public PageResult<DeviceDataHistory> historyDataList(PaginationQuery query, DeviceInfo deviceInfo) {
-      PageResult<DeviceDataHistory> result = null;
-      try {
-        Integer count = deviceDataHistoryMapper.findPageCount(query.getQueryData());
+  public PageResult<DeviceDataHistory> historyDataList(PaginationQuery query, DeviceInfo deviceInfo, List<Area> areaDeviceList) {
+    PageResult<DeviceDataHistory> result = null;
+    try {
+      Integer count = deviceDataHistoryMapper.findPageCount(query.getQueryData());
 
-        if (null != count && count.intValue() > 0) {
-          int startRecord = (query.getPageIndex() - 1) * query.getRowsPerPage();
-          query.addQueryData("startRecord", Integer.toString(startRecord));
-          query.addQueryData("endRecord", Integer.toString(query.getRowsPerPage()));
-          List<DeviceDataHistory> list = deviceDataHistoryMapper.findPage(query.getQueryData());
-          if(list != null) {
-            for(DeviceDataHistory history : list) {
+      if (null != count && count.intValue() > 0) {
+        int startRecord = (query.getPageIndex() - 1) * query.getRowsPerPage();
+        query.addQueryData("startRecord", Integer.toString(startRecord));
+        query.addQueryData("endRecord", Integer.toString(query.getRowsPerPage()));
+        List<DeviceDataHistory> list = deviceDataHistoryMapper.findPage(query.getQueryData());
+        if (list != null) {
+          for (DeviceDataHistory history : list) {
+            if (deviceInfo != null && history.getDeviceId() == deviceInfo.getId()) {
               history.setDeviceInfo(deviceInfo);
+              continue;
+            }
+            history.setDeviceInfo(findDeviceInfo(history.getDeviceId(), areaDeviceList));
+            // 设置区域信息
+            if (history.getDeviceInfo() != null) {
+              history.setArea(areaMapper.selectByPrimaryKey(history.getDeviceInfo().getAreaId()));
             }
           }
-          result = new PageResult<DeviceDataHistory>(list, count, query);
         }
-      } catch (Exception e) {
-        log.error("HistoryService.getDeviceInfoList,Error", e);
+        result = new PageResult<DeviceDataHistory>(list, count, query);
       }
+    } catch (Exception e) {
+      log.error("HistoryService.getDeviceInfoList,Error", e);
+    }
     return result;
   }
 
@@ -348,6 +451,219 @@ public class HistoryService extends BaseService {
     list1.toArray(strings1);
     list2.toArray(strings2);
     return new Tuple2<String[], String[]>(strings1, strings2);
+  }
+
+  private DeviceInfo findDeviceInfo(long deviceId, List<Area> areaList) {
+    if (areaList == null) {
+      return null;
+    }
+    List<DeviceInfo> deviceInfoList = null;
+    for (Area area : areaList) {
+      deviceInfoList = area.getDeviceInfoList();
+      if (deviceInfoList == null) {
+        continue;
+      }
+      for (DeviceInfo tmp : deviceInfoList) {
+        if (deviceId == tmp.getId()) {
+          return tmp;
+        }
+      }
+    }
+    return null;
+  }
+
+  private List<DeviceInfo> findDeviceInfo(String deviceIds, DeviceTypeEnum[] deviceTypeEnums) {
+    if (StringUtil.isEmpty(deviceIds)) {
+      return null;
+    }
+
+    List<DeviceInfo> list = Lists.newArrayList();
+    DeviceInfo deviceInfo;
+    for (String tmp : deviceIds.split(BizConstant.SPLIT)) {
+      deviceInfo = deviceInfoMapper.selectByPrimaryKey(Long.valueOf(tmp));
+      if (deviceInfo == null) {
+        continue;
+      }
+
+      for (DeviceTypeEnum deviceTypeEnum : deviceTypeEnums) {
+        if (DeviceTypeEnum.hasType(deviceInfo.getType(), deviceTypeEnum)) {
+          list.add(deviceInfo);
+          break;
+        }
+      }
+
+    }
+
+    for(DeviceInfo tmp : list) {
+      tmp.setArea(areaMapper.selectByPrimaryKey(tmp.getAreaId()));
+    }
+
+    return list;
+  }
+
+  private List<DeviceTypeEnum> findDeviceTypes(List<DeviceInfo> list, DeviceTypeEnum[] exportOptTypeEnums) {
+    Map<DeviceTypeEnum, Object> map = Maps.newHashMap();
+    for (DeviceInfo deviceInfo : list) {
+      for (DeviceTypeEnum tmpEnum : exportOptTypeEnums) {
+        if (DeviceTypeEnum.hasType(deviceInfo.getType(), tmpEnum) && !map.containsKey(tmpEnum)) {
+          map.put(tmpEnum, null);
+          if (map.size() == exportOptTypeEnums.length) {
+            break;
+          }
+        }
+      }
+      if (map.size() == exportOptTypeEnums.length) {
+        break;
+      }
+    }
+    List<DeviceTypeEnum> result =  new ArrayList<DeviceTypeEnum>(map.keySet());
+//    result.sort((a,b) -> a.getId() - b.getId());
+    result.sort(new Comparator<DeviceTypeEnum>() {
+      @Override
+      public int compare(DeviceTypeEnum o1, DeviceTypeEnum o2) {
+        return o1.getId() - o2.getId();
+      }
+    });
+    return result;
+  }
+
+  private List<MaxMinEnum> findMaxMinEnums(String dataTypes) {
+    List<MaxMinEnum> list = Lists.newArrayList();
+    if (dataTypes.indexOf("avg") >= 0) {
+      list.add(MaxMinEnum.avg);
+    }
+    if (dataTypes.indexOf("max") >= 0) {
+      list.add(MaxMinEnum.max);
+    }
+    if (dataTypes.indexOf("min") >= 0) {
+      list.add(MaxMinEnum.min);
+    }
+    return list;
+  }
+
+  private void  addHeaderAndDataTitle(List<String> headerList, List<String> dataHeaderList, List<DeviceTypeEnum> typeEnums, List<MaxMinEnum> maxMinEnums, List<DeviceInfo> deviceInfoList) {
+    for (DeviceTypeEnum typeEnum : typeEnums) {
+      for (MaxMinEnum maxMinEnum : maxMinEnums) {
+        for (DeviceInfo deviceInfo : deviceInfoList) {
+          if (!DeviceTypeEnum.hasType(deviceInfo.getType(), typeEnum)) {
+            continue;
+          }
+          headerList.add(deviceInfo.showName());
+          dataHeaderList.add(typeEnum.getName() + maxMinEnum.getName() + "(" + typeEnum.getUnit() + ")");
+        }
+      }
+
+    }
+
+  }
+
+  private String findDeviceIds(List<DeviceInfo> list) {
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0, size = list.size(); i < size; i++) {
+      if(i > 0) {
+        sb.append(BizConstant.SPLIT);
+      }
+      sb.append(String.valueOf(list.get(i).getId()));
+    }
+    return sb.toString();
+  }
+
+  private void optData4export(List<String[]> dataValueList, List<ExportBatchDataBean> currentDataBeanList, Date tmpStart, List<DeviceTypeEnum> typeEnums, List<MaxMinEnum> maxMinEnums, List<DeviceInfo> deviceInfoList) {
+    List<String> dataList = Lists.newArrayList();
+    dataList.add(DateUtil.getDate(tmpStart, DateUtil.dateFullPatternNoSecond));
+
+    Map<Long, ExportBatchDataBean> currentDataBeanMap = Maps.newHashMap();
+    for(ExportBatchDataBean tmp : currentDataBeanList) {
+      currentDataBeanMap.put(tmp.getDeviceId(), tmp);
+    }
+
+
+    ExportBatchDataBean tmpDataBean;
+    for (DeviceTypeEnum typeEnum : typeEnums) {
+      for (MaxMinEnum maxMinEnum : maxMinEnums) {
+        for (DeviceInfo deviceInfo : deviceInfoList) {
+          if (!DeviceTypeEnum.hasType(deviceInfo.getType(), typeEnum)) {
+            continue;
+          }
+
+          tmpDataBean = currentDataBeanMap.get(deviceInfo.getId());
+
+
+
+
+          if(tmpDataBean == null) {
+            dataList.add("--");
+            continue;
+          }
+          if(maxMinEnum == MaxMinEnum.avg && typeEnum == DeviceTypeEnum.temp) {
+            dataList.add(trim0(tmpDataBean.getAvgTemp()));
+            continue;
+          }
+          if(maxMinEnum == MaxMinEnum.max && typeEnum == DeviceTypeEnum.temp) {
+            dataList.add(trim0(tmpDataBean.getMaxTemp()));
+            continue;
+          }
+          if(maxMinEnum == MaxMinEnum.min && typeEnum == DeviceTypeEnum.temp) {
+            dataList.add(trim0(tmpDataBean.getMinTemp()));
+            continue;
+          }
+
+
+          if(maxMinEnum == MaxMinEnum.avg && typeEnum == DeviceTypeEnum.humi) {
+            dataList.add(trim0(tmpDataBean.getAvgHumi()));
+            continue;
+          }
+          if(maxMinEnum == MaxMinEnum.max && typeEnum == DeviceTypeEnum.humi) {
+            dataList.add(trim0(tmpDataBean.getMaxHumi()));
+            continue;
+          }
+          if(maxMinEnum == MaxMinEnum.min && typeEnum == DeviceTypeEnum.humi) {
+            dataList.add(trim0(tmpDataBean.getMinHumi()));
+            continue;
+          }
+
+
+          if(maxMinEnum == MaxMinEnum.avg && typeEnum == DeviceTypeEnum.shine) {
+            dataList.add(trim0(tmpDataBean.getAvgShine()));
+            continue;
+          }
+          if(maxMinEnum == MaxMinEnum.max && typeEnum == DeviceTypeEnum.shine) {
+            dataList.add(trim0(tmpDataBean.getMaxShine()));
+            continue;
+          }
+          if(maxMinEnum == MaxMinEnum.min && typeEnum == DeviceTypeEnum.shine) {
+            dataList.add(trim0(tmpDataBean.getMinShine()));
+            continue;
+          }
+
+          if(maxMinEnum == MaxMinEnum.avg && typeEnum == DeviceTypeEnum.pressure) {
+            dataList.add(trim0(tmpDataBean.getAvgPressure()));
+            continue;
+          }
+          if(maxMinEnum == MaxMinEnum.max && typeEnum == DeviceTypeEnum.pressure) {
+            dataList.add(trim0(tmpDataBean.getMaxPressure()));
+            continue;
+          }
+          if(maxMinEnum == MaxMinEnum.min && typeEnum == DeviceTypeEnum.pressure) {
+            dataList.add(trim0(tmpDataBean.getMinPressure()));
+            continue;
+          }
+        }
+      }
+    }
+
+
+
+    String[] result = new String[dataList.size()];
+    dataList.toArray(result);
+    dataValueList.add(result);
+  }
+
+  private String trim0(Double d) {
+    if(d == 0.0) {
+      return "--";
+    }
+    return String.valueOf(d);
   }
 
 

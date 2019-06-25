@@ -98,6 +98,8 @@ public class DeviceDataHistory {
 
     private DeviceInfo deviceInfo;
 
+    private Area area;
+
 
     // ==============  扩展方法  =================
 

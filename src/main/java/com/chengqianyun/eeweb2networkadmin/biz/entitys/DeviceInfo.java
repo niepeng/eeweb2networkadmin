@@ -164,6 +164,13 @@ public class DeviceInfo {
 
     // ==============  扩展方法  =================
 
+    public String showName() {
+        if(area != null) {
+            return area.getName() + "-" + name;
+        }
+        return name;
+    }
+
     public void optArea(List<Area> list) {
         if (list == null) {
             return;

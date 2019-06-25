@@ -25,6 +25,7 @@ public enum MenuEnum {
 
   history("icon-signal","history", null, 1, "历史管理", RoleEnum.values(), null),
     history_list(null,"history_list","history", 2, "历史数据", RoleEnum.values(), "history/historyList"),
+    history_batch_list(null,"history_batch_list","history", 2, "批量数据", RoleEnum.values(), "history/historyBatchList"),
     history_curveList(null,"history_curveList","history", 2, "历史曲线", RoleEnum.values(), "history/historyCurveList"),
 
 
