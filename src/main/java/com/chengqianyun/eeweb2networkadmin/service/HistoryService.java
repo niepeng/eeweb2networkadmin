@@ -70,7 +70,7 @@ public class HistoryService extends BaseService {
 
 
     String sheetName = "设备数据";
-    String title = "监控平台历史数据查询结果";
+    String title = "监控平台历史数据查询结果( " + startTime + " ---- " + endTime + " )";
 
     exportHelperBean.setSheetName(sheetName);
     exportHelperBean.setTitle(title);

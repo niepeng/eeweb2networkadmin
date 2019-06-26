@@ -71,7 +71,9 @@ public class ExportExcel<T> {
     // 生成一个样式
     HSSFCellStyle styleLeft = workbook.createCellStyle();
     styleLeft.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-    styleLeft.setFont(font);
+    HSSFFont fontTitle = workbook.createFont();
+    fontTitle.setFontHeightInPoints((short) 20);
+    styleLeft.setFont(fontTitle);
     styleLeft.setWrapText(true);
 
     // 生成并设置另一个样式
