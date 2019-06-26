@@ -55,7 +55,9 @@ public class ExportExcel<T> {
     // 生成一个表格
     HSSFSheet sheet = workbook.createSheet(exportHelperBean.getSheetName());
     // 设置表格默认列宽度为15个字节
-    sheet.setDefaultColumnWidth((short) 30);
+    sheet.setDefaultColumnWidth((short) 6);
+//    sheet.setColumnWidth(1, 15);
+
     // 生成一个样式
     HSSFCellStyle style = workbook.createCellStyle();
     style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
@@ -64,13 +66,13 @@ public class ExportExcel<T> {
 //    font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
     // 把字体应用到当前的样式
     style.setFont(font);
+    style.setWrapText(true);
 
     // 生成一个样式
     HSSFCellStyle styleLeft = workbook.createCellStyle();
     styleLeft.setAlignment(HSSFCellStyle.ALIGN_LEFT);
     styleLeft.setFont(font);
-
-
+    styleLeft.setWrapText(true);
 
     // 生成并设置另一个样式
     HSSFCellStyle style2 = workbook.createCellStyle();
@@ -81,6 +83,7 @@ public class ExportExcel<T> {
 //    font2.setBoldweight(HSSFFont.BOLDWEIGHT_NORMAL);
     // 把字体应用到当前的样式
     style2.setFont(font2);
+    style2.setWrapText(true);
 
 
     HSSFCellStyle lowStyle = workbook.createCellStyle();
@@ -88,12 +91,14 @@ public class ExportExcel<T> {
     HSSFFont lowFont = workbook.createFont();
     lowFont.setColor(BLUE.index);
     lowStyle.setFont(lowFont);
+    lowStyle.setWrapText(true);
 
     HSSFCellStyle highStyle = workbook.createCellStyle();
     highStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
     HSSFFont heighFont = workbook.createFont();
     heighFont.setColor(RED.index);
     highStyle.setFont(heighFont);
+    highStyle.setWrapText(true);
 
 
     // 声明一个画图的顶级管理器

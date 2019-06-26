@@ -146,6 +146,7 @@ public class HistoryController extends BaseController {
 //      query.addQueryData("deviceId", String.valueOf(deviceInfo.getId()));
       query.addQueryData("startTime", startTime);
       query.addQueryData("endTime", endTime);
+      query.addQueryData("deviceIds", deviceIds);
 
 //      model.addAttribute("deviceInfo", deviceInfo);
 //      model.addAttribute("area", deviceService.getArea(deviceInfo.getAreaId()));

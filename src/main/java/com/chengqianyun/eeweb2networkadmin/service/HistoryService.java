@@ -56,10 +56,10 @@ public class HistoryService extends BaseService {
 //    String[] headerList = new String[] {"数据类型：温度湿度", "间隔：" + distanceTime , "区域1-涉笔1","区域1-涉笔1","区域1-涉笔2","区域1-涉笔2" };
 //    String[] dataHeaderList = new String[]{"NO", "记录时间", "温度平均值(℃)", "湿度平均值(%RH)", "温度平均值(℃)", "湿度平均值(%RH)"};
 
-    String distanceTime = "时间间隔：" +  (distanceTimeInt < 60 ?  distanceTimeInt + "分钟" : distanceTimeInt/60 + "小时");
+    String distanceTime = "间隔：" +  (distanceTimeInt < 60 ?  distanceTimeInt + "分钟" : distanceTimeInt/60 + "小时");
 
     List<String> headerList = Lists.newArrayList();
-    headerList.add("数据类型：" + getDeviceTypeNames(typeEnums));
+    headerList.add("类型：" + getDeviceTypeNames(typeEnums));
     headerList.add(distanceTime);
 
     List<String> dataHeaderList = Lists.newArrayList();
@@ -110,8 +110,8 @@ public class HistoryService extends BaseService {
 
       // 取： 【tmpStart,tmpEnd) 这段时间的数据
       dbParams.put("deviceIds", currentDeviceIds);
-      dbParams.put("startTime", DateUtil.getDate(tmpStart));
-      dbParams.put("endTime", DateUtil.getDate(tmpEnd));
+      dbParams.put("startTime", DateUtil.getDate(tmpStart, DateUtil.dateFullPatternNoSecond));
+      dbParams.put("endTime", DateUtil.getDate(tmpEnd, DateUtil.dateFullPatternNoSecond));
       currentDataBeanList = deviceDataHistoryMapper.exportAvgInfo(dbParams);
       if(!CollectionUtils.isEmpty(currentDataBeanList)) {
         optData4export(dataValueList, currentDataBeanList, tmpStart, typeEnums, maxMinEnums, deviceInfoList, markStyleBeanMap);
