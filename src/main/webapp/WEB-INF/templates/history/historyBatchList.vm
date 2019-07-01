@@ -113,8 +113,10 @@
 ##                <option value="5" #if("$!distanceTime" == "5") selected #end>5分钟</option>
 ##                <option value="10" #if("$!distanceTime" == "10") selected #end>10分钟</option>
 ##                <option value="30" #if("$!distanceTime" == "30") selected #end>30分钟</option>
-##                <option value="60" #if("$!distanceTime" == "60") selected #end>1个小时</option>
+                <option value="60" #if("$!distanceTime" == "60") selected #end>1个小时</option>
+                <option value="120" #if("$!distanceTime" == "120") selected #end>2个小时</option>
                 <option value="360" #if("$!distanceTime" == "360") selected #end>6个小时</option>
+                <option value="360" #if("$!distanceTime" == "480") selected #end>8个小时</option>
                 <option value="720" #if("$!distanceTime" == "720") selected #end>12个小时</option>
                 <option value="1440" #if("$!distanceTime" == "1440") selected #end>24个小时</option>
               </select>

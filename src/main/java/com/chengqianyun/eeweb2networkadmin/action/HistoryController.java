@@ -146,7 +146,9 @@ public class HistoryController extends BaseController {
 //      query.addQueryData("deviceId", String.valueOf(deviceInfo.getId()));
       query.addQueryData("startTime", startTime);
       query.addQueryData("endTime", endTime);
-      query.addQueryData("deviceIds", deviceIds);
+      if(!"0".equalsIgnoreCase(deviceIds)) {
+        query.addQueryData("deviceIds", deviceIds);
+      }
 
 //      model.addAttribute("deviceInfo", deviceInfo);
 //      model.addAttribute("area", deviceService.getArea(deviceInfo.getAreaId()));
@@ -209,6 +211,9 @@ public class HistoryController extends BaseController {
       addOptMenu(model, MenuEnum.history);
       List<Area> areaList = deviceService.getAreaAndDeviceInfo();
       DeviceInfo deviceInfo = findOneDeviceId(areaList, deviceId);
+      if(deviceId < 1 && deviceInfo != null) {
+        deviceId = deviceInfo.getId();
+      }
       if (StringUtil.isEmpty(startTime) || StringUtil.isEmpty(endTime)) {
         Date now = new Date();
         endTime = DateUtil.getDate(now, DateUtil.dateFullPatternNoSecond);

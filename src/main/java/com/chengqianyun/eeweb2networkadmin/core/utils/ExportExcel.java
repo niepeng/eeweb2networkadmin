@@ -72,7 +72,7 @@ public class ExportExcel<T> {
     HSSFCellStyle styleLeft = workbook.createCellStyle();
     styleLeft.setAlignment(HSSFCellStyle.ALIGN_LEFT);
     HSSFFont fontTitle = workbook.createFont();
-    fontTitle.setFontHeightInPoints((short) 20);
+    fontTitle.setFontHeightInPoints((short) 10);
     styleLeft.setFont(fontTitle);
     styleLeft.setWrapText(true);
 
