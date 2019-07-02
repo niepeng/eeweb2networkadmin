@@ -1,0 +1,170 @@
+#set($layout="layout/noNavBar.vm")
+<style>
+  .blockcell {
+    height: 30px;line-height: 80x;margin-top:20px;
+  }
+
+  .blockcell_one {
+    color: #fff;
+    float: left;width: 180px;
+    margin-left: 20px;
+    font-size:13px; text-align: center;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    margin-top:20px;
+  }
+
+  .blockcell_one_normal {
+    background-color: #aed232;
+  }
+
+  /*.blockcell_one_alarm {*/
+    /*background-color: #ddbd5f;*/
+  /*}*/
+  .blockcell_one_alarm {
+    background-color: red;
+  }
+
+  .blockcell_one_alarm_down {
+    background-color: blue;
+  }
+  .blockcell_one_alarm_up {
+    background-color: red;
+  }
+
+
+  .blockcell_one_offline {
+    background-color: #bfbfbf;
+  }
+
+
+</style>
+
+<script src="${www}/js/my97DatePicker/WdatePicker.js"></script>
+
+
+<div class="main-content" style="margin-left:0px;" >
+  <div class="page-content111111">
+    <div class="container-fluid">
+      #if(${msg})
+        <div>
+          #if(${success})
+            <li class="text-success">$!{msg}</li>
+          #else
+            <li class="text-danger">$!{msg}</li>
+          #end
+        </div>
+      #end
+      <div class="dataTables_wrapper">
+        <div class="row" style="padding-top:0px;padding-bottom: 0px;">
+          <div class="col-sm-11" style="width: 80%;">
+            <form id="form_intime" class="form-inline" role="form">
+
+              #if($!alarmSong)
+                <div class="form-group">
+                  <audio controls="controls" autoplay="autoplay" style="height: 50px;">
+                    <source src="${www}/music/cqAlarm1.mp3" type="audio/mpeg" />
+                    当前浏览器不支持播放报警声音
+                  </audio>
+                </div>
+
+                <div style="clear: both; "></div>
+              #end
+
+            </form>
+          </div>
+
+        </div>
+
+
+
+
+      ## -------------------------- 框列表数据 -----------------------------------
+
+        <div class="blockcell">
+        ##          #foreach($i in [1..20])
+        ##          <div class="blockcell_one blockcell_one_normal">
+        ##            $!{i}今日应收金额}(万元)  <br/>
+        ##             <br/>
+        ##            $showTime <br/>
+        ##          </div>
+        ##          #end
+
+          #foreach($tmpElementDataBean in $dataIntimeBean.elementDataBeanList)
+            <div
+              #if("$!{tmpElementDataBean.status}" == "1")
+                #set($showStatus ="正常")
+                      class="blockcell_one blockcell_one_normal"
+              #elseif("$!{tmpElementDataBean.status}" == "3")
+                      class="blockcell_one blockcell_one_offline"
+                #set($showStatus ="离线")
+              #elseif("$!{tmpElementDataBean.status}" == "21")
+                      class="blockcell_one blockcell_one_alarm_down"
+                #set($showStatus ="报警")
+              #elseif("$!{tmpElementDataBean.status}" == "22")
+                      class="blockcell_one blockcell_one_alarm_up"
+                #set($showStatus ="报警")
+              #else
+                      class="blockcell_one blockcell_one_alarm"
+                #set($showStatus ="报警")
+              #end
+            >
+
+            ## 设备名称(区域)-标签
+              $stringUtil.showContent($!{tmpElementDataBean.deviceInfo.name},10)($!{tmpElementDataBean.area.name}) <br/>
+
+            ## 数据值展示和单位
+              #if($!{tmpElementDataBean.deviceOneTypeEnum.isDataDevice()})
+                #if("$!{tmpElementDataBean.status}" != "3") $!{tmpElementDataBean.data} #else -- #end $!{tmpElementDataBean.deviceOneTypeEnum.unit} &nbsp;
+              #end
+
+            ## 展示文案如:温度正常
+              #if("$!{tmpElementDataBean.status}" == "3")
+                $!{tmpElementDataBean.deviceOneTypeEnum.name}离线
+              #else
+                #if("$!{tmpElementDataBean.deviceOneTypeEnum.id}" == "128")
+                  #if("$!{tmpElementDataBean.status}" == "1")
+                    来电
+                  #else
+                    停电
+                  #end
+                #else
+                  #set($showStatus = $!{tmpElementDataBean.deviceOneTypeEnum.name} + $showStatus)
+                  $showStatus
+                #end
+              #end
+              <br/>
+              $dateUtil.getDate($!{tmpElementDataBean.time}, 'yyyy-MM-dd HH:mm:ss')
+            </div>
+          #end
+
+        </div>
+
+
+
+
+
+      </div>
+    </div>
+  </div><!-- /.page-content -->
+</div><!-- /.main-content -->
+
+<script>
+
+
+  function refulshCurrentPage(){
+    var url = window.location.href;
+    window.location.href = url;
+  }
+
+  var times = $!{reflush_data_time} * 1000;
+  //重复执行某个方法
+  var t1 = window.setInterval(refulshCurrentPage,times);
+  // var t2 = window.setInterval("hello()",3000);
+  //去掉定时器的方法
+  // window.clearInterval(t1);
+
+  // function selectConditionOpt(optHiddden) {
+  //   alert("newValueis = " + optHiddden);
+  // }
+</script>

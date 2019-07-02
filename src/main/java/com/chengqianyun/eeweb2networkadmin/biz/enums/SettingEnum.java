@@ -23,6 +23,7 @@ public enum SettingEnum {
   platform_name("platform_name", "平台名称", "管理系统"),
   data_cycle_time("data_cycle_time", "数据更新周期:单位秒", "10"),
   history_data_backup_path("history_data_backup_path", "历史数据备份路径", "d:/eefield/backup"),
+  index_reflush_data_time("index_reflush_data_time", "首页数据刷新周期", "120"/* 单位秒 */),
 
   default_data_contain("default_data_contain", "数据默认缓存x分钟", "300" /* 单位秒 */),
 

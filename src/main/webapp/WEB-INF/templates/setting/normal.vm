@@ -67,7 +67,7 @@
       <div class="row">
         <div class="col-xs-12 col-md-8">
           <div class="form-group">
-            <label class="col-md-4 col-sm-2 control-label">数据更新周期</label>
+            <label class="col-md-4 col-sm-2 control-label">数据更新周期:</label>
             <div class="col-md-8 col-sm-8">
               <select  name="data_cycle_time">
                 <option value="10" #if("$!settingNormalBean.data_cycle_time" == "10") selected #end>10秒</option>
@@ -85,6 +85,24 @@
           </div>
         </div>
       </div>
+
+      <div class="row">
+        <div class="col-xs-12 col-md-8">
+          <div class="form-group">
+            <label class="col-md-4 col-sm-2 control-label">首页刷新周期:</label>
+            <div class="col-md-8 col-sm-8">
+              <select  name="index_reflush_data_time">
+                <option value="60" #if("$!settingNormalBean.index_reflush_data_time" == "60") selected #end>1分钟</option>
+                <option value="120" #if("$!settingNormalBean.index_reflush_data_time" == "120") selected #end>2分钟</option>
+                <option value="180" #if("$!settingNormalBean.index_reflush_data_time" == "180") selected #end>3分钟</option>
+                <option value="300" #if("$!settingNormalBean.index_reflush_data_time" == "300") selected #end>5分钟</option>
+                <option value="600" #if("$!settingNormalBean.index_reflush_data_time" == "600") selected #end>10分钟</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
 
 ##      <div class="row">
 ##        <div class="col-xs-12 col-md-8">

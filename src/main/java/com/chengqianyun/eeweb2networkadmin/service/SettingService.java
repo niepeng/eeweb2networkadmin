@@ -91,6 +91,7 @@ public class SettingService extends BaseService {
     bean.setData_cycle_time(getData(SettingEnum.data_cycle_time));
     bean.setPlatform_name(getData(SettingEnum.platform_name));
     bean.setHistory_data_backup_path(getData(SettingEnum.history_data_backup_path));
+    bean.setIndex_reflush_data_time(getData(SettingEnum.index_reflush_data_time));
     return bean;
   }
 
@@ -98,6 +99,7 @@ public class SettingService extends BaseService {
     saveData(SettingEnum.data_cycle_time, bean.getData_cycle_time());
     saveData(SettingEnum.platform_name, bean.getPlatform_name());
     saveData(SettingEnum.history_data_backup_path, bean.getHistory_data_backup_path());
+    saveData(SettingEnum.index_reflush_data_time, bean.getIndex_reflush_data_time());
 
 
     PageUtilFactory.platformName = bean.getPlatform_name();

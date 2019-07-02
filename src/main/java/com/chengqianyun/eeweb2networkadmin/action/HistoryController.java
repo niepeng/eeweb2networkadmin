@@ -11,6 +11,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataHistory;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.SettingEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.core.utils.*;
@@ -87,7 +88,6 @@ public class HistoryController extends BaseController {
       model.addAttribute("areaList", areaList);
       model.addAttribute("startTime", startTime);
       model.addAttribute("endTime", endTime);
-
 
       // 检查时间段不能超过7天
       Date startTimeDate = DateUtil.getDate(startTime, DateUtil.dateFullPatternNoSecond);

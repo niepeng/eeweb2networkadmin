@@ -57,6 +57,13 @@
     </ul><!-- .breadcrumb -->
     <div class="nav-search" id="nav-search">
     </div><!-- #nav-search -->
+      <div class="col-sm-1 text-right" style="float: right;">
+##        <tt onclick="selectConditionOpt(true);" style="padding-left: 20px;padding-right: 10px;padding-top:10px;padding-bottom:10px;">
+##          <i class="icon-caret-down"></i>
+##        </tt>
+##        <a href="${www}/intime/dataList2" class="btn btn-success btn-xs">全屏模式</a>
+##        <a href="${www}/intime/dataList2" class="btn btn-success btn-xs">切换总览</a>
+      </div>
   </div>
   <div class="page-content">
     <div class="container-fluid">
@@ -71,8 +78,8 @@
       #end
       <div class="dataTables_wrapper">
         <div class="row">
-          <div class="col-sm-11">
-            <form class="form-inline" role="form">
+          <div class="col-sm-11" style="width: 80%">
+            <form id="form_intime" class="form-inline" role="form">
 
               #if($!alarmSong)
                 <div class="form-group">
@@ -137,8 +144,9 @@
             </form>
           </div>
 
-          <div class="col-sm-1 text-right">
-            <a href="${www}/intime/dataList2" class="btn btn-success btn-xs">切换总览</a>
+          <div class="col-sm-1 text-right" style="overflow: hidden;white-space: nowrap;width: 17%;">
+            <a href="#" id="fullScreenHrefId" onclick="toFullScreenPage();" target="_blank" class="btn btn-success btn-xs" style="margin-right: 10px;" >全屏模式</a>
+            <a href="${www}/intime/dataList2" class="btn btn-success btn-xs" >切换总览</a>
           </div>
         </div>
 
@@ -209,3 +217,29 @@
     </div>
   </div><!-- /.page-content -->
 </div><!-- /.main-content -->
+
+<script>
+
+  function toFullScreenPage() {
+    var currentUrl = window.location.href;
+    currentUrl = currentUrl.replace("dataList", "fullScreenPage");
+    document.getElementById("fullScreenHrefId").href = currentUrl;
+  }
+
+  function refulshCurrentPage(){
+    // alert("hello:" + Math.ceil(Math.random()*100));
+    var form1 = document.getElementById("form_intime");
+    form1.submit();
+  }
+
+  var times = $!{reflush_data_time} * 1000;
+  //重复执行某个方法
+  var t1 = window.setInterval(refulshCurrentPage,times);
+  // var t2 = window.setInterval("hello()",3000);
+  //去掉定时器的方法
+  // window.clearInterval(t1);
+
+  // function selectConditionOpt(optHiddden) {
+  //   alert("newValueis = " + optHiddden);
+  // }
+</script>

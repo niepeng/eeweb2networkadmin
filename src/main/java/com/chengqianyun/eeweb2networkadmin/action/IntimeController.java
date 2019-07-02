@@ -8,6 +8,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.entitys.Area;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntime;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.MenuEnum;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.SettingEnum;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import com.chengqianyun.eeweb2networkadmin.service.AlarmService;
@@ -85,6 +86,7 @@ public class IntimeController extends BaseController {
       model.addAttribute("areaList", areaList);
       model.addAttribute("dataIntimeBean", dataIntimeBean);
       model.addAttribute("sortValue", sortValue);
+      model.addAttribute("reflush_data_time", deviceService.getData(SettingEnum.index_reflush_data_time));
       return "/intime/dataList";
     } catch (Exception ex) {
       model.addAttribute(SUCCESS, false);
@@ -93,6 +95,57 @@ public class IntimeController extends BaseController {
       return "/intime/dataList";
     }
   }
+
+  /**
+   * 实时数据展示:全屏模式
+   */
+  @RequestMapping( value = "/fullScreenPage", method = RequestMethod.GET)
+  public String fullScreenPage(
+          // 设备类型
+          @RequestParam(value = "deviceTypes", required = false, defaultValue = "") String deviceTypes,
+          // 报警状态
+          @RequestParam(value = "statuses", required = false, defaultValue = "") String statuses,
+          // 设备区域
+          @RequestParam(value = "areaIds", required = false, defaultValue = "") String areaIds,
+          // 设备区域
+          @RequestParam(value = "sortValue", required = true, defaultValue = "time") String sortValue,
+//      // 标签
+//      @RequestParam(value = "tags", required = false, defaultValue = "") String tags,
+          Model model) {
+    try {
+      if(StringUtil.isEmpty(deviceTypes) && StringUtil.isEmpty(statuses) && StringUtil.isEmpty(areaIds)) {
+        deviceTypes = lastIntimeBean.getDeviceTypes();
+        statuses = lastIntimeBean.getStatuses();
+        areaIds = lastIntimeBean.getAreaIds();
+      } else {
+        lastIntimeBean.setDeviceTypes(deviceTypes);
+        lastIntimeBean.setStatuses(statuses);
+        lastIntimeBean.setAreaIds(areaIds);
+      }
+
+      List<Area> areaList = deviceService.getAreaAll();
+      DataIntimeBean dataIntimeBean = new DataIntimeBean();
+      dataIntimeBean.setDeviceTypes(deviceTypes);
+      dataIntimeBean.setStatuses(statuses);
+      dataIntimeBean.setAreaIds(areaIds);
+
+      deviceIntimeService.deviceDataIntime(dataIntimeBean);
+      dataIntimeBean.sort(sortValue);
+
+      model.addAttribute("alarmSong", alarmService.hasAlarmData());
+      model.addAttribute("areaList", areaList);
+      model.addAttribute("dataIntimeBean", dataIntimeBean);
+      model.addAttribute("sortValue", sortValue);
+      model.addAttribute("reflush_data_time", deviceService.getData(SettingEnum.index_reflush_data_time));
+      return "/intime/fullScreenPage";
+    } catch (Exception ex) {
+      model.addAttribute(SUCCESS, false);
+      model.addAttribute(MESSAGE, ex.getMessage());
+      log.error(ex);
+      return "/intime/fullScreenPage";
+    }
+  }
+
 
   /**
    * 实时数据展示2:总览

@@ -17,4 +17,6 @@ public class SettingNormalBean {
   private String data_cycle_time;
 
   private String history_data_backup_path;
+
+  private String index_reflush_data_time;
 }
