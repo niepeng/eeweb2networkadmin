@@ -73,7 +73,9 @@ public class SettingService extends BaseService {
   }
 
   public void save(SettingAlarmBean bean) {
-    saveData(SettingEnum.alarm_sms, String.valueOf(Boolean.valueOf(bean.isAlarm_sms())));
+    // 页面上去掉了是否开启短信报警的开关，默认使用电话报警的设置
+//    saveData(SettingEnum.alarm_sms, String.valueOf(Boolean.valueOf(bean.isAlarm_sms())));
+    saveData(SettingEnum.alarm_sms, String.valueOf(Boolean.valueOf(bean.isAlarm_phone())));
     saveData(SettingEnum.alarm_phone, String.valueOf(Boolean.valueOf(bean.isAlarm_phone())));
     saveData(SettingEnum.sms_cnmi_type, bean.getSms_cnmi_type());
     saveData(SettingEnum.sms_center, bean.getSms_center());

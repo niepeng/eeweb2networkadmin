@@ -3,21 +3,21 @@ package com.chengqianyun.eeweb2networkadmin.data;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfoMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceConfigEnum;
-import com.chengqianyun.eeweb2networkadmin.core.SpringHelper;
 import com.chengqianyun.eeweb2networkadmin.core.utils.IoUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.SpringContextHolder;
 import com.chengqianyun.eeweb2networkadmin.service.PolicyService;
 import com.chengqianyun.eeweb2networkadmin.service.SendPhoneService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
@@ -35,7 +35,7 @@ public final class ServerConnectionManager {
   public static final int FAIL_TIMES_RETURN = 5;
 
   /**
-   * 获取数据周期:单位秒
+   * 获取数据周期:单位秒(这个是默认值，通过数据库读取实现的)
    */
   public static int GET_DATA_CYCLE = 10;
 
@@ -163,7 +163,8 @@ public final class ServerConnectionManager {
 
   public static DeviceInfo addSnConnection(String sn, int address, ServerClientHandler serverClientHandler) {
 //    log.info("addSnConnection start,sn={},address={}", sn, address);
-    DeviceInfoMapper deviceInfoMapper = SpringHelper.getBean("deviceInfoMapper", DeviceInfoMapper.class);
+//    DeviceInfoMapper deviceInfoMapper = SpringHelper.getBean("deviceInfoMapper", DeviceInfoMapper.class);
+    DeviceInfoMapper deviceInfoMapper = SpringContextHolder.getBean(DeviceInfoMapper.class);
     if (snDeviceSocketMap.containsKey(sn)) {
       log.warn("addSnConnection_snDeviceSocketMap already exist");
       close(snDeviceSocketMap.get(sn));
@@ -202,7 +203,9 @@ public final class ServerConnectionManager {
   }
 
   public static void updateDeviceInfo(String sn) {
-    DeviceInfoMapper deviceInfoMapper = SpringHelper.getBean("deviceInfoMapper", DeviceInfoMapper.class);
+//    DeviceInfoMapper deviceInfoMapper = SpringHelper.getBean("deviceInfoMapper", DeviceInfoMapper.class);
+    DeviceInfoMapper deviceInfoMapper = SpringContextHolder.getBean(DeviceInfoMapper.class);
+
     DeviceInfo deviceInfo = deviceInfoMapper.selectBySn(sn);
     if (deviceInfo != null && snDeviceSocketMap.containsKey(sn)) {
       DeviceInfo oldDeviceInfo = snDeviceSocketMap.get(sn);

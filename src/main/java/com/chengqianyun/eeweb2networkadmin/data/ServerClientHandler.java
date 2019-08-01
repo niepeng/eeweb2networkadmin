@@ -80,7 +80,7 @@ public class ServerClientHandler implements Runnable {
 
       String sn = snAddressTuple.getT1();
       int address = snAddressTuple.getT2();
-//      log.warn("sn={},address={}", sn, address);
+      log.warn("match sn={},address={}", sn, address);
       DeviceInfo deviceInfo = ServerConnectionManager.addSnConnection(sn, address, this);
 //      log.warn("addSnConnection_result={}", deviceInfo);
 

@@ -87,7 +87,9 @@ public class OptDataHelper {
     boolean isOffline = dataIntime.hasOffline();
     if (isOffline) {
 //      int second = ServerConnectionManager.GET_DATA_CYCLE * ServerConnectionManager.FAIL_TIMES_RETURN;
-      int second = 4 * 60;
+
+      // 10分钟 + 一个周期时间作为离线缓冲时间
+      int second = 10 * 60 + ServerConnectionManager.GET_DATA_CYCLE;
       Date afterDate = DateUtil.addSecond(now, -second);
       Long id = dataIntimeMapper.hasRecentlyOne(dataIntime.getDeviceId(), afterDate);
       if (id != null && id > 0) {

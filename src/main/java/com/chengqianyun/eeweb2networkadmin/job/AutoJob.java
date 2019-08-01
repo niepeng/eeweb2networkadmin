@@ -11,8 +11,10 @@ import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceDataIntimeMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfo;
 import com.chengqianyun.eeweb2networkadmin.biz.entitys.DeviceInfoMapper;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
+import com.chengqianyun.eeweb2networkadmin.biz.enums.SettingEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.ExportExcel;
+import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
 import com.chengqianyun.eeweb2networkadmin.service.HistoryService;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,6 +23,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.chengqianyun.eeweb2networkadmin.service.MailService;
+import com.chengqianyun.eeweb2networkadmin.service.PhoneSmsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +42,10 @@ import org.springframework.stereotype.Component;
 public class AutoJob {
 
   private final static long CLEAR_TIMES = 1 * Times.hour;
+
+
+  private final static long CHECK_SERIAL_SMS = 1 * Times.hour;
+
 
   /**
    * 秒 分 小时 天 月 星期 年
@@ -59,6 +68,13 @@ public class AutoJob {
   @Autowired
   private HistoryService historyService;
 
+  @Autowired
+  private PhoneSmsService phoneSmsService;
+
+  @Autowired
+  private MailService mailService;
+
+
   @Scheduled(fixedDelay = CLEAR_TIMES)
   public void clearData() {
     log.info("clearDataStart............................");
@@ -74,6 +90,17 @@ public class AutoJob {
     optClearIntime(list);
 
     log.info("clearDataEnd............................");
+  }
+
+  @Scheduled(fixedDelay = CHECK_SERIAL_SMS)
+  public void checkSerialSms() {
+    log.info("checkSerialSmsStart............................");
+
+    /**
+     * 监控短信通道：如果短信开启，邮件报警开启，一段时间去检测短信通道是否可使用，如果不正常，发送邮件报警
+     */
+    executeCheckSerialSms();
+    log.info("checkSerialSmsEnd............................");
   }
 
   @Scheduled(cron = AUTO_BACKUP_DEVICE_HISTORY_TIME_EXP)
@@ -159,6 +186,38 @@ public class AutoJob {
 
     }
   }
+
+  private void executeCheckSerialSms() {
+    Boolean alarmPhone = Boolean.valueOf(phoneSmsService.getData(SettingEnum.alarm_phone));
+    if (!alarmPhone) {
+      log.info("current config do not need alarm phone for sms");
+      return;
+    }
+
+    Boolean alarmEmail = Boolean.valueOf(phoneSmsService.getData(SettingEnum.alarm_email));
+    if (!alarmEmail) {
+      log.info("current config do not need send email");
+      return;
+    }
+
+    String receiveEmails = phoneSmsService.getData(SettingEnum.receiveEmails);
+    if (StringUtil.isEmpty(receiveEmails)) {
+      log.info("receive email address is null");
+      return;
+    }
+
+    boolean smsIsAvaliable = phoneSmsService.serialIsAvaliable();
+    if(smsIsAvaliable) {
+      log.info("smsIsAvaliable=true");
+      return;
+    }
+
+    String time = DateUtil.getDate(new Date(), DateUtil.dateFullPattern);
+    String subject = "短信模块异常提醒-" + time;
+    String content = String.format("您的短信模块还未连接或通讯出现异常，请及时确认！\n \t \t \t %s", time);
+    mailService.sendEmail(subject, receiveEmails.split(","), null, content, null);
+  }
+
 
 
 

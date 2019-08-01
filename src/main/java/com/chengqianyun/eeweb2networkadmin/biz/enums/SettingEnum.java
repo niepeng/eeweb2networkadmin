@@ -12,7 +12,8 @@ import lombok.Getter;
 @Getter
 public enum SettingEnum {
 
-  alarm_sms("alarm_sms", "短信报警:true启用,false:禁用", "false"),
+//  alarm_sms("alarm_sms", "短信报警:true启用,false:禁用", "false"),
+  alarm_sms("alarm_sms", "短信报警:true启用,false:禁用", "true"),
   alarm_phone("alarm_phone", "电话报警:true启用,false:禁用", "false"),
   sms_cnmi_type("sms_cnmi_type", "短信CNMI类型", "AT+CNMI=2,2"),
   sms_center("sms_center", "短信中心号码", "13800571500"),
