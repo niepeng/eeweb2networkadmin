@@ -2,6 +2,7 @@ package com.chengqianyun.eeweb2networkadmin.test;
 
 
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
+import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.SHAUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.data.CalcCRC;
 import com.chengqianyun.eeweb2networkadmin.core.utils.data.FunctionUnit;
@@ -9,6 +10,7 @@ import com.chengqianyun.eeweb2networkadmin.data.InstructionManager;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,7 +21,24 @@ import java.util.List;
 
 public class MainTest {
 
-  public static void main(String[] args) throws UnsupportedEncodingException {
+  public static void main(String[] args) {
+    List<String> list = new ArrayList<>();
+    list.add("a");
+    list.add("b");
+    list.add("c");
+    System.out.println(list);
+    long now = System.currentTimeMillis();
+    long time = 1565315383633L;
+    System.out.println(now);
+    System.out.println(time);
+    System.out.println((now - time));
+    Date d = new Date(time);
+
+    System.out.println(DateUtil.getDate(d, DateUtil.dateFullPattern));
+
+  }
+
+  public static void main5(String[] args) throws UnsupportedEncodingException {
     double d = 0.0d;
 
     System.out.println(d == 0.0);

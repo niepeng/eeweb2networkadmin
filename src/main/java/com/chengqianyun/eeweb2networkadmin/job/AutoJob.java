@@ -103,6 +103,13 @@ public class AutoJob {
     log.info("checkSerialSmsEnd............................");
   }
 
+  @Scheduled(fixedDelay = 2 * 60 * 1000)
+  public void autoCloseSerial() {
+    log.info("autoCloseSerialStart");
+    phoneSmsService.autoCloseSerial();
+    log.info("autoCloseSerialEnd");
+  }
+
   @Scheduled(cron = AUTO_BACKUP_DEVICE_HISTORY_TIME_EXP)
   public void autoBackupDeviceHistory() {
     /**

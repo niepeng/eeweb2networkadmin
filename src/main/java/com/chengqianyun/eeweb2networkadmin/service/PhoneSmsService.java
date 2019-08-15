@@ -82,7 +82,6 @@ public class PhoneSmsService extends BaseService {
     }).start();
   }
 
-  @Scheduled(fixedDelay = 2 * 60 * 1000)
   public void autoCloseSerial() {
     if (!serialRunning.get()) {
       return;

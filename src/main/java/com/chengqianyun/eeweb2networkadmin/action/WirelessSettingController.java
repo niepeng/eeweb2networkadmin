@@ -8,6 +8,7 @@ import com.chengqianyun.eeweb2networkadmin.biz.page.PageResult;
 import com.chengqianyun.eeweb2networkadmin.biz.page.PaginationQuery;
 import com.chengqianyun.eeweb2networkadmin.core.utils.DateUtil;
 import com.chengqianyun.eeweb2networkadmin.core.utils.StringUtil;
+import com.chengqianyun.eeweb2networkadmin.data.CallSmsHelper;
 import com.chengqianyun.eeweb2networkadmin.service.ContactService;
 import com.chengqianyun.eeweb2networkadmin.service.PhoneSmsService;
 import java.util.Date;
@@ -41,14 +42,31 @@ public class WirelessSettingController extends BaseController {
   @Autowired
   private PhoneSmsService phoneSmsService;
 
+
+  @Autowired
+  private CallSmsHelper callSmsHelper;
+
   /**
    * 通讯测试
    */
   @RequestMapping(value = "/normal", method = RequestMethod.GET)
-  public String normal( Model model) {
+  public String normal( Model model, @RequestParam(value = "serialOpt", required = false, defaultValue = "") String serialOpt) {
     try {
       addOptMenu(model, MenuEnum.wirelessSetting);
+
+      // 调试代码，串口的打开和关闭
+      if("1".equalsIgnoreCase(serialOpt)) {
+        log.info("opt serial open start ...");
+        callSmsHelper.checkSerialAvailable();
+        log.info("opt serial open end ...");
+      } else if("2".equalsIgnoreCase(serialOpt)) {
+        log.info("opt serial close start ...");
+        callSmsHelper.close();
+        log.info("opt serial close end ...");
+      }
+
       model.addAttribute("running", phoneSmsService.serialIsAvaliable());
+
       return "/wirelessSetting/normal";
     } catch (Exception ex) {
       model.addAttribute(SUCCESS, false);
@@ -59,12 +77,12 @@ public class WirelessSettingController extends BaseController {
   }
 
 
-//  /**
-//   * 操作:打开关闭
-//   */
-//  @RequestMapping(value = "/serialOpt", method = RequestMethod.GET)
-//  public String serialOpt( Model model,
-//      @RequestParam(value = "newFlag", required = false, defaultValue = "") String newFlag, RedirectAttributes redirectAttributes) {
+  /**
+   * 操作:打开关闭
+   */
+  @RequestMapping(value = "/serialOpt", method = RequestMethod.GET)
+  public String serialOpt( Model model,
+      @RequestParam(value = "newFlag", required = false, defaultValue = "") String newFlag, RedirectAttributes redirectAttributes) {
 //    try {
 //      if (newFlag.equalsIgnoreCase("true")) {
 //        serialService.init(true);
@@ -86,7 +104,9 @@ public class WirelessSettingController extends BaseController {
 //      log.error(ex);
 //      return "redirect:/wirelessSetting/normal";
 //    }
-//  }
+
+    return "/wirelessSetting/normal";
+  }
 
 
   /**

@@ -7,11 +7,8 @@ import com.chengqianyun.eeweb2networkadmin.biz.enums.SettingEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.ShortMessageUnit;
 import com.chengqianyun.eeweb2networkadmin.core.utils.Tuple2;
 import com.chengqianyun.eeweb2networkadmin.service.PhoneSmsService;
-import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
-import gnu.io.PortInUseException;
-import gnu.io.SerialPort;
-import gnu.io.UnsupportedCommOperationException;
+import gnu.io.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,7 +28,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class CallSmsHelper {
+public class CallSmsHelper implements SerialPortEventListener {
 
   @Autowired
   protected SettingMapper settingMapper;
@@ -112,41 +109,46 @@ public class CallSmsHelper {
     return tuple2;
   }
 
-  public void close() {
-    if(serialPort != null) {
-      try {
-        close(serialPort);
-      } catch (IOException e) {
-        log.error("close短信通道异常,{}", e);
-      }
-    }
-  }
+//  public void close() {
+//    if(serialPort != null) {
+//      try {
+//        close(serialPort);
+//      } catch (Exception e) {
+//        log.error("close短信通道异常,{}", e);
+//      }
+//    }
+//  }
 
   /**
    * 关闭串口，释放资源
-   *
-   * @param serialPort
-   * @throws IOException
    */
-  public void close(SerialPort serialPort) throws IOException {
-    OutputStream out = serialPort.getOutputStream();
-    InputStream in = serialPort.getInputStream();
-    if (out != null) {
-      try {
-        out.close();
-        out = null;
-      } catch (Exception e) {
-        log.error("e,closeOutError", e);
-      }
-    }
-    if (in != null) {
-      try {
-        in.close();
-        in = null;
-      } catch (Exception e) {
-        log.error("e,closeInError", e);
-      }
-    }
+  public void close() {
+//    OutputStream out = null;
+//    InputStream in = null;
+//    try {
+//      out = serialPort.getOutputStream();
+//      in = serialPort.getInputStream();
+//    } catch(Exception e) {
+//      log.error("closeSerialPortError", e);
+//    }
+//
+//    if (out != null) {
+//      try {
+//        out.close();
+//        out = null;
+//      } catch (Exception e) {
+//        log.error("closeOutError", e);
+//      }
+//    }
+//
+//    if (in != null) {
+//      try {
+//        in.close();
+//        in = null;
+//      } catch (Exception e) {
+//        log.error("closeInError", e);
+//      }
+//    }
 
     if (serialPort != null) {
       try {
@@ -154,12 +156,12 @@ public class CallSmsHelper {
         serialPort.notifyOnBreakInterrupt(false);
         serialPort.removeEventListener();
         serialPort.close();
+      } catch (Error e) {
+        log.error("closeSerialPortError", e);
+      } finally {
         serialPort = null;
-      } catch (Exception e) {
-        log.error("e,closeSerialPortError", e);
       }
     }
-
   }
 
 
@@ -245,10 +247,11 @@ public class CallSmsHelper {
         return false;
       }
       serialPort = (SerialPort) commPortIdentifier.open("sms_port", 60);
+      serialPort.notifyOnBreakInterrupt(true);
+      serialPort.addEventListener(this);
       serialPort.setSerialPortParams(baudrate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
       serialPort.setDTR(true);
       serialPort.setRTS(true);
-
       /**
        * 1:设置不显示回显:ATE0
        * 输入：ATE[<value>]<CR> 参数：<value>―0表示不回显；1表示回显。
@@ -286,14 +289,18 @@ public class CallSmsHelper {
 
   private List<String> getAllComPorts() {
     List<String> comList = new ArrayList<String>();
-    Enumeration en = CommPortIdentifier.getPortIdentifiers();
-    CommPortIdentifier portIdRs;
+    try {
+      Enumeration en = CommPortIdentifier.getPortIdentifiers();
+      CommPortIdentifier portIdRs;
 
-    while (en.hasMoreElements()) {
-      portIdRs = (CommPortIdentifier) en.nextElement();
-      if (portIdRs.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-        comList.add(portIdRs.getName());
+      while (en.hasMoreElements()) {
+        portIdRs = (CommPortIdentifier) en.nextElement();
+        if (portIdRs.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+          comList.add(portIdRs.getName());
+        }
       }
+    } catch(Error e) {
+      log.error("getAllComPortsError", e);
     }
     return comList;
   }
@@ -362,4 +369,13 @@ public class CallSmsHelper {
   }
 
 
+  @Override
+  public void serialEvent(SerialPortEvent event) {
+    switch (event.getEventType()) {
+      case SerialPortEvent.BI:// BI - 通讯中断.
+        log.error("SerialPortEvent.BI,serial sms connect lost.");
+        close();
+        break;
+    }
+  }
 }
