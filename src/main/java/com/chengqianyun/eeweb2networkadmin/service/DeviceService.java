@@ -170,6 +170,10 @@ public class DeviceService extends BaseService {
         if (list != null) {
           for (DeviceInfo info : list) {
             info.optArea(areaList);
+
+            // 添加ip和端口
+            info.optIpInfo(ServerConnectionManager.snDeviceSocketMap);
+
 //            if(info.getRelationOutId() > 0) {
 //              info.setRelationDeviceInfo(deviceInfoMapper.selectByPrimaryKey(info.getRelationOutId()));
 //            }

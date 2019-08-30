@@ -3,8 +3,12 @@ package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 import com.chengqianyun.eeweb2networkadmin.biz.enums.DeviceTypeEnum;
 import com.chengqianyun.eeweb2networkadmin.core.utils.UnitUtil;
 import com.chengqianyun.eeweb2networkadmin.data.ServerClientHandler;
+
+import java.net.Socket;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import lombok.Data;
 import lombok.ToString;
 
@@ -159,6 +163,11 @@ public class DeviceInfo {
 
     private ServerClientHandler serverClientHandler;
 
+    /**
+     * 用与展示ip和端口，没有用 --
+     */
+    private String ipInfo;
+
 
     // ==============  扩展方法  =================
 
@@ -180,6 +189,24 @@ public class DeviceInfo {
                 return;
             }
         }
+    }
+
+    public void optIpInfo(Map<String, DeviceInfo> snDeviceSocketMap) {
+        ipInfo = "--";
+        DeviceInfo tmp = snDeviceSocketMap.get(sn);
+        if (tmp == null) {
+            return;
+        }
+
+        if (tmp.getServerClientHandler() == null) {
+            return;
+        }
+
+        Socket tmpSocket = tmp.getServerClientHandler().getSocket();
+        if (tmpSocket == null) {
+            return;
+        }
+        ipInfo = tmpSocket.getInetAddress().getHostAddress() + ":" + tmpSocket.getPort();
     }
 
     public String getTempScope() {
