@@ -189,7 +189,7 @@ public class Convert {
       resp.setDeviceId(dataBean.getDeviceInfo().getId());
       resp.setAreaId(dataBean.getArea() != null ? dataBean.getArea().getId() : 0);
       resp.setDeviceOneType(dataBean.getDeviceOneTypeEnum().getId());
-      resp.setDate(dataBean.getData());
+      resp.setData(dataBean.getData());
       resp.setStatus(dataBean.getStatus());
       resp.setDate(DateUtil.getDate(dataBean.getTime(), DateUtil.dateFullPattern));
       result.add(resp);
