@@ -1,6 +1,7 @@
 package com.chengqianyun.eeweb2networkadmin.service;
 
 import com.chengqianyun.eeweb2networkadmin.biz.Convert;
+import com.chengqianyun.eeweb2networkadmin.biz.bean.ApiAvgDataBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceDataHistoryBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.ExportBatchDataBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.export.ExportBatchBean;
@@ -170,6 +171,148 @@ public class HistoryService extends BaseService {
     return exportHelperBean;
 
   }
+
+  public Tuple2<List<DeviceDataHistoryBean>, Integer> getHistoryDataAllForApi(PaginationQuery query, int distanceTimeInt, DeviceInfo deviceInfo, Date startDate, Date endDate) {
+    int startRecord = (query.getPageIndex() - 1) * query.getRowsPerPage();
+    List<DeviceDataHistoryBean> result = new ArrayList<>();
+    if(distanceTimeInt == 1) {
+      Integer count = deviceDataHistoryMapper.findPageCount(query.getQueryData());
+      query.addQueryData("startRecord", Integer.toString(startRecord));
+      query.addQueryData("endRecord", Integer.toString(query.getRowsPerPage()));
+      List<DeviceDataHistory> dbList = deviceDataHistoryMapper.findPage(query.getQueryData());
+      for (DeviceDataHistory bean : dbList) {
+        DeviceDataHistoryBean tmpBean1 = Convert.change(bean, deviceInfo.getType());
+        tmpBean1.setStartTime(tmpBean1.getTime());
+        tmpBean1.setEndTime(DateUtil.getDate(DateUtil.addMinitue(DateUtil.getDate(tmpBean1.getTime(), DateUtil.dateFullPattern), distanceTimeInt), DateUtil.dateFullPattern));
+        result.add(tmpBean1);
+      }
+      return new Tuple2<>(result, count);
+    }
+
+//    int calcTimeMin = DateUtil.diffDateToMintue(endDate, startDate) + 1;
+//    int totalPage = (calcTimeMin <= distanceTimeInt) ? 1 : (calcTimeMin % distanceTimeInt == 0 ? calcTimeMin / distanceTimeInt : calcTimeMin / distanceTimeInt + 1);
+    int calcTimeMin = DateUtil.diffDateToMintue(endDate, startDate) ;
+    int totalSize = (calcTimeMin <= distanceTimeInt) ? 1 : calcTimeMin / distanceTimeInt;
+    int pageSize = query.getRowsPerPage();
+    Date tmpStartTime = null;
+    Date tmpEndTime = null;
+    boolean isBreak = false;
+    for (int i = 0; i < pageSize; i++) {
+      query.removeQueryData("startTime");
+      query.removeQueryData("endTime");
+      tmpStartTime = DateUtil.addMinitue(startDate, (startRecord + i) * distanceTimeInt);
+      if(tmpStartTime.getTime() > endDate.getTime()) {
+        break;
+      }
+      tmpEndTime = DateUtil.addMinitue(startDate, (startRecord + i + 1) * distanceTimeInt);
+      if (tmpEndTime.getTime() > endDate.getTime()) {
+        break;
+      }
+      query.addQueryData("startTime", DateUtil.getDateTimeNoSecond(tmpStartTime));
+      query.addQueryData("endTime", DateUtil.getDateTimeNoSecond(tmpEndTime));
+      List<ApiAvgDataBean> tmpList = deviceDataHistoryMapper.deviceAvgInfo(query.getQueryData());
+      if (tmpList != null) {
+        for (ApiAvgDataBean apiAvgDataBean : tmpList) {
+          DeviceDataHistoryBean tmpBean1 = Convert.change(apiAvgDataBean, deviceInfo.getType());
+          tmpBean1.setStartTime(query.getQueryData("startTime")+":00");
+          tmpBean1.setTime(tmpBean1.getStartTime());
+          tmpBean1.setEndTime(query.getQueryData("endTime") + ":00");
+          result.add(tmpBean1);
+        }
+      }
+    }
+
+    return new Tuple2<>(result, totalSize);
+
+//    int page = query.getRowsPerPage();
+//    for (int i = 0; i < page; i++) {
+//
+//    }
+//    if(distanceTimeInt == 2) {
+//      List<ApiAvgDataBean> tmpList = deviceDataHistoryMapper.deviceAvgInfo(query.getQueryData());
+//      if(tmpList != null) {
+//        for(ApiAvgDataBean apiAvgDataBean : tmpList) {
+//          DeviceDataHistoryBean tmpBean1 = Convert.change(apiAvgDataBean, deviceInfo.getType());
+//          result.add(tmpBean1);
+//        }
+//      }
+//    }
+
+    /*
+    List<DeviceDataHistoryBean> result = new ArrayList<DeviceDataHistoryBean>();
+    int pageSize = query.getRowsPerPage();
+
+    int currentNum = 0;
+    Date startDate = null;
+    Date endDate = null;
+    DeviceDataHistoryBean tmpBean = null;
+
+    int pageIndex = 1;
+    do {
+      query.setPageIndex(pageIndex++);
+      int startRecord = (query.getPageIndex() - 1) * query.getRowsPerPage();
+      query.addQueryData("startRecord", Integer.toString(startRecord));
+      query.addQueryData("endRecord", Integer.toString(query.getRowsPerPage()));
+      List<DeviceDataHistory> dbList = deviceDataHistoryMapper.findPage(query.getQueryData());
+
+
+      if (distanceTimeInt == 1) {
+        for (DeviceDataHistory bean : dbList) {
+          DeviceDataHistoryBean tmpBean1 = Convert.change(bean, deviceInfo.getType());
+          result.add(tmpBean1);
+        }
+        return result;
+      }
+
+      if(dbList.size() == 0) {
+        break;
+      }
+
+      // 第一页查询初始化,否则值就是上一页结束的值
+      if(tmpBean == null) {
+        startDate = dbList.get(0).getCreatedAt();
+        endDate = DateUtil.addMinitue(startDate, distanceTimeInt);
+      }
+
+      for (int i = 0, size = dbList.size(); i < size; i++) {
+        if (tmpBean == null) {
+          tmpBean = Convert.change(dbList.get(0), deviceInfo.getType());
+          currentNum++;
+          continue;
+        }
+
+        if (dbList.get(i).getCreatedAt().getTime() < endDate.getTime()) {
+          currentNum++;
+          tmpBean.addValue(dbList.get(i));
+          continue;
+        }
+
+        // 一个小周期结束,计算的结果
+        tmpBean.calcAvg(currentNum);
+        result.add(tmpBean);
+
+        // 初始化数据,进行下一个周期结果
+        currentNum = 1;
+        tmpBean = Convert.change(dbList.get(i), deviceInfo.getType());
+        startDate = dbList.get(i).getCreatedAt();
+        endDate = DateUtil.addMinitue(startDate, distanceTimeInt);
+      }
+
+
+      if(dbList.size() < pageSize) {
+        break;
+      }
+
+    } while(true);
+
+
+
+
+    return result;
+     */
+
+  }
+
 
 
   public List<DeviceDataHistoryBean> getHistoryDataAll(PaginationQuery query, int distanceTimeInt, DeviceInfo deviceInfo) {

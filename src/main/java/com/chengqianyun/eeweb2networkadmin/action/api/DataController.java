@@ -195,12 +195,12 @@ public class DataController extends BaseController {
     query.addQueryData("endTime", endTime);
 
     // 获取出所有数据,然后根据筛选条件获取需要的部分
-    List<DeviceDataHistoryBean> beanList = historyService.getHistoryDataAll(query, distanceTimeInt, deviceInfo);
-    List<DeviceDataHistoryResp> dataList = subList(Convert.changeHistoryRespList(beanList, dataTypes), pageIndex, pageSize);
+    Tuple2<List<DeviceDataHistoryBean>, Integer> beanList = historyService.getHistoryDataAllForApi(query, distanceTimeInt, deviceInfo, starDate, endDate);
+//    List<DeviceDataHistoryResp> dataList = subList(Convert.changeHistoryRespList(beanList, dataTypes), pageIndex, pageSize);
 
     JSONObject jsonObject = new JSONObject();
-    jsonObject.put("totalSize", beanList.size());
-    jsonObject.put("historyDataList", dataList);
+    jsonObject.put("totalSize", beanList.getT2() != null ? beanList.getT2() : 0);
+    jsonObject.put("historyDataList", beanList.getT1());
     jsonObject.put("pageIndex", pageIndex);
     jsonObject.put("pageSize", pageSize);
 

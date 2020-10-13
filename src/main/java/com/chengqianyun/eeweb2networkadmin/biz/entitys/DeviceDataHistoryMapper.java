@@ -1,5 +1,6 @@
 package com.chengqianyun.eeweb2networkadmin.biz.entitys;
 
+import com.chengqianyun.eeweb2networkadmin.biz.bean.ApiAvgDataBean;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,8 @@ public interface DeviceDataHistoryMapper {
     List<ExportBatchDataBean> exportAvgInfo(Map<String,String> map);
 
     List<DeviceDataHistory> findPage(Map<String,String> map);
+
+    List<ApiAvgDataBean> deviceAvgInfo(Map<String,String> map);
 
     List<DeviceDataHistory> findPageAll(Map<String,String> map);
 

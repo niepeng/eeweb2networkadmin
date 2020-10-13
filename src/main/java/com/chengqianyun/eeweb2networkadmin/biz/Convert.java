@@ -1,6 +1,7 @@
 package com.chengqianyun.eeweb2networkadmin.biz;
 
 
+import com.chengqianyun.eeweb2networkadmin.biz.bean.ApiAvgDataBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.DeviceDataHistoryBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.ElementDataBean;
 import com.chengqianyun.eeweb2networkadmin.biz.bean.api.AreaResp;
@@ -90,6 +91,45 @@ public class Convert {
     }
 
     return result;
+  }
+
+  public static DeviceDataHistoryBean change(ApiAvgDataBean bean, int deviceType) {
+    DeviceDataHistoryBean result = new DeviceDataHistoryBean();
+    if(bean == null) {
+      return result;
+    }
+//    result.setTime(DateUtil.getDate(bean.getCreatedAt(), DateUtil.dateFullPattern));
+    if (DeviceTypeEnum.hasType(deviceType, DeviceTypeEnum.temp)) {
+      result.setTempMin(nullDefault0(bean.getTempMin()));
+      result.setTempMax(nullDefault0(bean.getTempMax()));
+      result.setTempAvg(nullDefault0(bean.getTempAvg()));
+    }
+    if (DeviceTypeEnum.hasType(deviceType, DeviceTypeEnum.humi)) {
+      result.setHumiMin(nullDefault0(bean.getHumiMin()));
+      result.setHumiMax(nullDefault0(bean.getHumiMax()));
+      result.setHumiAvg(nullDefault0(bean.getHumiAvg()));
+    }
+    if (DeviceTypeEnum.hasType(deviceType, DeviceTypeEnum.shine)) {
+      result.setShineMax(nullDefault0(bean.getShineMax()));
+      result.setShineMin(nullDefault0(bean.getShineMin()));
+      result.setShineAvg(nullDefault0(bean.getShineAvg()));
+    }
+    if (DeviceTypeEnum.hasType(deviceType, DeviceTypeEnum.pressure)) {
+      result.setPressureMax(nullDefault0(bean.getPressureMax()));
+      result.setPressureMin(nullDefault0(bean.getPressureMin()));
+      result.setPressureAvg(nullDefault0(bean.getPressureAvg()));
+    }
+    if (DeviceTypeEnum.hasType(deviceType, DeviceTypeEnum.power)) {
+      result.setPowerMax(nullDefault0(bean.getPowerMax()));
+      result.setPowerMin(nullDefault0(bean.getPowerMin()));
+      result.setPowerAvg(nullDefault0(bean.getPowerAvg()));
+    }
+
+    return result;
+  }
+
+  private static int nullDefault0(Integer i) {
+    return i == null ? 0 : i;
   }
 
   public static List<HistoryListBean> convertHistoryList(List<DeviceDataHistoryBean> list, DeviceInfo deviceInfo) {

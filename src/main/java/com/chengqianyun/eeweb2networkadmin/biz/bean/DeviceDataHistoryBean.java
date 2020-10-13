@@ -20,6 +20,10 @@ public class DeviceDataHistoryBean {
 
   private String time;
 
+  private String startTime;
+
+  private String endTime;
+
   /**
    * 温度
    */

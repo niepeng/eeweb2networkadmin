@@ -41,6 +41,31 @@
 
   </resultMap>
 
+  <resultMap id="apiHistoryDataMap" type="com.chengqianyun.eeweb2networkadmin.biz.bean.ApiAvgDataBean" >
+    <result column="deviceId" property="deviceId" jdbcType="BIGINT" />
+
+    <result column="avgTemp" property="tempAvg" jdbcType="INTEGER" />
+    <result column="maxTemp" property="tempMax" jdbcType="INTEGER" />
+    <result column="minTemp" property="tempMin" jdbcType="INTEGER" />
+
+    <result column="avgHumi" property="humiAvg" jdbcType="INTEGER" />
+    <result column="maxHumi" property="humiMax" jdbcType="INTEGER" />
+    <result column="minHumi" property="humiMin" jdbcType="INTEGER" />
+
+    <result column="avgShine" property="shineAvg" jdbcType="INTEGER" />
+    <result column="maxShine" property="shineMax" jdbcType="INTEGER" />
+    <result column="minShine" property="shineMin" jdbcType="INTEGER" />
+
+    <result column="avgPressure" property="pressureAvg" jdbcType="INTEGER" />
+    <result column="maxPressure" property="pressureMax" jdbcType="INTEGER" />
+    <result column="minPressure" property="pressureMin" jdbcType="INTEGER" />
+
+  </resultMap>
+
+
+
+
+
   <sql id="Base_Column_List" >
     id, device_id, status, temp, humi, power, shine, pressure, smoke, water, electric, body,
     `out`, created_at, updated_at, created_by, updated_by
@@ -84,6 +109,30 @@
         <include refid="pageSearch"/>
         group by device_id
   </select>
+
+
+  <select id="deviceAvgInfo" parameterType="java.util.Map" resultMap="apiHistoryDataMap">
+    select device_id deviceId ,
+    avg(temp) as avgTemp,
+    max(temp) as maxTemp,
+    min(temp) as minTemp,
+
+    avg(humi) as avgHumi,
+    max(humi) as maxHumi,
+    min(humi) as minHumi,
+
+    avg(shine) as avgShine,
+    max(shine) as maxShine,
+    min(shine) as minShine,
+
+    avg(pressure) as avgPressure,
+    max(pressure) as maxPressure,
+    min(pressure) as minPressure
+
+    FROM t_device_data_history
+    <include refid="pageSearch"/>
+  </select>
+
 
 
   <select id="findPageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
